@@ -1,5 +1,7 @@
 # Checklist: Trabalho 1 - Desenvolvimento do Minigame (Puzzle 3D)
 
+## Programação II
+
 Este checklist contém os requisitos técnicos para o desenvolvimento do minigame (puzzle 3D) que servirá como base para a integração em rede. Os itens abaixo refletem os conteúdos abordados em **Programação II** e devem ser implementados considerando a execução local no lado do cliente.
 
 ## 1. Estruturação do Nível e Atores
@@ -31,7 +33,7 @@ Este checklist contém os requisitos técnicos para o desenvolvimento do minigam
 - [ ]  Entrega de acordo com o documento *Instruções para Entrega dos Trabalhos* (no Moodle)
 
 
-### Redes
+## Redes
 
 - [ ] O ambiente principal deverá utilizar o template Third Person padrão da engine.
 - [ ] O mapa base (level do 3rd person) deve suportar a instanciação simultânea de múltiplos jogadores (Listen Server)
