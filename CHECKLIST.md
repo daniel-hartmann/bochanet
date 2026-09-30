@@ -35,7 +35,7 @@ Este checklist contém os requisitos técnicos para o desenvolvimento do minigam
 
 ## Redes
 
-- [ ] O ambiente principal deverá utilizar o template Third Person padrão da engine.
+- [x] O ambiente principal deverá utilizar o template Third Person padrão da engine.
 - [ ] O mapa base (level do 3rd person) deve suportar a instanciação simultânea de múltiplos jogadores (Listen Server)
 - [ ] Deve existir um objeto interativo compartilhado no mapa principal. Todos os jogadores devem poder interagir com ele sem que o objeto seja coletado ou destruído.
 - [ ] A interação com este objeto deve disparar localmente (apenas para o cliente que interagiu) um minijogo 3D utilizando a técnica de Level Streaming. O minijogo roda no lado do cliente.
