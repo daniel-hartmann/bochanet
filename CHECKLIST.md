@@ -44,3 +44,7 @@ um evento de validação para o servidor (Server RPC).
 - [ ] O servidor, ao receber o sinal de vitória, deve processar o encerramento da partida e emitir um aviso global (Game Over) para todos os clientes, indicando o vencedor.
 - [ ] Lembre-se de utilizar nós de validação (como Is Locally Controlled ou Is Local Player Controller) para garantir que o Level Streaming não puxe a câmera dos outros jogadores da rede.
 - [ ] Testar utilizando o modo Play in Editor (PIE) configurado como Listen Server com pelo menos 2 jogadores
+
+
+
+# Checklist: Trabalho 2
