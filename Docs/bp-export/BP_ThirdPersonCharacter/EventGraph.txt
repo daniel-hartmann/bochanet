@@ -1,0 +1,80 @@
+Graph: EventGraph
+
+[N0] StopJumping (K2Node_CallFunction)
+    in  execute : Exec <- N4.Completed, N13.then
+
+[N1] Comment (EdGraphNode_Comment)
+    // Orbiting Camera Input. The CameraBoom component adopts the character's Control Rotation
+
+[N2] Comment (EdGraphNode_Comment)
+    // Movement Input
+
+[N3] Comment (EdGraphNode_Comment)
+    // Jump Input - Jump properties such as height, press-and-hold and multi-jump can be customized on the Character Movement Component.
+
+[N4] EnhancedInputAction IA_Jump (K2Node_EnhancedInputAction)
+    out Started : Exec -> N7.execute
+    out Completed : Exec -> N0.execute
+
+[N5] EnhancedInputAction IA_Move (K2Node_EnhancedInputAction)
+    out Triggered : Exec -> N14.execute
+    out ActionValue_X : Float (double-precision) -> N14.X Axis
+    out ActionValue_Y : Float (double-precision) -> N14.Y Axis
+
+[N6] EnhancedInputAction IA_Look (K2Node_EnhancedInputAction)
+    out Triggered : Exec -> N16.execute
+    out ActionValue_X : Float (double-precision) -> N16.X Axis
+    out ActionValue_Y : Float (double-precision) -> N16.Y Axis
+
+[N7] Jump (K2Node_CallFunction)
+    in  execute : Exec <- N4.Started, N12.then
+
+[N8] Comment (EdGraphNode_Comment)
+    // A basic Character with a controllable, orbiting Third Person camera.
+
+[N9] Event Secondary Thumbstick (K2Node_Event)
+    out then : Exec -> N17.execute
+    out Axis_X : Float (double-precision) -> N17.X Axis
+    out Axis_Y : Float (double-precision) -> N17.Y Axis
+
+[N10] EnhancedInputAction IA_MouseLook (K2Node_EnhancedInputAction)
+    out Triggered : Exec -> N18.execute
+    out ActionValue_X : Float (double-precision) -> N18.X Axis
+    out ActionValue_Y : Float (double-precision) -> N18.Y Axis
+
+[N11] Event Primary Thumbstick (K2Node_Event)
+    out then : Exec -> N15.execute
+    out Axis_X : Float (double-precision) -> N15.X Axis
+    out Axis_Y : Float (double-precision) -> N15.Y Axis
+
+[N12] Event Touch Jump Start (K2Node_Event)
+    out then : Exec -> N7.execute
+
+[N13] Event Touch Jump End (K2Node_Event)
+    out then : Exec -> N0.execute
+
+[N14] Move (K2Node_CallFunction)
+    in  execute : Exec <- N5.Triggered
+    in  X Axis : Float (double-precision) <- N5.ActionValue_X
+    in  Y Axis : Float (double-precision) <- N5.ActionValue_Y
+
+[N15] Move (K2Node_CallFunction)
+    in  execute : Exec <- N11.then
+    in  X Axis : Float (double-precision) <- N11.Axis_X
+    in  Y Axis : Float (double-precision) <- N11.Axis_Y
+
+[N16] Aim (K2Node_CallFunction)
+    in  execute : Exec <- N6.Triggered
+    in  X Axis : Float (single-precision) <- N6.ActionValue_X
+    in  Y Axis : Float (double-precision) <- N6.ActionValue_Y
+
+[N17] Aim (K2Node_CallFunction)
+    in  execute : Exec <- N9.then
+    in  X Axis : Float (single-precision) <- N9.Axis_X
+    in  Y Axis : Float (double-precision) <- N9.Axis_Y
+
+[N18] Aim (K2Node_CallFunction)
+    in  execute : Exec <- N10.Triggered
+    in  X Axis : Float (single-precision) <- N10.ActionValue_X
+    in  Y Axis : Float (double-precision) <- N10.ActionValue_Y
+

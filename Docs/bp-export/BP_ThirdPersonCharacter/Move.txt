@@ -1,0 +1,61 @@
+Graph: Move
+
+[N0] Move (K2Node_FunctionEntry)
+    out then : Exec -> N2.execute
+    out X Axis : Float (double-precision) -> N8.InputPin
+    out Y Axis : Float (double-precision) -> N9.InputPin
+
+[N1] AddMovementInput (K2Node_CallFunction)
+    in  execute : Exec <- N2.then
+    in  WorldDirection : Vector <- N4.ReturnValue
+    in  ScaleValue : Float (single-precision) <- N10.OutputPin
+    in  bForce : Boolean = false
+
+[N2] AddMovementInput (K2Node_CallFunction)
+    in  execute : Exec <- N0.then
+    out then : Exec -> N1.execute
+    in  WorldDirection : Vector <- N5.ReturnValue
+    in  ScaleValue : Float (single-precision) <- N7.OutputPin
+    in  bForce : Boolean = false
+
+[N3] GetControlRotation (K2Node_CallFunction)
+    out ReturnValue_Yaw : Float (single-precision) -> N4.InRot_Yaw
+
+[N4] GetForwardVector (K2Node_CallFunction)
+    in  InRot_Roll : Float (single-precision) = 0.0
+    in  InRot_Pitch : Float (single-precision) = 0.0
+    in  InRot_Yaw : Float (single-precision) <- N3.ReturnValue_Yaw
+    out ReturnValue : Vector -> N1.WorldDirection
+
+[N5] GetRightVector (K2Node_CallFunction)
+    in  InRot_Roll : Float (single-precision) <- N6.ReturnValue_Roll
+    in  InRot_Pitch : Float (single-precision) = 0.0
+    in  InRot_Yaw : Float (single-precision) <- N6.ReturnValue_Yaw
+    out ReturnValue : Vector -> N2.WorldDirection
+
+[N6] GetControlRotation (K2Node_CallFunction)
+    out ReturnValue_Roll : Float (single-precision) -> N5.InRot_Roll
+    out ReturnValue_Yaw : Float (single-precision) -> N5.InRot_Yaw
+
+[N7] Reroute Node (K2Node_Knot)
+    in  InputPin : Float (double-precision) <- N8.OutputPin
+    out OutputPin : Float (double-precision) -> N2.ScaleValue
+
+[N8] Reroute Node (K2Node_Knot)
+    in  InputPin : Float (double-precision) <- N0.X Axis
+    out OutputPin : Float (double-precision) -> N7.InputPin
+
+[N9] Reroute Node (K2Node_Knot)
+    in  InputPin : Float (double-precision) <- N0.Y Axis
+    out OutputPin : Float (double-precision) -> N10.InputPin
+
+[N10] Reroute Node (K2Node_Knot)
+    in  InputPin : Float (double-precision) <- N9.OutputPin
+    out OutputPin : Float (double-precision) -> N1.ScaleValue
+
+[N11] Comment (EdGraphNode_Comment)
+    // Left/Right
+
+[N12] Comment (EdGraphNode_Comment)
+    // Forward / Backward
+

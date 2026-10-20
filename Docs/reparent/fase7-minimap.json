@@ -1,0 +1,10 @@
+{
+	"blueprints": [
+		{
+			"path": "/Game/Bocha/UI/BP_MinimapCapture.BP_MinimapCapture",
+			"parent": "/Script/BochaNet.BochaMinimapCapture",
+			"clearEventGraph": true
+		}
+	],
+	"compilePaths": ["/Game/Bocha", "/Game/Lobby", "/Game/ThirdPerson"]
+}

@@ -1,0 +1,20 @@
+Blueprint: /Game/Bocha/UI/WBP_Minimap.WBP_Minimap
+Parent: /Script/UMG.UserWidget
+
+[Variables]
+
+[Class Defaults overridden vs parent]
+    Image_21 =  (own)
+    bHasScriptImplementedTick = False
+    bHasScriptImplementedPaint = False
+
+[Widgets]
+CanvasPanel_200 : CanvasPanel (parent: root)
+    Slots = ("/Script/UMG.CanvasPanelSlot'/Game/Bocha/UI/WBP_Minimap.WBP_Minimap:WidgetTree.CanvasPanel_200.CanvasPanelSlot_0'")
+    bExpandedInDesigner = True
+Image_21 : Image (parent: CanvasPanel_200) [IsVariable]
+    Brush = (ImageType=FullColor,ResourceObject="/Script/Engine.TextureRenderTarget2D'/Game/Bocha/UI/RT_Minimap.RT_Minimap'")
+    Slot = /Script/UMG.CanvasPanelSlot'/Game/Bocha/UI/WBP_Minimap.WBP_Minimap:WidgetTree.CanvasPanel_200.CanvasPanelSlot_0'
+
+[Graphs]
+EventGraph (3 nodes) -> EventGraph.txt

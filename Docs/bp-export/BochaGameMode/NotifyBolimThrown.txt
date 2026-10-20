@@ -1,0 +1,30 @@
+Graph: NotifyBolimThrown
+
+[N0] NotifyBolimThrown (K2Node_FunctionEntry)
+    out then : Exec -> N1.execute
+
+[N1] PrintString (K2Node_CallFunction)
+    in  execute : Exec <- N0.then
+    out then : Exec -> N3.execute
+    in  InString : String = Bolim was trhowed
+    in  bPrintToScreen : Boolean = true
+    in  bPrintToLog : Boolean = true
+    in  TextColor : Linear Color Structure = (R=0.000000,G=0.660000,B=1.000000,A=1.000000)
+    in  Duration : Float (single-precision) = 2.000000
+    in  Key : Name = None
+
+[N2] Comment (EdGraphNode_Comment)
+    // TODO: WAIT FOR BALL TO STOP
+
+[N3] SpawnBall (K2Node_CallFunction)
+    in  execute : Exec <- N1.then
+    in  isBlue : Boolean <- N5.ReturnValue
+
+[N4] Get CurrentPlayer (K2Node_VariableGet)
+    out CurrentPlayer : Integer -> N5.A
+
+[N5] Equal (Integer) (K2Node_PromotableOperator)
+    in  A : Integer <- N4.CurrentPlayer
+    in  B : Integer = 1
+    out ReturnValue : Boolean -> N3.isBlue
+

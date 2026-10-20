@@ -1,0 +1,21 @@
+{
+	"blueprints": [
+		{
+			"path": "/Game/Bocha/BochaGameMode.BochaGameMode",
+			"resetDefaults": [
+				"bHidden",
+				"bNetLoadOnClient",
+				"bAllowTickBeforeBeginPlay",
+				"bCanBeDamaged",
+				"bEnableAutoLODGeneration",
+				"NetUpdateFrequency",
+				"bIsSpatiallyLoaded"
+			]
+		}
+	],
+	"compilePaths": [
+		"/Game/Bocha",
+		"/Game/Lobby",
+		"/Game/ThirdPerson"
+	]
+}

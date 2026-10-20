@@ -1,0 +1,25 @@
+Blueprint: /Game/ThirdPerson/Blueprints/BP_ThirdPersonPlayerController.BP_ThirdPersonPlayerController
+Parent: /Script/BochaNet.BochaPlayerController
+
+[Variables]
+
+[Components]
+
+[Class Defaults overridden vs parent]
+    DefaultMappingContext = /Script/EnhancedInput.InputMappingContext'/Game/Input/IMC_Default.IMC_Default'
+    MouseLookMappingContext = /Script/EnhancedInput.InputMappingContext'/Game/Input/IMC_MouseLook.IMC_MouseLook'
+    TouchControlsWidgetClass = /Script/UMG.WidgetBlueprintGeneratedClass'/Game/Input/Touch/UI_TouchSimple.UI_TouchSimple_C'
+    InteractAction = /Script/EnhancedInput.InputAction'/Game/Input/Actions/IA_Interact.IA_Interact'
+    BochaMoveAction = /Script/EnhancedInput.InputAction'/Game/Bocha/Input/IA_BochaMove.IA_BochaMove'
+    BochaStrengthAction = /Script/EnhancedInput.InputAction'/Game/Bocha/Input/IA_BochaStrength.IA_BochaStrength'
+    BochaThrowAction = /Script/EnhancedInput.InputAction'/Game/Bocha/Input/IA_BochaThrow.IA_BochaThrow'
+    BolimClass = /Script/Engine.BlueprintGeneratedClass'/Game/Bocha/Actors/ABolim.ABolim_C'
+    BochaClass = /Script/Engine.BlueprintGeneratedClass'/Game/Bocha/Actors/ABocha.ABocha_C'
+    TransformComponent = /Script/Engine.SceneComponent'/Game/ThirdPerson/Blueprints/BP_ThirdPersonPlayerController.Default__BP_ThirdPersonPlayerController_C:TransformComponent0'
+    RootComponent = /Script/Engine.SceneComponent'/Game/ThirdPerson/Blueprints/BP_ThirdPersonPlayerController.Default__BP_ThirdPersonPlayerController_C:TransformComponent0'
+
+[Native component TransformComponent0 : SceneComponent overridden vs parent]
+
+[Graphs]
+UserConstructionScript (1 nodes) -> UserConstructionScript.txt
+EventGraph (0 nodes) -> EventGraph.txt

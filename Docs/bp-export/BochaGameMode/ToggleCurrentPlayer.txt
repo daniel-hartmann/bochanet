@@ -1,0 +1,26 @@
+Graph: ToggleCurrentPlayer
+
+[N0] ToggleCurrentPlayer (K2Node_FunctionEntry)
+    out then : Exec -> N1.execute
+
+[N1] Branch (K2Node_IfThenElse)
+    in  execute : Exec <- N0.then
+    in  Condition : Boolean <- N3.ReturnValue
+    out then : Exec -> N4.execute
+    out else : Exec -> N5.execute
+
+[N2] Get CurrentPlayer (K2Node_VariableGet)
+    out CurrentPlayer : Integer -> N3.A
+
+[N3] Equal (Integer) (K2Node_PromotableOperator)
+    in  A : Integer <- N2.CurrentPlayer
+    out ReturnValue : Boolean -> N1.Condition
+
+[N4] Set CurrentPlayer (K2Node_VariableSet)
+    in  execute : Exec <- N1.then
+    in  CurrentPlayer : Integer = 1
+
+[N5] Set CurrentPlayer (K2Node_VariableSet)
+    in  execute : Exec <- N1.else
+    in  CurrentPlayer : Integer = 0
+

@@ -1,0 +1,24 @@
+Blueprint: /Game/Bocha/BP_CameraRig.BP_CameraRig
+Parent: /Script/Engine.Actor
+
+[Variables]
+BolimBolim : Array of ABolim Object References = '' [] Category=Default
+
+[Components]
+SpringArm : SpringArmComponent (parent: None, socket: None)
+FollowCamera : CameraComponent (parent: SpringArm, socket: None)
+
+[Class Defaults overridden vs parent]
+    FollowCamera =  (own)
+    SpringArm =  (own)
+    BolimBolim =  (own)
+    PrimaryActorTick = (bCanEverTick=True)
+
+[Component template SpringArm : SpringArmComponent overridden vs class defaults]
+
+[Component template FollowCamera : CameraComponent overridden vs class defaults]
+    RelativeRotation = (Pitch=-90.000000,Yaw=0.000000,Roll=0.000000)
+
+[Graphs]
+UserConstructionScript (1 nodes) -> UserConstructionScript.txt
+EventGraph (6 nodes) -> EventGraph.txt

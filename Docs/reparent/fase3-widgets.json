@@ -1,0 +1,21 @@
+{
+	"retargetFunctions": [
+		{
+			"from": "/Game/Bocha/UI/WBP_HUD.WBP_HUD_C",
+			"to": "/Script/BochaNet.BochaHUDWidget",
+			"pinRenames": {
+				"GetThrowStrength": { "Strength": "ReturnValue" },
+				"SetThrowStrength": { "NewParam": "Strength" }
+			}
+		}
+	],
+	"blueprints": [
+		{
+			"path": "/Game/Bocha/UI/WBP_HUD.WBP_HUD",
+			"parent": "/Script/BochaNet.BochaHUDWidget",
+			"removeFunctions": ["GetThrowStrength", "SetThrowStrength", "AdjustStrength", "SetP1Bolim"],
+			"clearEventGraph": true
+		}
+	],
+	"compilePaths": ["/Game/Bocha", "/Game/Lobby", "/Game/ThirdPerson"]
+}

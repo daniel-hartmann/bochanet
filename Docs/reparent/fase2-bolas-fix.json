@@ -1,0 +1,27 @@
+{
+	"blueprints": [
+		{
+			"path": "/Game/Bocha/Actors/ABall.ABall",
+			"resetComponents": [
+				"Sphere"
+			]
+		},
+		{
+			"path": "/Game/Bocha/Actors/ABocha.ABocha",
+			"resetComponents": [
+				"Sphere"
+			]
+		},
+		{
+			"path": "/Game/Bocha/Actors/ABolim.ABolim",
+			"resetComponents": [
+				"Sphere"
+			]
+		}
+	],
+	"compilePaths": [
+		"/Game/Bocha",
+		"/Game/Lobby",
+		"/Game/ThirdPerson"
+	]
+}

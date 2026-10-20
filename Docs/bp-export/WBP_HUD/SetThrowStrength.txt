@@ -1,0 +1,20 @@
+Graph: SetThrowStrength
+
+[N0] SetThrowStrength (K2Node_FunctionEntry)
+    out then : Exec -> N2.execute
+    out NewParam : Float (double-precision) -> N3.Value
+
+[N1] Get Slider_Strength (K2Node_VariableGet)
+    out Slider_Strength : Slider Object Reference -> N2.self
+
+[N2] SetValue (K2Node_CallFunction)
+    in  execute : Exec <- N0.then
+    in  self : Slider Object Reference <- N1.Slider_Strength
+    in  InValue : Float (single-precision) <- N3.ReturnValue
+
+[N3] Clamp (Float) (K2Node_CallFunction)
+    in  Value : Float (double-precision) <- N0.NewParam
+    in  Min : Float (double-precision) = 100.000000
+    in  Max : Float (double-precision) = 1000.000000
+    out ReturnValue : Float (double-precision) -> N2.InValue
+

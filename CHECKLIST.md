@@ -6,7 +6,7 @@ Este checklist contém os requisitos técnicos para o desenvolvimento do minigam
 
 ### 1. Estruturação do Nível e Atores
 
-- [ ]  **Criação do Subnível:** O minigame deve ser construído em um nível (mapa) isolado, preparado para ser carregado via *Level Streaming* no mapa principal.
+- [ ]  **Criação do Subnível:** O minigame deve ser construído em um nível (mapa) isolado, preparado para ser carregado via ~*Level Streaming*~ (já foi testado e não é uma boa ideia e não será usado) no mapa principal.
 - [ ]  **Construção do Ambiente:** Utilização de formas geométricas primitivas (cubos, esferas, cilindros) ou assets externos para compor a área do puzzle.
 - [ ]  **Sistemas de Coordenadas:** Posicionamento e transformação (Translação, Rotação, Escala) corretos dos atores que compõem o desafio lógico.
 

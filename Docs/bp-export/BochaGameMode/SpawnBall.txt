@@ -1,0 +1,115 @@
+Graph: SpawnBall
+
+[N0] SpawnBall (K2Node_FunctionEntry)
+    out then : Exec -> N9.execute
+    out isBlue : Boolean -> N8.Condition
+
+[N1] SpawnActor ABocha (K2Node_SpawnActorFromClass)
+    in  execute : Exec <- N9.then
+    out then : Exec -> N17.execute
+    in  Class : Actor Class Reference = /Game/Bocha/Actors/ABocha.ABocha_C
+    out ReturnValue : ABocha Object Reference -> N3.self, N6.InputPin, N10.CurrentBall, N12.self, N17.self
+    in  SpawnTransform_Location : Vector = 0, 0, 0
+    in  SpawnTransform_Rotation : Rotator = 0, 0, 0
+    in  SpawnTransform_Scale : Vector = 1.000000,1.000000,1.000000
+    in  CollisionHandlingOverride : ESpawnActorCollisionHandlingMethod Enum = Undefined
+    in  TransformScaleMethod : ESpawnActorScaleMethod Enum = MultiplyWithRoot
+    in  bBlue : Boolean <- N19.ReturnValue
+
+[N2] SetSimulatePhysics (K2Node_CallFunction)
+    in  execute : Exec <- N8.else, N11.then
+    out then : Exec -> N3.execute
+    in  self : Primitive Component Object Reference <- N12.Sphere
+    in  bSimulate : Boolean = false
+
+[N3] Attach Actor To Actor (K2Node_CallFunction)
+    in  execute : Exec <- N2.then
+    out then : Exec -> N4.execute
+    in  self : Actor Object Reference <- N1.ReturnValue
+    in  ParentActor : Actor Object Reference <- N13.ReturnValue
+    in  SocketName : Name = None
+    in  LocationRule : EAttachmentRule Enum = KeepRelative
+    in  RotationRule : EAttachmentRule Enum = KeepRelative
+    in  ScaleRule : EAttachmentRule Enum = KeepRelative
+    in  bWeldSimulatedBodies : Boolean = TRUE
+
+[N4] Set Actor Relative Location (K2Node_CallFunction)
+    in  execute : Exec <- N3.then
+    in  self : Actor Object Reference <- N7.OutputPin
+    in  NewRelativeLocation : Vector = 100.000000,0.000000,-30.000000
+    in  bSweep : Boolean = false
+    in  bTeleport : Boolean = false
+
+[N5] Comment (EdGraphNode_Comment)
+    // Spawn ABall
+
+[N6] Reroute Node (K2Node_Knot)
+    in  InputPin : ABocha Object Reference <- N1.ReturnValue
+    out OutputPin : ABocha Object Reference -> N7.InputPin
+
+[N7] Reroute Node (K2Node_Knot)
+    in  InputPin : ABocha Object Reference <- N6.OutputPin
+    out OutputPin : ABocha Object Reference -> N4.self
+
+[N8] Branch (K2Node_IfThenElse)
+    in  execute : Exec <- N10.then
+    in  Condition : Boolean <- N0.isBlue
+    out then : Exec -> N11.execute
+    out else : Exec -> N2.execute
+
+[N9] PrintString (K2Node_CallFunction)
+    in  execute : Exec <- N0.then
+    out then : Exec -> N1.execute
+    in  InString : String = Spawning ball
+    in  bPrintToScreen : Boolean = true
+    in  bPrintToLog : Boolean = true
+    in  TextColor : Linear Color Structure = (R=0.000000,G=0.660000,B=1.000000,A=1.000000)
+    in  Duration : Float (single-precision) = 2.000000
+    in  Key : Name = None
+
+[N10] Set CurrentBall (K2Node_VariableSet)
+    in  execute : Exec <- N17.then
+    out then : Exec -> N8.execute
+    in  CurrentBall : Bocha Ball Object Reference <- N1.ReturnValue
+
+[N11] SetMaterial (K2Node_CallFunction)
+    in  execute : Exec <- N8.then
+    out then : Exec -> N2.execute
+    in  self : Primitive Component Object Reference <- N12.Sphere
+    in  ElementIndex : Integer = 0
+    in  Material : Material Interface Object Reference = /Game/Bocha/Materials/BallBlueMaterial.BallBlueMaterial
+
+[N12] Get Sphere (K2Node_VariableGet)
+    out Sphere : Static Mesh Component Object Reference -> N11.self, N2.self
+    in  self : Bocha Ball Object Reference <- N1.ReturnValue
+
+[N13] Select (K2Node_Select)
+    in  Option 0 : Character Object Reference <- N15.ReturnValue
+    in  Option 1 : Character Object Reference <- N14.TargetCharacter
+    in  Index : Boolean <- N16.ReturnValue
+    out ReturnValue : Character Object Reference -> N3.ParentActor
+
+[N14] Get TargetCharacter (K2Node_VariableGet)
+    out TargetCharacter : Character Object Reference -> N16.Object, N13.Option 1
+
+[N15] GetPlayerCharacter (K2Node_CallFunction)
+    in  PlayerIndex : Integer = 0
+    out ReturnValue : Character Object Reference -> N13.Option 0
+
+[N16] IsValid (K2Node_CallFunction)
+    in  Object : Object Reference <- N14.TargetCharacter
+    out ReturnValue : Boolean -> N13.Index
+
+[N17] SetReplicates (K2Node_CallFunction)
+    in  execute : Exec <- N1.then
+    out then : Exec -> N10.execute
+    in  self : Actor Object Reference <- N1.ReturnValue
+    in  bInReplicates : Boolean = false
+
+[N18] IsServer (K2Node_CallFunction)
+    out ReturnValue : Boolean -> N19.A
+
+[N19] NOT Boolean (K2Node_CallFunction)
+    in  A : Boolean <- N18.ReturnValue
+    out ReturnValue : Boolean -> N1.bBlue
+

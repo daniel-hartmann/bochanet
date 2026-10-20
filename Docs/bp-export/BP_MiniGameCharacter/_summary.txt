@@ -1,0 +1,37 @@
+Blueprint: /Game/Bocha/Player/BP_MiniGameCharacter.BP_MiniGameCharacter
+Parent: /Script/BochaNet.BochaMinigameCharacter
+
+[Variables]
+
+[Components]
+
+[Class Defaults overridden vs parent]
+    SpringArm = /Script/Engine.SpringArmComponent'/Game/Bocha/Player/BP_MiniGameCharacter.Default__BP_MiniGameCharacter_C:SpringArm'
+    Camera = /Script/Engine.CameraComponent'/Game/Bocha/Player/BP_MiniGameCharacter.Default__BP_MiniGameCharacter_C:Camera'
+    MappingContext = /Script/EnhancedInput.InputMappingContext'/Game/Bocha/Input/IMC_Bocha.IMC_Bocha'
+    MinimapWidgetClass = /Script/UMG.WidgetBlueprintGeneratedClass'/Game/Bocha/UI/WBP_Minimap.WBP_Minimap_C'
+    Mesh = /Script/Engine.SkeletalMeshComponent'/Game/Bocha/Player/BP_MiniGameCharacter.Default__BP_MiniGameCharacter_C:CharacterMesh0'
+    CharacterMovement = /Script/Engine.CharacterMovementComponent'/Game/Bocha/Player/BP_MiniGameCharacter.Default__BP_MiniGameCharacter_C:CharMoveComp'
+    CapsuleComponent = /Script/Engine.CapsuleComponent'/Game/Bocha/Player/BP_MiniGameCharacter.Default__BP_MiniGameCharacter_C:CollisionCylinder'
+    ArrowComponent = /Script/Engine.ArrowComponent'/Game/Bocha/Player/BP_MiniGameCharacter.Default__BP_MiniGameCharacter_C:Arrow'
+    RootComponent = /Script/Engine.CapsuleComponent'/Game/Bocha/Player/BP_MiniGameCharacter.Default__BP_MiniGameCharacter_C:CollisionCylinder'
+
+[Native component CollisionCylinder : CapsuleComponent overridden vs parent]
+
+[Native component Arrow : ArrowComponent overridden vs parent]
+    AttachParent = CollisionCylinder
+
+[Native component CharMoveComp : CharacterMovementComponent overridden vs parent]
+
+[Native component CharacterMesh0 : SkeletalMeshComponent overridden vs parent]
+    AttachParent = CollisionCylinder
+
+[Native component SpringArm : SpringArmComponent overridden vs parent]
+    AttachParent = CollisionCylinder
+
+[Native component Camera : CameraComponent overridden vs parent]
+    AttachParent = SpringArm
+
+[Graphs]
+UserConstructionScript (1 nodes) -> UserConstructionScript.txt
+EventGraph (0 nodes) -> EventGraph.txt

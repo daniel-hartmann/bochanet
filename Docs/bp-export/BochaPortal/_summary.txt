@@ -1,0 +1,31 @@
+Blueprint: /Game/Lobby/BochaPortal.BochaPortal
+Parent: /Script/BochaNet.BochaPortal
+
+[Variables]
+
+[Components]
+DefaultSceneRoot : SceneComponent (parent: None, socket: None)
+ABall : ChildActorComponent (parent: DefaultSceneRoot, socket: None)
+InteractionArea : SphereComponent (parent: DefaultSceneRoot, socket: None)
+
+[Class Defaults overridden vs parent]
+    InteractionArea =  (own)
+    ABall =  (own)
+    DefaultSceneRoot =  (own)
+    MinigameLevel = /Game/Bocha/CanchaMap.CanchaMap
+    MinigameCharacterClass = /Script/Engine.BlueprintGeneratedClass'/Game/Bocha/Player/BP_MiniGameCharacter.BP_MiniGameCharacter_C'
+    MinigameManagerClass = /Script/Engine.BlueprintGeneratedClass'/Game/Bocha/BochaGameMode.BochaGameMode_C'
+
+[Component template DefaultSceneRoot : SceneComponent overridden vs class defaults]
+    bVisualizeComponent = True
+
+[Component template ABall : ChildActorComponent overridden vs class defaults]
+    ChildActorClass = /Script/Engine.BlueprintGeneratedClass'/Game/Bocha/Actors/ABall.ABall_C'
+
+[Component template InteractionArea : SphereComponent overridden vs class defaults]
+    AreaClass = /Script/CoreUObject.Class'/Script/NavigationSystem.NavArea_Obstacle'
+    RelativeScale3D = (X=4.000000,Y=4.000000,Z=4.000000)
+
+[Graphs]
+UserConstructionScript (1 nodes) -> UserConstructionScript.txt
+EventGraph (0 nodes) -> EventGraph.txt

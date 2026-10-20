@@ -1,0 +1,30 @@
+Graph: Aim
+
+[N0] Aim (K2Node_FunctionEntry)
+    out then : Exec -> N2.execute
+    out X Axis : Float (single-precision) -> N2.Val
+    out Y Axis : Float (double-precision) -> N6.InputPin
+
+[N1] AddControllerPitchInput (K2Node_CallFunction)
+    in  execute : Exec <- N2.then
+    in  Val : Float (single-precision) <- N3.OutputPin
+
+[N2] AddControllerYawInput (K2Node_CallFunction)
+    in  execute : Exec <- N0.then
+    out then : Exec -> N1.execute
+    in  Val : Float (single-precision) <- N0.X Axis
+
+[N3] Reroute Node (K2Node_Knot)
+    in  InputPin : Float (double-precision) <- N6.OutputPin
+    out OutputPin : Float (double-precision) -> N1.Val
+
+[N4] Comment (EdGraphNode_Comment)
+    // Left/Right
+
+[N5] Comment (EdGraphNode_Comment)
+    // Up/Down
+
+[N6] Reroute Node (K2Node_Knot)
+    in  InputPin : Float (double-precision) <- N0.Y Axis
+    out OutputPin : Float (double-precision) -> N3.InputPin
+

@@ -1,0 +1,32 @@
+Graph: AdjustStrength
+
+[N0] AdjustStrength (K2Node_FunctionEntry)
+    out then : Exec -> N6.execute
+    out Delta : Float (double-precision) -> N3.B
+
+[N1] Get Slider_Strength (K2Node_VariableGet)
+    out Slider_Strength : Slider Object Reference -> N2.self
+
+[N2] GetValue (K2Node_CallFunction)
+    in  self : Slider Object Reference <- N1.Slider_Strength
+    out ReturnValue : Float (single-precision) -> N3.A
+
+[N3] float + float (K2Node_PromotableOperator)
+    in  A : Float (double-precision) <- N2.ReturnValue
+    in  B : Float (double-precision) <- N0.Delta
+    out ReturnValue : Float (double-precision) -> N4.Value
+
+[N4] Clamp (Float) (K2Node_CallFunction)
+    in  Value : Float (double-precision) <- N3.ReturnValue
+    in  Min : Float (double-precision) = 0.0
+    in  Max : Float (double-precision) = 400.000000
+    out ReturnValue : Float (double-precision) -> N6.InValue
+
+[N5] Get Slider_Strength (K2Node_VariableGet)
+    out Slider_Strength : Slider Object Reference -> N6.self
+
+[N6] SetValue (K2Node_CallFunction)
+    in  execute : Exec <- N0.then
+    in  self : Slider Object Reference <- N5.Slider_Strength
+    in  InValue : Float (single-precision) <- N4.ReturnValue
+

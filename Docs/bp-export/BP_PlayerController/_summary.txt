@@ -1,0 +1,18 @@
+Blueprint: /Game/Bocha/Player/BP_PlayerController.BP_PlayerController
+Parent: /Script/Engine.PlayerController
+
+[Variables]
+MinigameManager : Bocha Game Mode Object Reference = '' [] Category=Default
+
+[Components]
+
+[Class Defaults overridden vs parent]
+    MinigameManager =  (own)
+    TransformComponent = /Script/Engine.SceneComponent'/Game/Bocha/Player/BP_PlayerController.Default__BP_PlayerController_C:TransformComponent0'
+    RootComponent = /Script/Engine.SceneComponent'/Game/Bocha/Player/BP_PlayerController.Default__BP_PlayerController_C:TransformComponent0'
+
+[Native component TransformComponent0 : SceneComponent overridden vs parent]
+
+[Graphs]
+UserConstructionScript (1 nodes) -> UserConstructionScript.txt
+EventGraph (2 nodes) -> EventGraph.txt

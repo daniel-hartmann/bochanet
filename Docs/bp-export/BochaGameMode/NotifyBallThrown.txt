@@ -1,0 +1,21 @@
+Graph: NotifyBallThrown
+
+[N0] NotifyBallThrown (K2Node_FunctionEntry)
+    out then : Exec -> N4.execute
+
+[N1] Get CurrentPlayer (K2Node_VariableGet)
+    out CurrentPlayer : Integer -> N2.A
+
+[N2] Equal (Integer) (K2Node_PromotableOperator)
+    in  A : Integer <- N1.CurrentPlayer
+    in  B : Integer = 1
+    out ReturnValue : Boolean -> N3.isBlue
+
+[N3] SpawnBall (K2Node_CallFunction)
+    in  execute : Exec <- N4.then
+    in  isBlue : Boolean <- N2.ReturnValue
+
+[N4] ToggleCurrentPlayer (K2Node_CallFunction)
+    in  execute : Exec <- N0.then
+    out then : Exec -> N3.execute
+

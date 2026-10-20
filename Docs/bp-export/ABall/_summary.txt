@@ -1,0 +1,16 @@
+Blueprint: /Game/Bocha/Actors/ABall.ABall
+Parent: /Script/BochaNet.BochaBall
+
+[Variables]
+
+[Components]
+
+[Class Defaults overridden vs parent]
+    Sphere = /Script/Engine.StaticMeshComponent'/Game/Bocha/Actors/ABall.Default__ABall_C:Sphere'
+    RootComponent = /Script/Engine.StaticMeshComponent'/Game/Bocha/Actors/ABall.Default__ABall_C:Sphere'
+
+[Native component Sphere : StaticMeshComponent overridden vs parent]
+
+[Graphs]
+UserConstructionScript (1 nodes) -> UserConstructionScript.txt
+EventGraph (0 nodes) -> EventGraph.txt

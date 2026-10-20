@@ -1,0 +1,26 @@
+Graph: EventGraph
+
+[N0] Event BeginPlay (K2Node_Event) {DISABLED}
+    // This node is disabled and will not be called. Drag off pins to build functionality.
+
+[N1] Event ActorBeginOverlap (K2Node_Event) {DISABLED}
+    // This node is disabled and will not be called. Drag off pins to build functionality.
+
+[N2] Event Tick (K2Node_Event)
+    out then : Exec -> N3.execute
+
+[N3] Set Actor Location (K2Node_CallFunction)
+    in  execute : Exec <- N2.then
+    in  NewLocation : Vector = 0, 0, 0
+    in  bSweep : Boolean = false
+    in  bTeleport : Boolean = false
+
+[N4] GetAllActorsOfClass (K2Node_CallFunction)
+    out then : Exec -> N5.execute
+    in  ActorClass : Actor Class Reference = /Game/Bocha/Actors/ABolim.ABolim_C
+    out OutActors : Array of ABolim Object References -> N5.BolimBolim
+
+[N5] Set BolimBolim (K2Node_VariableSet)
+    in  execute : Exec <- N4.then
+    in  BolimBolim : Array of ABolim Object References <- N4.OutActors
+

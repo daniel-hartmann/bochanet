@@ -1,0 +1,55 @@
+{
+	"blueprints": [
+		{
+			"path": "/Game/Bocha/Actors/ABall.ABall",
+			"parent": "/Script/BochaNet.BochaBall",
+			"removeComponents": [
+				"Sphere"
+			],
+			"clearEventGraph": true,
+			"resetComponents": [
+				"Sphere"
+			]
+		},
+		{
+			"path": "/Game/Bocha/Actors/ABocha.ABocha",
+			"parent": "/Script/BochaNet.BochaBocha",
+			"removeVariables": [
+				"bBlue"
+			],
+			"clearEventGraph": true,
+			"set": {
+				"BlueMaterial": "/Game/Bocha/Materials/BallBlueMaterial.BallBlueMaterial"
+			},
+			"resetComponents": [
+				"Sphere"
+			]
+		},
+		{
+			"path": "/Game/Bocha/Actors/ABolim.ABolim",
+			"parent": "/Script/BochaNet.BochaBolim",
+			"clearEventGraph": true,
+			"resetComponents": [
+				"Sphere"
+			]
+		}
+	],
+	"retypeVariables": [
+		{
+			"blueprint": "/Game/Bocha/BochaGameMode.BochaGameMode",
+			"variable": "CurrentBall",
+			"class": "/Script/BochaNet.BochaBall"
+		}
+	],
+	"retargetMembers": [
+		{
+			"from": "/Game/Bocha/Actors/ABall.ABall_C",
+			"to": "/Script/BochaNet.BochaBall"
+		}
+	],
+	"compilePaths": [
+		"/Game/Bocha",
+		"/Game/Lobby",
+		"/Game/ThirdPerson"
+	]
+}

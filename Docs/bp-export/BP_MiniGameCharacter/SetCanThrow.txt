@@ -1,0 +1,10 @@
+Graph: SetCanThrow
+
+[N0] SetCanThrow (K2Node_FunctionEntry)
+    out then : Exec -> N1.execute
+    out NewValue : Boolean -> N1.bCanThrow
+
+[N1] Set bCanThrow (K2Node_VariableSet)
+    in  execute : Exec <- N0.then
+    in  bCanThrow : Boolean <- N0.NewValue
+

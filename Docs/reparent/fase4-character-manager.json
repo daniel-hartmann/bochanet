@@ -1,0 +1,91 @@
+{
+	"retargetFunctions": [
+		{
+			"from": "/Game/Bocha/Player/BP_MiniGameCharacter.BP_MiniGameCharacter_C",
+			"to": "/Script/BochaNet.BochaMinigameCharacter",
+			"pinRenames": {
+				"DoStrength": {
+					"Y": "Delta"
+				}
+			}
+		}
+	],
+	"retargetMembers": [
+		{
+			"from": "/Game/Bocha/Player/BP_MiniGameCharacter.BP_MiniGameCharacter_C",
+			"to": "/Script/BochaNet.BochaMinigameCharacter"
+		},
+		{
+			"from": "/Game/Bocha/BochaGameMode.BochaGameMode_C",
+			"to": "/Script/BochaNet.BochaMinigameManager"
+		}
+	],
+	"blueprints": [
+		{
+			"path": "/Game/Bocha/BochaGameMode.BochaGameMode",
+			"parent": "/Script/BochaNet.BochaMinigameManager",
+			"removeVariables": [
+				"SpawnedBolim",
+				"CurrentBall",
+				"CurrentPlayer",
+				"TargetCharacter"
+			],
+			"removeFunctions": [
+				"NotifyBolimThrown",
+				"SpawnBall",
+				"NotifyBallThrown",
+				"ToggleCurrentPlayer"
+			],
+			"clearEventGraph": true,
+			"set": {
+				"BolimClass": "/Game/Bocha/Actors/ABolim.ABolim_C",
+				"BochaClass": "/Game/Bocha/Actors/ABocha.ABocha_C",
+				"HUDWidgetClass": "/Game/Bocha/UI/WBP_HUD.WBP_HUD_C"
+			},
+			"resetDefaults": [
+				"bHidden",
+				"bNetLoadOnClient",
+				"bAllowTickBeforeBeginPlay",
+				"bCanBeDamaged",
+				"bEnableAutoLODGeneration",
+				"NetUpdateFrequency",
+				"bIsSpatiallyLoaded"
+			]
+		},
+		{
+			"path": "/Game/Bocha/Player/BP_MiniGameCharacter.BP_MiniGameCharacter",
+			"parent": "/Script/BochaNet.BochaMinigameCharacter",
+			"removeComponents": [
+				"Camera",
+				"SpringArm"
+			],
+			"removeVariables": [
+				"GameMode",
+				"bCanThrow"
+			],
+			"removeFunctions": [
+				"SetCanThrow"
+			],
+			"clearEventGraph": true,
+			"keepEvents": [
+				"SendThrow"
+			],
+			"convertEventsToOverrides": [
+				"SendThrow"
+			],
+			"resetComponents": [
+				"SpringArm",
+				"Camera"
+			],
+			"set": {
+				"MappingContext": "/Game/Bocha/Input/IMC_Bocha.IMC_Bocha",
+				"MinimapWidgetClass": "/Game/Bocha/UI/WBP_Minimap.WBP_Minimap_C"
+			}
+		}
+	],
+	"compilePaths": [
+		"/Game/Bocha",
+		"/Game/Lobby",
+		"/Game/ThirdPerson"
+	]
+}

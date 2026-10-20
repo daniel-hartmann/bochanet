@@ -1,0 +1,16 @@
+Graph: GetThrowStrength
+
+[N0] GetThrowStrength (K2Node_FunctionEntry)
+    out then : Exec -> N1.execute
+
+[N1] Return Node (K2Node_FunctionResult)
+    in  execute : Exec <- N0.then
+    in  Strength : Float (double-precision) <- N3.ReturnValue
+
+[N2] Get Slider_Strength (K2Node_VariableGet)
+    out Slider_Strength : Slider Object Reference -> N3.self
+
+[N3] GetValue (K2Node_CallFunction)
+    in  self : Slider Object Reference <- N2.Slider_Strength
+    out ReturnValue : Float (single-precision) -> N1.Strength
+

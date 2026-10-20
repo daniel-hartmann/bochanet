@@ -1,0 +1,71 @@
+Blueprint: /Game/ThirdPerson/Blueprints/BP_ThirdPersonCharacter.BP_ThirdPersonCharacter
+Parent: /Script/Engine.Character
+
+[Variables]
+
+[Components]
+CameraBoom : SpringArmComponent (parent: CollisionCylinder, socket: None)
+FollowCamera : CameraComponent (parent: CameraBoom, socket: SpringEndpoint)
+
+[Class Defaults overridden vs parent]
+    FollowCamera =  (own)
+    CameraBoom =  (own)
+    Mesh = /Script/Engine.SkeletalMeshComponent'/Game/ThirdPerson/Blueprints/BP_ThirdPersonCharacter.Default__BP_ThirdPersonCharacter_C:CharacterMesh0'
+    CharacterMovement = /Script/Engine.CharacterMovementComponent'/Game/ThirdPerson/Blueprints/BP_ThirdPersonCharacter.Default__BP_ThirdPersonCharacter_C:CharMoveComp'
+    CapsuleComponent = /Script/Engine.CapsuleComponent'/Game/ThirdPerson/Blueprints/BP_ThirdPersonCharacter.Default__BP_ThirdPersonCharacter_C:CollisionCylinder'
+    ArrowComponent = /Script/Engine.ArrowComponent'/Game/ThirdPerson/Blueprints/BP_ThirdPersonCharacter.Default__BP_ThirdPersonCharacter_C:Arrow'
+    bUseControllerRotationYaw = False
+    RootComponent = /Script/Engine.CapsuleComponent'/Game/ThirdPerson/Blueprints/BP_ThirdPersonCharacter.Default__BP_ThirdPersonCharacter_C:CollisionCylinder'
+    ActorLabel = MyPawn_C-1
+
+[Native component CollisionCylinder : CapsuleComponent overridden vs parent]
+    CapsuleHalfHeight = 90.000000
+    CapsuleRadius = 35.000000
+    AreaClass = /Script/CoreUObject.Class'/Script/NavigationSystem.NavArea_Obstacle'
+    bUseSystemDefaultObstacleAreaClass = False
+    AreaClassOverride = /Script/CoreUObject.Class'/Script/NavigationSystem.NavArea_Obstacle'
+    BodyInstance = (CollisionProfileName="Custom",CollisionResponses=(ResponseArray=((Channel="Visibility",Response=ECR_Ignore),(Channel="Camera",Response=ECR_Ignore))))
+
+[Native component Arrow : ArrowComponent overridden vs parent]
+    AttachParent = CollisionCylinder
+
+[Native component CharMoveComp : CharacterMovementComponent overridden vs parent]
+    JumpZVelocity = 500.000000
+    MaxAcceleration = 1500.000000
+    MinAnalogWalkSpeed = 20.000000
+    BrakingFrictionFactor = 1.000000
+    BrakingDecelerationWalking = 2000.000000
+    BrakingDecelerationFalling = 1500.000000
+    AirControl = 0.350000
+    PerchRadiusThreshold = 15.000000
+    RotationRate = (Pitch=0.000000,Yaw=500.000000,Roll=0.000000)
+    bUseSeparateBrakingFriction = True
+    bOrientRotationToMovement = True
+    NavMovementProperties = (FixedPathBrakingDistance=200.000000,bUseAccelerationForPaths=True,bUseFixedBrakingDistanceForPaths=True)
+    NavAgentProps = (AgentRadius=42.000000,AgentHeight=192.000000)
+
+[Native component CharacterMesh0 : SkeletalMeshComponent overridden vs parent]
+    AnimClass = /Script/Engine.AnimBlueprintGeneratedClass'/Game/Characters/Mannequins/Anims/Unarmed/ABP_Unarmed.ABP_Unarmed_C'
+    ClothingSimulationFactory = /Script/CoreUObject.Class'/Script/ClothingSystemRuntimeNv.ClothingSimulationFactoryNv'
+    SkeletalMesh = /Script/Engine.SkeletalMesh'/Game/Characters/Mannequins/Meshes/SKM_Quinn_Simple.SKM_Quinn_Simple'
+    SkinnedAsset = /Script/Engine.SkeletalMesh'/Game/Characters/Mannequins/Meshes/SKM_Quinn_Simple.SKM_Quinn_Simple'
+    BodyInstance = (CollisionProfileName="Custom",CollisionResponses=(ResponseArray=((Channel="Pawn",Response=ECR_Ignore),(Channel="Visibility",Response=ECR_Ignore),(Channel="Vehicle",Response=ECR_Ignore),(Channel="Camera",Response=ECR_Ignore))),MassInKgOverride=85.812500)
+    AttachParent = CollisionCylinder
+    RelativeLocation = (X=0.000000,Y=0.000000,Z=-89.000000)
+    RelativeRotation = (Pitch=0.000000,Yaw=270.000000,Roll=-0.000000)
+
+[Component template CameraBoom : SpringArmComponent overridden vs class defaults]
+    TargetArmLength = 400.000000
+    bUsePawnControlRotation = True
+    RelativeLocation = (X=0.000000,Y=0.000000,Z=8.492264)
+
+[Component template FollowCamera : CameraComponent overridden vs class defaults]
+    OrthoWidth = 512.000000
+    bAutoCalculateOrthoPlanes = False
+    OrthoNearClipPlane = 0.000000
+
+[Graphs]
+UserConstructionScript (1 nodes) -> UserConstructionScript.txt
+Move (13 nodes) -> Move.txt
+Aim (7 nodes) -> Aim.txt
+EventGraph (19 nodes) -> EventGraph.txt

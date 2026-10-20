@@ -1,0 +1,22 @@
+Graph: SetP1Bolim
+
+[N0] SetP1Bolim (K2Node_FunctionEntry)
+    out then : Exec -> N3.execute
+
+[N1] Get P2_Bolim (K2Node_VariableGet)
+    out P2_Bolim : Image Object Reference -> N4.self
+
+[N2] Get P1_Bolim (K2Node_VariableGet)
+    out P1_Bolim : Image Object Reference -> N3.self
+
+[N3] SetVisibility (K2Node_CallFunction)
+    in  execute : Exec <- N0.then
+    out then : Exec -> N4.execute
+    in  self : Widget Object Reference <- N2.P1_Bolim
+    in  InVisibility : ESlateVisibility Enum = Visible
+
+[N4] SetVisibility (K2Node_CallFunction)
+    in  execute : Exec <- N3.then
+    in  self : Widget Object Reference <- N1.P2_Bolim
+    in  InVisibility : ESlateVisibility Enum = Hidden
+

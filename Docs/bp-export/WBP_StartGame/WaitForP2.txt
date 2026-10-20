@@ -1,0 +1,6 @@
+Graph: WaitForP2
+
+[N0] WaitForP2 (K2Node_FunctionEntry)
+
+[N1] Get Button_0 (K2Node_VariableGet)
+

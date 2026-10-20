@@ -1,0 +1,36 @@
+Graph: Should Use Touch Controls
+
+[N0] Should Use Touch Controls (K2Node_FunctionEntry)
+    out then : Exec -> N3.execute
+
+[N1] Return Node (K2Node_FunctionResult)
+    in  execute : Exec <- N3.iOS, N3.Android
+    in  Use Mobile Controls : Boolean = true
+
+[N2] GetPlatformName (K2Node_CallFunction)
+    out ReturnValue : String -> N3.Selection
+
+[N3] Switch on String (K2Node_SwitchString)
+    out Default : Exec -> N8.InputPin
+    in  execute : Exec <- N0.then
+    in  Selection : String <- N2.ReturnValue
+    out iOS : Exec -> N1.execute
+    out Android : Exec -> N1.execute
+
+[N4] Return Node (K2Node_FunctionResult)
+    in  execute : Exec <- N8.OutputPin
+    in  Use Mobile Controls : Boolean <- N5.Force Touch Controls
+
+[N5] Get Force Touch Controls (K2Node_VariableGet)
+    out Force Touch Controls : Boolean -> N4.Use Mobile Controls
+
+[N6] Comment (EdGraphNode_Comment)
+    // Use UMG touch controls if on a mobile platform.
+
+[N7] Comment (EdGraphNode_Comment)
+    // You can also force touch controls through a config override.
+
+[N8] Reroute Node (K2Node_Knot)
+    in  InputPin : Exec <- N3.Default
+    out OutputPin : Exec -> N4.execute
+

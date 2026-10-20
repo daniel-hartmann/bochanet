@@ -1,0 +1,15 @@
+{
+	"blueprints": [
+		{
+			"path": "/Game/Bocha/UI/WBP_StartGame.WBP_StartGame",
+			"removeFunctions": [
+				"WaitForP2"
+			]
+		}
+	],
+	"compilePaths": [
+		"/Game/Bocha",
+		"/Game/Lobby",
+		"/Game/ThirdPerson"
+	]
+}

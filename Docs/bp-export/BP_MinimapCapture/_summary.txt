@@ -1,0 +1,16 @@
+Blueprint: /Game/Bocha/UI/BP_MinimapCapture.BP_MinimapCapture
+Parent: /Script/BochaNet.BochaMinimapCapture
+
+[Variables]
+
+[Components]
+SceneCaptureComponent2D : SceneCaptureComponent2D (parent: None, socket: None)
+
+[Class Defaults overridden vs parent]
+    SceneCaptureComponent2D =  (own)
+
+[Component template SceneCaptureComponent2D : SceneCaptureComponent2D overridden vs class defaults]
+
+[Graphs]
+UserConstructionScript (1 nodes) -> UserConstructionScript.txt
+EventGraph (0 nodes) -> EventGraph.txt

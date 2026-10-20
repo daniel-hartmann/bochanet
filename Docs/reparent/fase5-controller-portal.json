@@ -1,0 +1,43 @@
+{
+	"blueprints": [
+		{
+			"path": "/Game/ThirdPerson/Blueprints/BP_ThirdPersonPlayerController.BP_ThirdPersonPlayerController",
+			"parent": "/Script/BochaNet.BochaPlayerController",
+			"removeVariables": ["Touch Controls Widget Class", "Force Touch Controls", "MinigameManager", "MinigameCharacter"],
+			"removeFunctions": ["Should Use Touch Controls"],
+			"clearEventGraph": true,
+			"set": {
+				"DefaultMappingContext": "/Game/Input/IMC_Default.IMC_Default",
+				"MouseLookMappingContext": "/Game/Input/IMC_MouseLook.IMC_MouseLook",
+				"TouchControlsWidgetClass": "/Game/Input/Touch/UI_TouchSimple.UI_TouchSimple_C",
+				"InteractAction": "/Game/Input/Actions/IA_Interact.IA_Interact",
+				"BochaMoveAction": "/Game/Bocha/Input/IA_BochaMove.IA_BochaMove",
+				"BochaStrengthAction": "/Game/Bocha/Input/IA_BochaStrength.IA_BochaStrength",
+				"BochaThrowAction": "/Game/Bocha/Input/IA_BochaThrow.IA_BochaThrow",
+				"BolimClass": "/Game/Bocha/Actors/ABolim.ABolim_C",
+				"BochaClass": "/Game/Bocha/Actors/ABocha.ABocha_C"
+			}
+		},
+		{
+			"path": "/Game/Lobby/BochaPortal.BochaPortal",
+			"parent": "/Script/BochaNet.BochaPortal",
+			"removeVariables": ["bMinigameStarted"],
+			"clearEventGraph": true,
+			"set": {
+				"MinigameLevel": "/Game/Bocha/CanchaMap.CanchaMap",
+				"MinigameCharacterClass": "/Game/Bocha/Player/BP_MiniGameCharacter.BP_MiniGameCharacter_C",
+				"MinigameManagerClass": "/Game/Bocha/BochaGameMode.BochaGameMode_C"
+			}
+		},
+		{
+			"path": "/Game/ThirdPerson/Blueprints/BP_ThirdPersonCharacter.BP_ThirdPersonCharacter",
+			"removeEvents": ["SetNearbyPortal", "ClearNearbyPortal", "IA_Interact"],
+			"removeVariables": ["NearbyPortal"]
+		},
+		{
+			"path": "/Game/Bocha/Player/BP_MiniGameCharacter.BP_MiniGameCharacter",
+			"clearEventGraph": true
+		}
+	],
+	"compilePaths": ["/Game/Bocha", "/Game/Lobby", "/Game/ThirdPerson"]
+}

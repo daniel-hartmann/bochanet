@@ -1,0 +1,17 @@
+Blueprint: /Game/Bocha/Actors/ABocha.ABocha
+Parent: /Script/BochaNet.BochaBocha
+
+[Variables]
+
+[Components]
+
+[Class Defaults overridden vs parent]
+    BlueMaterial = /Script/Engine.Material'/Game/Bocha/Materials/BallBlueMaterial.BallBlueMaterial'
+    Sphere = /Script/Engine.StaticMeshComponent'/Game/Bocha/Actors/ABocha.Default__ABocha_C:Sphere'
+    RootComponent = /Script/Engine.StaticMeshComponent'/Game/Bocha/Actors/ABocha.Default__ABocha_C:Sphere'
+
+[Native component Sphere : StaticMeshComponent overridden vs parent]
+
+[Graphs]
+UserConstructionScript (1 nodes) -> UserConstructionScript.txt
+EventGraph (0 nodes) -> EventGraph.txt
