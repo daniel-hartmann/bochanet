@@ -26,6 +26,10 @@ public:
 
 private:
 	bool ApplyBlueprintSpec(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const;
+	bool CreateBlueprintAsset(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const;
+	bool CreateInputAction(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const;
+	bool UnmapKey(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const;
+	bool MapKey(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const;
 	bool ApplyMapSpec(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const;
 	bool RetypeVariable(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const;
 	int32 RetargetMembers(UBlueprint* Blueprint, UClass* FromClass, UClass* ToClass) const;

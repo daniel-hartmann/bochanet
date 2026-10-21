@@ -7,7 +7,10 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "Game/BochaMatch.h"
+#include "Game/BochaMinigameManager.h"
 #include "Kismet/GameplayStatics.h"
+#include "UI/BochaHUDWidget.h"
 #include "Lobby/BochaPortal.h"
 #include "Player/BochaMinigameCharacter.h"
 
@@ -64,6 +67,7 @@ void ABochaPlayerController::SetupInputComponent()
 	EnhancedInput->BindAction(BochaMoveAction, ETriggerEvent::Triggered, this, &ABochaPlayerController::BochaMove);
 	EnhancedInput->BindAction(BochaStrengthAction, ETriggerEvent::Triggered, this, &ABochaPlayerController::BochaStrength);
 	EnhancedInput->BindAction(BochaThrowAction, ETriggerEvent::Started, this, &ABochaPlayerController::BochaThrow);
+	EnhancedInput->BindAction(BochaAimMouseAction, ETriggerEvent::Triggered, this, &ABochaPlayerController::BochaAimMouse);
 }
 
 void ABochaPlayerController::Interact()
@@ -76,9 +80,19 @@ void ABochaPlayerController::Interact()
 
 void ABochaPlayerController::BochaMove(const FInputActionValue& Value)
 {
-	if (IsValid(MinigameCharacter))
+	if (!IsValid(MinigameCharacter))
 	{
-		MinigameCharacter->DoMove(Value.Get<FVector2D>().X);
+		return;
+	}
+	// X: A/D slide sideways. Y: Q/E aim.
+	const FVector2D Axis = Value.Get<FVector2D>();
+	if (Axis.X != 0.0)
+	{
+		MinigameCharacter->DoMove(Axis.X);
+	}
+	if (Axis.Y != 0.0)
+	{
+		MinigameCharacter->DoAim(Axis.Y);
 	}
 }
 
@@ -87,6 +101,14 @@ void ABochaPlayerController::BochaStrength(const FInputActionValue& Value)
 	if (IsValid(MinigameCharacter))
 	{
 		MinigameCharacter->DoStrength(Value.Get<FVector2D>().Y);
+	}
+}
+
+void ABochaPlayerController::BochaAimMouse(const FInputActionValue& Value)
+{
+	if (IsValid(MinigameCharacter))
+	{
+		MinigameCharacter->DoAimMouse(Value.Get<float>());
 	}
 }
 
@@ -106,26 +128,55 @@ void ABochaPlayerController::ServerRequestStart_Implementation(ABochaPortal* Por
 	}
 }
 
-void ABochaPlayerController::ServerThrow_Implementation(FVector BallLocation, FVector Impulse, bool bIsBolim)
+void ABochaPlayerController::ServerThrow_Implementation(FVector BallLocation, FVector Velocity)
 {
+	ABochaMatch* Match = ABochaMatch::Find(this);
+	if (!Match || !Match->CanThrow(PlayerState) || !Match->IsBehindThrowLine(BallLocation))
+	{
+		ClientThrowRejected();
+		return;
+	}
+
 	const FTransform SpawnTransform(BallLocation);
 	ABochaBall* Ball = nullptr;
-	if (bIsBolim)
+	FVector LaunchVelocity = Velocity;
+	if (Match->IsThrowingBolim())
 	{
 		FActorSpawnParameters Params;
 		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		Ball = GetWorld()->SpawnActor<ABochaBolim>(BolimClass, SpawnTransform, Params);
+		// The strength picks where the jack stops; it always ends up valid.
+		const float Strength = (Velocity.Size2D() - UBochaHUDWidget::MinThrowStrength)
+			/ (UBochaHUDWidget::MaxThrowStrength - UBochaHUDWidget::MinThrowStrength);
+		LaunchVelocity = Match->LaunchBolim(Ball, Strength);
 	}
 	else
 	{
 		ABochaBocha* Bocha = GetWorld()->SpawnActorDeferred<ABochaBocha>(BochaClass, SpawnTransform, nullptr, nullptr,
 			ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-		// The host plays the red balls and the client the blue ones, same rule as the held ball.
-		Bocha->bBlue = !IsLocalPlayerController();
+		// Team 1 plays blue, same rule as the held ball.
+		Bocha->bBlue = Match->GetCurrentThrower() == 1;
 		Bocha->FinishSpawning(SpawnTransform);
 		Ball = Bocha;
 	}
 
-	Ball->GetSphere()->SetSimulatePhysics(true);
-	Ball->GetSphere()->AddImpulse(Impulse);
+	// Rolled along the floor: a ball dropped from the hand loses most of its speed on landing.
+	Ball->Launch(BallLocation, Match->GetFloorZ(), LaunchVelocity);
+	Match->RegisterThrow(Ball);
+}
+
+void ABochaPlayerController::ServerClaimVictory_Implementation()
+{
+	if (ABochaMatch* Match = ABochaMatch::Find(this))
+	{
+		Match->HandleVictoryClaim(PlayerState);
+	}
+}
+
+void ABochaPlayerController::ClientThrowRejected_Implementation()
+{
+	if (MinigameManager)
+	{
+		MinigameManager->Refresh();
+	}
 }

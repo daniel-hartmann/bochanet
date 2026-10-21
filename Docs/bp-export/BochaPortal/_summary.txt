@@ -15,6 +15,7 @@ InteractionArea : SphereComponent (parent: DefaultSceneRoot, socket: None)
     MinigameLevel = /Game/Bocha/CanchaMap.CanchaMap
     MinigameCharacterClass = /Script/Engine.BlueprintGeneratedClass'/Game/Bocha/Player/BP_MiniGameCharacter.BP_MiniGameCharacter_C'
     MinigameManagerClass = /Script/Engine.BlueprintGeneratedClass'/Game/Bocha/BochaGameMode.BochaGameMode_C'
+    MatchClass = /Script/Engine.BlueprintGeneratedClass'/Game/Bocha/BP_BochaMatch.BP_BochaMatch_C'
 
 [Component template DefaultSceneRoot : SceneComponent overridden vs class defaults]
     bVisualizeComponent = True

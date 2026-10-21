@@ -1,0 +1,12 @@
+{
+	"createBlueprints": [
+		{ "path": "/Game/Bocha/BP_BochaMatch", "parent": "/Script/BochaNet.BochaMatch" }
+	],
+	"blueprints": [
+		{
+			"path": "/Game/Lobby/BochaPortal.BochaPortal",
+			"set": { "MatchClass": "/Game/Bocha/BP_BochaMatch.BP_BochaMatch_C" }
+		}
+	],
+	"compilePaths": ["/Game/Bocha", "/Game/Lobby", "/Game/ThirdPerson"]
+}

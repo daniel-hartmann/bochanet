@@ -1,0 +1,7 @@
+{
+	"mapKeys": [
+		{ "context": "/Game/Bocha/Input/IMC_Bocha.IMC_Bocha", "action": "/Game/Bocha/Input/IA_BochaMove.IA_BochaMove", "key": "Right", "modifiers": ["SwizzleAxis"] },
+		{ "context": "/Game/Bocha/Input/IMC_Bocha.IMC_Bocha", "action": "/Game/Bocha/Input/IA_BochaMove.IA_BochaMove", "key": "Left", "modifiers": ["SwizzleAxis", "Negate"] }
+	],
+	"compilePaths": ["/Game/Bocha", "/Game/Lobby", "/Game/ThirdPerson"]
+}

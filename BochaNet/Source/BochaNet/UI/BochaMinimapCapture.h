@@ -7,8 +7,9 @@
 class USceneCaptureComponent2D;
 
 /**
- * Renders the court into the minimap render target at a fixed interval, hiding the local player.
- * The scene capture component (and its render target) is set up on the instance in CanchaMap.
+ * Old camera minimap (render target shown by WBP_Minimap). Replaced by UBochaMinimapWidget, so it
+ * no longer captures; the instance placed in CanchaMap can be deleted together with WBP_Minimap
+ * and RT_Minimap.
  */
 UCLASS()
 class BOCHANET_API ABochaMinimapCapture : public AActor

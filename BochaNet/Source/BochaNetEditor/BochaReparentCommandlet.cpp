@@ -5,10 +5,17 @@
 #include "EdGraph/EdGraph.h"
 #include "EdGraphSchema_K2.h"
 #include "Engine/Blueprint.h"
+#include "Engine/BlueprintGeneratedClass.h"
 #include "Engine/SCS_Node.h"
 #include "Engine/SimpleConstructionScript.h"
 #include "FileHelpers.h"
+#include "Blueprint/WidgetTree.h"
+#include "Components/Widget.h"
 #include "Engine/World.h"
+#include "InputAction.h"
+#include "InputMappingContext.h"
+#include "InputModifiers.h"
+#include "WidgetBlueprint.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/GameModeBase.h"
 #include "GameFramework/WorldSettings.h"
@@ -108,6 +115,42 @@ int32 UBochaReparentCommandlet::Main(const FString& Params)
 
 	bool bOk = true;
 	TSet<UPackage*> ChangedPackages;
+
+	const TArray<TSharedPtr<FJsonValue>>* NewBlueprints = nullptr;
+	if (Spec->TryGetArrayField(TEXT("createBlueprints"), NewBlueprints))
+	{
+		for (const TSharedPtr<FJsonValue>& Value : *NewBlueprints)
+		{
+			bOk &= CreateBlueprintAsset(Value->AsObject(), ChangedPackages);
+		}
+	}
+
+	const TArray<TSharedPtr<FJsonValue>>* NewActions = nullptr;
+	if (Spec->TryGetArrayField(TEXT("createInputActions"), NewActions))
+	{
+		for (const TSharedPtr<FJsonValue>& Value : *NewActions)
+		{
+			bOk &= CreateInputAction(Value->AsObject(), ChangedPackages);
+		}
+	}
+
+	const TArray<TSharedPtr<FJsonValue>>* KeyUnmappings = nullptr;
+	if (Spec->TryGetArrayField(TEXT("unmapKeys"), KeyUnmappings))
+	{
+		for (const TSharedPtr<FJsonValue>& Value : *KeyUnmappings)
+		{
+			bOk &= UnmapKey(Value->AsObject(), ChangedPackages);
+		}
+	}
+
+	const TArray<TSharedPtr<FJsonValue>>* KeyMappings = nullptr;
+	if (Spec->TryGetArrayField(TEXT("mapKeys"), KeyMappings))
+	{
+		for (const TSharedPtr<FJsonValue>& Value : *KeyMappings)
+		{
+			bOk &= MapKey(Value->AsObject(), ChangedPackages);
+		}
+	}
 
 	// Calls and member accesses are retargeted first, while the old pins still carry their links.
 	const TArray<TSharedPtr<FJsonValue>>* FunctionRetargets = nullptr;
@@ -266,6 +309,20 @@ bool UBochaReparentCommandlet::ApplyBlueprintSpec(const TSharedPtr<FJsonObject>&
 		Blueprint->NewVariables.RemoveAt(Index);
 	}
 
+	// C++ widget bindings (BindWidget) need the designer widget to be a variable.
+	for (const FString& Name : GetStringArray(Spec, TEXT("markWidgetsAsVariables")))
+	{
+		UWidgetBlueprint* WidgetBlueprint = Cast<UWidgetBlueprint>(Blueprint);
+		UWidget* Widget = WidgetBlueprint && WidgetBlueprint->WidgetTree ? WidgetBlueprint->WidgetTree->FindWidget(FName(*Name)) : nullptr;
+		if (!Widget)
+		{
+			UE_LOG(LogBochaReparent, Error, TEXT("%s: widget %s not found"), *Blueprint->GetName(), *Name);
+			return false;
+		}
+		Widget->bIsVariable = true;
+		UE_LOG(LogBochaReparent, Display, TEXT("%s: %s is now a variable"), *Blueprint->GetName(), *Name);
+	}
+
 	const TArray<FString> EventsToRemove = GetStringArray(Spec, TEXT("removeEvents"));
 	if (EventsToRemove.Num() > 0)
 	{
@@ -332,6 +389,119 @@ bool UBochaReparentCommandlet::ApplyBlueprintSpec(const TSharedPtr<FJsonObject>&
 	}
 
 	ChangedPackages.Add(Blueprint->GetPackage());
+	return true;
+}
+
+bool UBochaReparentCommandlet::CreateBlueprintAsset(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const
+{
+	const FString PackageName = Spec->GetStringField(TEXT("path"));
+	const FString AssetName = FPackageName::GetShortName(PackageName);
+	if (LoadObject<UBlueprint>(nullptr, *(PackageName + TEXT(".") + AssetName), nullptr, LOAD_NoWarn | LOAD_Quiet))
+	{
+		UE_LOG(LogBochaReparent, Display, TEXT("%s already exists"), *PackageName);
+		return true;
+	}
+
+	UClass* Parent = LoadClassByPath(Spec->GetStringField(TEXT("parent")));
+	if (!Parent)
+	{
+		return false;
+	}
+	UPackage* Package = CreatePackage(*PackageName);
+	UBlueprint* Blueprint = FKismetEditorUtilities::CreateBlueprint(Parent, Package, FName(*AssetName), BPTYPE_Normal,
+		UBlueprint::StaticClass(), UBlueprintGeneratedClass::StaticClass());
+	FAssetRegistryModule::AssetCreated(Blueprint);
+	Package->MarkPackageDirty();
+	ChangedPackages.Add(Package);
+	UE_LOG(LogBochaReparent, Display, TEXT("Created %s (child of %s)"), *PackageName, *Parent->GetName());
+	return true;
+}
+
+bool UBochaReparentCommandlet::CreateInputAction(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const
+{
+	const FString PackageName = Spec->GetStringField(TEXT("path"));
+	if (LoadObject<UInputAction>(nullptr, *(PackageName + TEXT(".") + FPackageName::GetShortName(PackageName)), nullptr, LOAD_NoWarn | LOAD_Quiet))
+	{
+		UE_LOG(LogBochaReparent, Display, TEXT("%s already exists"), *PackageName);
+		return true;
+	}
+
+	const UEnum* ValueTypes = StaticEnum<EInputActionValueType>();
+	const int64 ValueType = ValueTypes->GetValueByNameString(Spec->GetStringField(TEXT("valueType")));
+	if (ValueType == INDEX_NONE)
+	{
+		UE_LOG(LogBochaReparent, Error, TEXT("%s: unknown valueType"), *PackageName);
+		return false;
+	}
+
+	UPackage* Package = CreatePackage(*PackageName);
+	UInputAction* Action = NewObject<UInputAction>(Package, *FPackageName::GetShortName(PackageName), RF_Public | RF_Standalone);
+	Action->ValueType = static_cast<EInputActionValueType>(ValueType);
+	FAssetRegistryModule::AssetCreated(Action);
+	Package->MarkPackageDirty();
+	ChangedPackages.Add(Package);
+	UE_LOG(LogBochaReparent, Display, TEXT("Created %s (%s)"), *PackageName, *Spec->GetStringField(TEXT("valueType")));
+	return true;
+}
+
+bool UBochaReparentCommandlet::UnmapKey(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const
+{
+	UInputMappingContext* Context = LoadObject<UInputMappingContext>(nullptr, *Spec->GetStringField(TEXT("context")));
+	UInputAction* Action = LoadObject<UInputAction>(nullptr, *Spec->GetStringField(TEXT("action")));
+	const FKey Key(*Spec->GetStringField(TEXT("key")));
+	if (!Context || !Action || !Key.IsValid())
+	{
+		UE_LOG(LogBochaReparent, Error, TEXT("unmapKeys: context, action or key not found in %s"), *Spec->GetStringField(TEXT("context")));
+		return false;
+	}
+	Context->UnmapKey(Action, Key);
+	UE_LOG(LogBochaReparent, Display, TEXT("%s: %s no longer mapped to %s"), *Context->GetName(), *Key.ToString(), *Action->GetName());
+	Context->MarkPackageDirty();
+	ChangedPackages.Add(Context->GetPackage());
+	return true;
+}
+
+bool UBochaReparentCommandlet::MapKey(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const
+{
+	UInputMappingContext* Context = LoadObject<UInputMappingContext>(nullptr, *Spec->GetStringField(TEXT("context")));
+	UInputAction* Action = LoadObject<UInputAction>(nullptr, *Spec->GetStringField(TEXT("action")));
+	const FKey Key(*Spec->GetStringField(TEXT("key")));
+	if (!Context || !Action || !Key.IsValid())
+	{
+		UE_LOG(LogBochaReparent, Error, TEXT("mapKeys: context, action or key not found in %s"), *Spec->GetStringField(TEXT("context")));
+		return false;
+	}
+
+	const bool bAlreadyMapped = Context->GetMappings().ContainsByPredicate(
+		[Action, &Key](const FEnhancedActionKeyMapping& Mapping) { return Mapping.Action == Action && Mapping.Key == Key; });
+	if (bAlreadyMapped)
+	{
+		UE_LOG(LogBochaReparent, Display, TEXT("%s: %s already mapped to %s"), *Context->GetName(), *Key.ToString(), *Action->GetName());
+		return true;
+	}
+
+	FEnhancedActionKeyMapping& Mapping = Context->MapKey(Action, Key);
+	for (const FString& Modifier : GetStringArray(Spec, TEXT("modifiers")))
+	{
+		if (Modifier == TEXT("SwizzleAxis"))
+		{
+			Mapping.Modifiers.Add(NewObject<UInputModifierSwizzleAxis>(Context));
+		}
+		else if (Modifier == TEXT("Negate"))
+		{
+			Mapping.Modifiers.Add(NewObject<UInputModifierNegate>(Context));
+		}
+		else
+		{
+			UE_LOG(LogBochaReparent, Error, TEXT("mapKeys: unknown modifier %s"), *Modifier);
+			return false;
+		}
+	}
+
+	UE_LOG(LogBochaReparent, Display, TEXT("%s: %s -> %s [%s]"), *Context->GetName(), *Key.ToString(), *Action->GetName(),
+		*FString::Join(GetStringArray(Spec, TEXT("modifiers")), TEXT(", ")));
+	Context->MarkPackageDirty();
+	ChangedPackages.Add(Context->GetPackage());
 	return true;
 }
 

@@ -1,0 +1,3 @@
+Mapping context: /Game/Input/IMC_MouseLook.IMC_MouseLook
+
+IA_MouseLook <- Mouse2D  modifiers=[InputModifierNegate] triggers=[]

@@ -1,0 +1,9 @@
+{
+	"blueprints": [
+		{
+			"path": "/Game/Bocha/Player/BP_MiniGameCharacter.BP_MiniGameCharacter",
+			"set": { "MinimapWidgetClass": "/Script/BochaNet.BochaMinimapWidget" }
+		}
+	],
+	"compilePaths": ["/Game/Bocha", "/Game/Lobby", "/Game/ThirdPerson"]
+}

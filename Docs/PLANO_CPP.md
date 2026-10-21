@@ -121,8 +121,7 @@ Decididos:
 
 Em aberto (portar igual por enquanto):
 
-0. Impulso usa produto componente a componente `Forward * (Strength,0,0)` — só o X do forward conta.
-   Igual ao BP; só faz diferença se o character girar.
+0. ~~Impulso com produto componente a componente~~ — corrigido na R3 do `PLANO_REGRAS.md` (mira em ângulo).
 
 3. `ServerThrow` confia na `SpawnLocation` e no `Impulse` do cliente, sem validação.
 4. Input do minigame é tratado duas vezes (PC roteia para o char **e** o char tem IMC próprio com prioridade 10).

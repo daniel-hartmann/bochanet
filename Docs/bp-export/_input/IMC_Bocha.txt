@@ -1,0 +1,10 @@
+Mapping context: /Game/Bocha/Input/IMC_Bocha.IMC_Bocha
+
+IA_BochaMove <- A  modifiers=[InputModifierNegate] triggers=[]
+IA_BochaMove <- D  modifiers=[] triggers=[]
+IA_BochaThrow <- SpaceBar  modifiers=[] triggers=[]
+IA_BochaStrength <- W  modifiers=[] triggers=[]
+IA_BochaStrength <- S  modifiers=[InputModifierNegate] triggers=[]
+IA_BochaMove <- E  modifiers=[InputModifierSwizzleAxis] triggers=[]
+IA_BochaMove <- Q  modifiers=[InputModifierSwizzleAxis, InputModifierNegate] triggers=[]
+IA_BochaAimMouse <- MouseX  modifiers=[] triggers=[]

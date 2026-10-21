@@ -4,6 +4,7 @@
 #include "GameFramework/Actor.h"
 #include "BochaPortal.generated.h"
 
+class ABochaMatch;
 class ABochaMinigameCharacter;
 class ABochaMinigameManager;
 
@@ -22,6 +23,10 @@ public:
 
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastStartMinigame();
+
+	/** Puts every player back in the lobby and lets the portal start a new match. */
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastEndMinigame();
 
 	bool HasMinigameStarted() const { return bMinigameStarted; }
 
@@ -46,10 +51,18 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Bocha")
 	TSubclassOf<ABochaMinigameManager> MinigameManagerClass;
 
+	/** Spawned by the server; holds the rules state both players share. */
+	UPROPERTY(EditDefaultsOnly, Category = "Bocha")
+	TSubclassOf<ABochaMatch> MatchClass;
+
 private:
 	UFUNCTION()
 	void OnMinigameLevelShown();
 
 	UPROPERTY(VisibleInstanceOnly, Category = "Bocha")
 	bool bMinigameStarted = false;
+
+	/** The court loaded on this machine. */
+	UPROPERTY(Transient)
+	TObjectPtr<class ULevelStreamingDynamic> MinigameLevelInstance;
 };

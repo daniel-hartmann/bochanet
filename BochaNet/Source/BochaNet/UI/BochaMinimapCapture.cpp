@@ -1,8 +1,6 @@
 #include "UI/BochaMinimapCapture.h"
 
 #include "Components/SceneCaptureComponent2D.h"
-#include "GameFramework/Character.h"
-#include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
 
 ABochaMinimapCapture::ABochaMinimapCapture()
@@ -14,18 +12,13 @@ void ABochaMinimapCapture::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Replaced by UBochaMinimapWidget: rendering the court twice would only cost frame time.
 	SceneCapture = FindComponentByClass<USceneCaptureComponent2D>();
-	if (!SceneCapture)
+	if (SceneCapture)
 	{
-		return;
+		SceneCapture->bCaptureEveryFrame = false;
+		SceneCapture->bCaptureOnMovement = false;
 	}
-
-	if (ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(this, 0))
-	{
-		SceneCapture->HideActorComponents(PlayerCharacter, true);
-	}
-
-	GetWorldTimerManager().SetTimer(CaptureTimer, this, &ABochaMinimapCapture::CaptureMinimap, CaptureInterval, true);
 }
 
 void ABochaMinimapCapture::CaptureMinimap()

@@ -1,0 +1,9 @@
+{
+	"blueprints": [
+		{
+			"path": "/Game/Bocha/UI/WBP_HUD.WBP_HUD",
+			"markWidgetsAsVariables": ["P1_Name", "P2_Name"]
+		}
+	],
+	"compilePaths": ["/Game/Bocha", "/Game/Lobby", "/Game/ThirdPerson"]
+}

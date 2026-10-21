@@ -22,20 +22,27 @@ class BOCHANET_API ABochaMinigameCharacter : public ACharacter
 public:
 	ABochaMinigameCharacter();
 
-	/** Slides the character sideways. */
+	/** Slides the character sideways, across the court. */
 	UFUNCTION(BlueprintCallable, Category = "Bocha")
 	void DoMove(float Scale);
+
+	/** Turns the character (and the throw) left (< 0) or right (> 0) at AimSpeed, within MaxAimAngle. */
+	UFUNCTION(BlueprintCallable, Category = "Bocha")
+	void DoAim(float Direction);
+
+	/** Turns the aim by a mouse movement, within MaxAimAngle. */
+	UFUNCTION(BlueprintCallable, Category = "Bocha")
+	void DoAimMouse(float MouseDelta);
 
 	/** Changes the throw strength by Delta steps. */
 	UFUNCTION(BlueprintCallable, Category = "Bocha")
 	void DoStrength(float Delta);
 
-	/** Throws the held ball, then hands the next one out. */
+	/** Throws the held ball, if the match gave one (only on the local player's turn). */
 	UFUNCTION(BlueprintCallable, Category = "Bocha")
 	void DoThrow();
 
-	UFUNCTION(BlueprintCallable, Category = "Bocha")
-	void SetCanThrow(bool bNewValue) { bCanThrow = bNewValue; }
+	float GetThrowStrength() const { return ThrowStrength; }
 
 	/** Set by BochaPortal right after it spawns the manager. */
 	UPROPERTY(BlueprintReadWrite, Category = "Bocha")
@@ -43,6 +50,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	TObjectPtr<USpringArmComponent> SpringArm;
@@ -56,14 +64,32 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UUserWidget> MinimapWidgetClass;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Bocha")
-	bool bCanThrow = true;
-
-	/** Starts at WBP_HUD's slider default; kept within the HUD's strength range. */
+	/** Launch speed (cm/s), within the HUD's strength range. 750 rolls a ball ~13 m. */
 	UPROPERTY(EditDefaultsOnly, Category = "Bocha")
-	float ThrowStrength = 200.f;
+	float ThrowStrength = 750.f;
+
+	/** Largest aim angle to either side (degrees). */
+	UPROPERTY(EditDefaultsOnly, Category = "Bocha")
+	float MaxAimAngle = 30.f;
+
+	/** Aim turn rate with Q/E (degrees per second). */
+	UPROPERTY(EditDefaultsOnly, Category = "Bocha")
+	float AimSpeed = 30.f;
+
+	/** Aim degrees per unit of mouse movement. */
+	UPROPERTY(EditDefaultsOnly, Category = "Bocha")
+	float MouseAimSensitivity = 0.1f;
 
 private:
 	/** Sends the throw to the server and removes the held ball. */
-	void SendThrow(const FVector& Impulse, bool bIsBolim);
+	void SendThrow(const FVector& Velocity);
+
+	void TurnAim(float DeltaYaw);
+
+	UPROPERTY(Transient)
+	TObjectPtr<UUserWidget> Minimap;
+
+	/** Spawn rotation: straight down the court. */
+	FRotator BaseRotation;
+	float AimYaw = 0.f;
 };

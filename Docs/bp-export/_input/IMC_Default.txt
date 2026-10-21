@@ -1,0 +1,16 @@
+Mapping context: /Game/Input/IMC_Default.IMC_Default
+
+IA_Jump <- SpaceBar  modifiers=[] triggers=[]
+IA_Jump <- Gamepad_FaceButton_Bottom  modifiers=[] triggers=[]
+IA_Move <- W  modifiers=[InputModifierSwizzleAxis] triggers=[]
+IA_Move <- S  modifiers=[InputModifierSwizzleAxis, InputModifierNegate] triggers=[]
+IA_Move <- A  modifiers=[InputModifierNegate] triggers=[]
+IA_Move <- D  modifiers=[] triggers=[]
+IA_Move <- Up  modifiers=[InputModifierSwizzleAxis] triggers=[]
+IA_Move <- Down  modifiers=[InputModifierSwizzleAxis, InputModifierNegate] triggers=[]
+IA_Move <- Right  modifiers=[] triggers=[]
+IA_Move <- Left  modifiers=[InputModifierNegate] triggers=[]
+IA_Move <- Gamepad_Left2D  modifiers=[InputModifierDeadZone, InputModifierScalar] triggers=[]
+IA_Look <- Gamepad_Right2D  modifiers=[InputModifierDeadZone] triggers=[]
+IA_Interact <- LeftMouseButton  modifiers=[] triggers=[]
+IA_Interact <- E  modifiers=[] triggers=[]

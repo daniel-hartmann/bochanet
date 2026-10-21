@@ -28,9 +28,20 @@ public:
 	UFUNCTION(Server, Reliable)
 	void ServerRequestStart(ABochaPortal* Portal);
 
-	/** Spawns the thrown ball on the server, where it replicates to everyone. */
+	/**
+	 * Spawns the thrown ball on the server, where it replicates to everyone, launched at Velocity
+	 * (cm/s). Ignored (and the client told so) when the match says it is not this player's turn.
+	 */
 	UFUNCTION(Server, Reliable)
-	void ServerThrow(FVector BallLocation, FVector Impulse, bool bIsBolim);
+	void ServerThrow(FVector BallLocation, FVector Velocity);
+
+	/** The winner's machine claims the victory; the server checks the score before announcing it. */
+	UFUNCTION(Server, Reliable)
+	void ServerClaimVictory();
+
+	/** The server refused a throw: put the held ball back as the match says. */
+	UFUNCTION(Client, Reliable)
+	void ClientThrowRejected();
 
 	void SetNearbyPortal(ABochaPortal* Portal) { NearbyPortal = Portal; }
 	void ClearNearbyPortal() { NearbyPortal = nullptr; }
@@ -71,6 +82,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Input|Bocha")
 	TObjectPtr<UInputAction> BochaThrowAction;
 
+	/** Mouse X: turns the aim by how much the mouse moved. */
+	UPROPERTY(EditDefaultsOnly, Category = "Input|Bocha")
+	TObjectPtr<UInputAction> BochaAimMouseAction;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Bocha")
 	TSubclassOf<ABochaBolim> BolimClass;
 
@@ -85,6 +100,7 @@ private:
 	void BochaMove(const FInputActionValue& Value);
 	void BochaStrength(const FInputActionValue& Value);
 	void BochaThrow();
+	void BochaAimMouse(const FInputActionValue& Value);
 
 	/** Portal whose interaction area the possessed pawn is standing in. */
 	UPROPERTY(Transient)

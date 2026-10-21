@@ -1,0 +1,21 @@
+{
+	"createInputActions": [
+		{ "path": "/Game/Bocha/Input/IA_BochaAimMouse", "valueType": "Axis1D" }
+	],
+	"unmapKeys": [
+		{ "context": "/Game/Bocha/Input/IMC_Bocha.IMC_Bocha", "action": "/Game/Bocha/Input/IA_BochaMove.IA_BochaMove", "key": "Right" },
+		{ "context": "/Game/Bocha/Input/IMC_Bocha.IMC_Bocha", "action": "/Game/Bocha/Input/IA_BochaMove.IA_BochaMove", "key": "Left" }
+	],
+	"mapKeys": [
+		{ "context": "/Game/Bocha/Input/IMC_Bocha.IMC_Bocha", "action": "/Game/Bocha/Input/IA_BochaMove.IA_BochaMove", "key": "E", "modifiers": ["SwizzleAxis"] },
+		{ "context": "/Game/Bocha/Input/IMC_Bocha.IMC_Bocha", "action": "/Game/Bocha/Input/IA_BochaMove.IA_BochaMove", "key": "Q", "modifiers": ["SwizzleAxis", "Negate"] },
+		{ "context": "/Game/Bocha/Input/IMC_Bocha.IMC_Bocha", "action": "/Game/Bocha/Input/IA_BochaAimMouse.IA_BochaAimMouse", "key": "MouseX" }
+	],
+	"blueprints": [
+		{
+			"path": "/Game/ThirdPerson/Blueprints/BP_ThirdPersonPlayerController.BP_ThirdPersonPlayerController",
+			"set": { "BochaAimMouseAction": "/Game/Bocha/Input/IA_BochaAimMouse.IA_BochaAimMouse" }
+		}
+	],
+	"compilePaths": ["/Game/Bocha", "/Game/Lobby", "/Game/ThirdPerson"]
+}

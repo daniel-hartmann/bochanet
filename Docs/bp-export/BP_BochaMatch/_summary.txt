@@ -1,0 +1,17 @@
+Blueprint: /Game/Bocha/BP_BochaMatch.BP_BochaMatch
+Parent: /Script/BochaNet.BochaMatch
+
+[Variables]
+
+[Components]
+DefaultSceneRoot : SceneComponent (parent: None, socket: None)
+
+[Class Defaults overridden vs parent]
+    DefaultSceneRoot =  (own)
+
+[Component template DefaultSceneRoot : SceneComponent overridden vs class defaults]
+    bVisualizeComponent = True
+
+[Graphs]
+UserConstructionScript (1 nodes) -> UserConstructionScript.txt
+EventGraph (3 nodes) -> EventGraph.txt

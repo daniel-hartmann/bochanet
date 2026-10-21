@@ -1,6 +1,9 @@
 #include "Lobby/BochaPortal.h"
 
+#include "DrawDebugHelpers.h"
 #include "Engine/LevelStreamingDynamic.h"
+#include "Game/BochaMinigameManager.h"
+#include "Game/BochaMatch.h"
 #include "Game/BochaMinigameManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/BochaMinigameCharacter.h"
@@ -21,6 +24,8 @@ ABochaPortal::ABochaPortal()
 
 	bReplicates = true;
 	bAlwaysRelevant = true;
+
+	MatchClass = ABochaMatch::StaticClass();
 }
 
 void ABochaPortal::NotifyActorBeginOverlap(AActor* OtherActor)
@@ -51,12 +56,59 @@ void ABochaPortal::MulticastStartMinigame_Implementation()
 	}
 	bMinigameStarted = true;
 
-	bool bSuccess = false;
-	ULevelStreamingDynamic* Level = ULevelStreamingDynamic::LoadLevelInstanceBySoftObjectPtr(
-		this, MinigameLevel, MinigameLevelLocation, FRotator::ZeroRotator, bSuccess);
-	if (Level)
+	if (HasAuthority() && !ABochaMatch::Find(this))
 	{
-		Level->OnLevelShown.AddDynamic(this, &ABochaPortal::OnMinigameLevelShown);
+		ABochaMatch* Match = GetWorld()->SpawnActorDeferred<ABochaMatch>(MatchClass, FTransform::Identity);
+		Match->SetCourtOrigin(MinigameLevelLocation);
+		Match->FinishSpawning(FTransform::Identity);
+	}
+
+	bool bSuccess = false;
+	MinigameLevelInstance = ULevelStreamingDynamic::LoadLevelInstanceBySoftObjectPtr(
+		this, MinigameLevel, MinigameLevelLocation, FRotator::ZeroRotator, bSuccess);
+	if (MinigameLevelInstance)
+	{
+		MinigameLevelInstance->OnLevelShown.AddDynamic(this, &ABochaPortal::OnMinigameLevelShown);
+	}
+}
+
+void ABochaPortal::MulticastEndMinigame_Implementation()
+{
+	if (!bMinigameStarted)
+	{
+		return;
+	}
+	bMinigameStarted = false;
+
+	if (ABochaPlayerController* PlayerController = Cast<ABochaPlayerController>(UGameplayStatics::GetPlayerController(this, 0)))
+	{
+		if (PlayerController->MinigameManager)
+		{
+			PlayerController->MinigameManager->Destroy();
+		}
+		if (PlayerController->MinigameCharacter)
+		{
+			PlayerController->MinigameCharacter->Destroy();
+		}
+		PlayerController->MinigameManager = nullptr;
+		PlayerController->MinigameCharacter = nullptr;
+		PlayerController->ResetIgnoreInputFlags();
+		PlayerController->SetViewTargetWithBlend(PlayerController->GetPawn(), 0.5f);
+	}
+
+	if (MinigameLevelInstance)
+	{
+		MinigameLevelInstance->SetIsRequestingUnloadAndRemoval(true);
+		MinigameLevelInstance = nullptr;
+	}
+	FlushPersistentDebugLines(GetWorld());
+
+	if (HasAuthority())
+	{
+		if (ABochaMatch* Match = ABochaMatch::Find(this))
+		{
+			Match->Destroy();
+		}
 	}
 }
 

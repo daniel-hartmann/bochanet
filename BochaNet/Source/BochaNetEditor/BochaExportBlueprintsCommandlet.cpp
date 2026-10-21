@@ -12,6 +12,14 @@
 #include "Engine/InheritableComponentHandler.h"
 #include "Engine/SCS_Node.h"
 #include "Engine/SimpleConstructionScript.h"
+#include "Engine/StaticMesh.h"
+#include "InputAction.h"
+#include "InputMappingContext.h"
+#include "InputModifiers.h"
+#include "InputTriggers.h"
+#include "Engine/World.h"
+#include "Components/StaticMeshComponent.h"
+#include "GameFramework/Actor.h"
 #include "HAL/FileManager.h"
 #include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
@@ -140,6 +148,85 @@ int32 UBochaExportBlueprintsCommandlet::Main(const FString& Params)
 	}
 
 	UE_LOG(LogTemp, Display, TEXT("Exported %d blueprints to %s"), Exported, *OutDir);
+
+	// Key mappings of every input mapping context.
+	TArray<FAssetData> Contexts;
+	FARFilter ContextFilter;
+	ContextFilter.PackagePaths = { FName(TEXT("/Game/Bocha")), FName(TEXT("/Game/Input")) };
+	ContextFilter.bRecursivePaths = true;
+	ContextFilter.ClassPaths.Add(UInputMappingContext::StaticClass()->GetClassPathName());
+	AssetRegistry.GetAssets(ContextFilter, Contexts);
+	for (const FAssetData& ContextAsset : Contexts)
+	{
+		const UInputMappingContext* Context = Cast<UInputMappingContext>(ContextAsset.GetAsset());
+		if (!Context)
+		{
+			continue;
+		}
+		FString Out = FString::Printf(TEXT("Mapping context: %s\n\n"), *Context->GetPathName());
+		for (const FEnhancedActionKeyMapping& Mapping : Context->GetMappings())
+		{
+			TArray<FString> Modifiers;
+			for (const UInputModifier* Modifier : Mapping.Modifiers)
+			{
+				Modifiers.Add(Modifier ? Modifier->GetClass()->GetName() : TEXT("None"));
+			}
+			TArray<FString> Triggers;
+			for (const UInputTrigger* Trigger : Mapping.Triggers)
+			{
+				Triggers.Add(Trigger ? Trigger->GetClass()->GetName() : TEXT("None"));
+			}
+			Out += FString::Printf(TEXT("%s <- %s  modifiers=[%s] triggers=[%s]\n"), *GetNameSafe(Mapping.Action),
+				*Mapping.Key.ToString(), *FString::Join(Modifiers, TEXT(", ")), *FString::Join(Triggers, TEXT(", ")));
+		}
+		FFileHelper::SaveStringToFile(Out, *FPaths::Combine(OutDir, TEXT("_input"), Context->GetName() + TEXT(".txt")));
+	}
+
+	// Placed actors of each map, with the local bounds of their static meshes (components are not
+	// registered in a commandlet, so world bounds are computed from mesh bounds and transforms).
+	TArray<FAssetData> Maps;
+	FARFilter MapFilter;
+	MapFilter.PackagePaths.Add(FName(TEXT("/Game/Bocha")));
+	MapFilter.bRecursivePaths = true;
+	MapFilter.ClassPaths.Add(UWorld::StaticClass()->GetClassPathName());
+	AssetRegistry.GetAssets(MapFilter, Maps);
+	for (const FAssetData& MapAsset : Maps)
+	{
+		UWorld* World = Cast<UWorld>(MapAsset.GetAsset());
+		if (!World || !World->PersistentLevel)
+		{
+			continue;
+		}
+		FString Out = FString::Printf(TEXT("Map: %s\n\n"), *World->GetPathName());
+		for (AActor* Actor : World->PersistentLevel->Actors)
+		{
+			if (!Actor)
+			{
+				continue;
+			}
+			// The root's relative transform is the actor transform; ComponentToWorld is not computed here.
+			const FTransform ActorTransform = Actor->GetRootComponent() ? Actor->GetRootComponent()->GetRelativeTransform() : FTransform::Identity;
+			Out += FString::Printf(TEXT("%s (%s) label=%s loc=%s rot=%s scale=%s tags=[%s]\n"),
+				*Actor->GetName(), *Actor->GetClass()->GetName(), *Actor->GetActorLabel(),
+				*ActorTransform.GetLocation().ToCompactString(), *ActorTransform.Rotator().ToCompactString(),
+				*ActorTransform.GetScale3D().ToCompactString(),
+				*FString::JoinBy(Actor->Tags, TEXT(","), [](const FName& Tag) { return Tag.ToString(); }));
+
+			TInlineComponentArray<UStaticMeshComponent*> Meshes;
+			Actor->GetComponents(Meshes);
+			for (const UStaticMeshComponent* Mesh : Meshes)
+			{
+				if (const UStaticMesh* StaticMesh = Mesh->GetStaticMesh())
+				{
+					const FBox LocalBox = StaticMesh->GetBoundingBox();
+					const FBox WorldBox = LocalBox.TransformBy(Mesh == Actor->GetRootComponent() ? ActorTransform : Mesh->GetRelativeTransform() * ActorTransform);
+					Out += FString::Printf(TEXT("    mesh %s: min=%s max=%s size=%s\n"), *StaticMesh->GetName(),
+						*WorldBox.Min.ToCompactString(), *WorldBox.Max.ToCompactString(), *WorldBox.GetSize().ToCompactString());
+				}
+			}
+		}
+		FFileHelper::SaveStringToFile(Out, *FPaths::Combine(OutDir, TEXT("_maps"), World->GetName() + TEXT(".txt")));
+	}
 	return 0;
 }
 

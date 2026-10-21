@@ -1,6 +1,6 @@
 #include "Player/BochaMinigameCharacter.h"
 
-#include "Actors/BochaBolim.h"
+#include "Actors/BochaBall.h"
 #include "Blueprint/UserWidget.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -18,8 +18,6 @@ namespace
 	// Above IMC_Default so the bocha keys win while the minigame runs.
 	constexpr int32 MappingPriority = 10;
 	constexpr float StrengthPerInput = 10.f;
-	// Upward impulse as a fraction of the throw strength.
-	constexpr float ArcFactor = 0.32f;
 }
 
 ABochaMinigameCharacter::ABochaMinigameCharacter()
@@ -43,6 +41,7 @@ void ABochaMinigameCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+	BaseRotation = GetActorRotation();
 
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
 	if (UEnhancedInputLocalPlayerSubsystem* InputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
@@ -52,15 +51,48 @@ void ABochaMinigameCharacter::BeginPlay()
 		InputSubsystem->AddMappingContext(MappingContext, MappingPriority, Options);
 	}
 
-	if (UUserWidget* Minimap = CreateWidget<UUserWidget>(PlayerController, MinimapWidgetClass))
+	Minimap = CreateWidget<UUserWidget>(PlayerController, MinimapWidgetClass);
+	if (Minimap)
 	{
 		Minimap->AddToViewport();
 	}
 }
 
+void ABochaMinigameCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	if (Minimap)
+	{
+		Minimap->RemoveFromParent();
+	}
+	const APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
+	if (UEnhancedInputLocalPlayerSubsystem* InputSubsystem = PlayerController
+		? ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()) : nullptr)
+	{
+		InputSubsystem->RemoveMappingContext(MappingContext);
+	}
+	Super::EndPlay(EndPlayReason);
+}
+
 void ABochaMinigameCharacter::DoMove(float Scale)
 {
-	AddMovementInput(GetCapsuleComponent()->GetRightVector(), Scale);
+	// Across the court, whatever the aim.
+	AddMovementInput(BaseRotation.RotateVector(FVector::RightVector), Scale);
+}
+
+void ABochaMinigameCharacter::DoAim(float Direction)
+{
+	TurnAim(Direction * AimSpeed * GetWorld()->GetDeltaSeconds());
+}
+
+void ABochaMinigameCharacter::DoAimMouse(float MouseDelta)
+{
+	TurnAim(MouseDelta * MouseAimSensitivity);
+}
+
+void ABochaMinigameCharacter::TurnAim(float DeltaYaw)
+{
+	AimYaw = FMath::Clamp(AimYaw + DeltaYaw, -MaxAimAngle, MaxAimAngle);
+	SetActorRotation(BaseRotation + FRotator(0.0, AimYaw, 0.0));
 }
 
 void ABochaMinigameCharacter::DoStrength(float Delta)
@@ -76,31 +108,16 @@ void ABochaMinigameCharacter::DoStrength(float Delta)
 
 void ABochaMinigameCharacter::DoThrow()
 {
-	if (!bCanThrow || !GameMode)
+	if (!GameMode || !IsValid(GameMode->GetCurrentBall()))
 	{
 		return;
 	}
-	SetCanThrow(false);
 
-	// Component-wise product, as in the original Blueprint: only the forward vector's X is used.
-	const FVector Impulse = GetActorForwardVector() * FVector(ThrowStrength, 0.0, 0.0)
-		+ FVector(0.0, 0.0, ThrowStrength * ArcFactor);
-	const bool bIsBolim = GameMode->GetCurrentBall()->IsA<ABochaBolim>();
-
-	SendThrow(Impulse, bIsBolim);
-
-	if (bIsBolim)
-	{
-		GameMode->NotifyBolimThrown();
-	}
-	else
-	{
-		GameMode->NotifyBallThrown();
-	}
-	SetCanThrow(true);
+	const FVector Velocity = GetActorForwardVector() * ThrowStrength;
+	SendThrow(Velocity);
 }
 
-void ABochaMinigameCharacter::SendThrow(const FVector& Impulse, bool bIsBolim)
+void ABochaMinigameCharacter::SendThrow(const FVector& Velocity)
 {
 	ABochaPlayerController* PlayerController = Cast<ABochaPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 	if (!PlayerController)
@@ -109,6 +126,6 @@ void ABochaMinigameCharacter::SendThrow(const FVector& Impulse, bool bIsBolim)
 	}
 
 	ABochaBall* Ball = GameMode->GetCurrentBall();
-	PlayerController->ServerThrow(Ball->GetActorLocation(), Impulse, bIsBolim);
+	PlayerController->ServerThrow(Ball->GetActorLocation(), Velocity);
 	Ball->Destroy();
 }

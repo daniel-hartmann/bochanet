@@ -40,9 +40,10 @@ HorizontalBox_44 : HorizontalBox (parent: VerticalBox_0)
 P1_Bolim : Image (parent: HorizontalBox_44) [IsVariable]
     Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox_44.HorizontalBoxSlot_4'
     DisplayLabel = P1_Bolim
-P1_Name : TextBlock (parent: HorizontalBox_44)
+P1_Name : TextBlock (parent: HorizontalBox_44) [IsVariable]
     Text = NSLOCTEXT("[DC225C049533598F0ACA9AE5B9146D64]", "3F0C20D5417714066D324C9E923E45BE", "Player 1")
     Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox_44.HorizontalBoxSlot_1'
+    bIsVariable = True
     DisplayLabel = P1_Name
 HorizontalBox : HorizontalBox (parent: VerticalBox_0)
     Slots = ("/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox.HorizontalBoxSlot_0'","/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox.HorizontalBoxSlot_1'","/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox.HorizontalBoxSlot_2'","/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree
@@ -70,9 +71,10 @@ HorizontalBox_1 : HorizontalBox (parent: VerticalBox_0)
 P2_Bolim : Image (parent: HorizontalBox_1) [IsVariable]
     Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox_1.HorizontalBoxSlot_4'
     DisplayLabel = P2_Bolim
-P2_Name : TextBlock (parent: HorizontalBox_1)
+P2_Name : TextBlock (parent: HorizontalBox_1) [IsVariable]
     Text = NSLOCTEXT("[DC225C049533598F0ACA9AE5B9146D64]", "7429EFE5432AFBD18D7571B145911B1F", "Player 2")
     Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox_1.HorizontalBoxSlot_1'
+    bIsVariable = True
     DisplayLabel = P2_Name
 HorizontalBox_2 : HorizontalBox (parent: VerticalBox_0)
     Slots = ("/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox_2.HorizontalBoxSlot_0'","/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox_2.HorizontalBoxSlot_1'","/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox_2.HorizontalBoxSlot_2'","/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:Widg
