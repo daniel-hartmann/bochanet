@@ -17,10 +17,11 @@ namespace
 		return Brush;
 	}
 
-	// The corner radius is clamped to half the size, so any square drawn with it is a circle.
+	// Without a radius the brush rounds by half its height, so a square drawn with it is a circle.
+	// (A fixed radius larger than the box draws nothing.)
 	const FSlateRoundedBoxBrush& CircleBrush()
 	{
-		static const FSlateRoundedBoxBrush Brush(FLinearColor::White, 1000.f);
+		static const FSlateRoundedBoxBrush Brush(FLinearColor::White);
 		return Brush;
 	}
 
