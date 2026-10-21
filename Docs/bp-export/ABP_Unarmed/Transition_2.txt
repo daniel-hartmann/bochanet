@@ -1,0 +1,21 @@
+Graph: Transition
+
+[N0] Result (AnimGraphNode_TransitionResult)
+    in  bCanEnterTransition : Boolean <- N2.ReturnValue
+
+[N1] Get IsFalling (K2Node_VariableGet)
+    out IsFalling : Boolean -> N2.A
+
+[N2] AND Boolean (K2Node_CommutativeAssociativeBinaryOperator)
+    in  A : Boolean <- N1.IsFalling
+    in  B : Boolean <- N4.ReturnValue
+    out ReturnValue : Boolean -> N0.bCanEnterTransition
+
+[N3] Get (K2Node_VariableGet)
+    out Velocity_Z : Float (double-precision) -> N4.A
+
+[N4] float > float (K2Node_PromotableOperator)
+    in  A : Float (double-precision) <- N3.Velocity_Z
+    in  B : Float (double-precision) = 100.000000
+    out ReturnValue : Boolean -> N2.B
+

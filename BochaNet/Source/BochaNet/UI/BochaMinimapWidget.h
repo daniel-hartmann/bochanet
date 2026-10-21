@@ -16,6 +16,7 @@ class BOCHANET_API UBochaMinimapWidget : public UUserWidget
 
 protected:
 	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
 	virtual int32 NativePaint(const FPaintArgs& Args, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect,
 		FSlateWindowElementList& OutDrawElements, int32 LayerId, const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const override;
 
@@ -50,4 +51,17 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Minimap")
 	FLinearColor BolimColor = FLinearColor(1.f, 0.9f, 0.1f);
+
+private:
+	void AddBall(class ABochaBall* Ball);
+	void RemoveBall(class ABochaBall* Ball);
+
+	/**
+	 * Balls in this world, kept up to date by the balls' begin/end play events: painting only reads
+	 * their positions and never searches the world.
+	 */
+	TArray<TWeakObjectPtr<class ABochaBall>> Balls;
+
+	/** Found once, when the first painted frame needs it. */
+	mutable TWeakObjectPtr<class ABochaMatch> Match;
 };

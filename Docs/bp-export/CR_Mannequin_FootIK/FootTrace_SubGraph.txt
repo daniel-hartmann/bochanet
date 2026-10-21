@@ -1,0 +1,63 @@
+Graph: FootTrace_SubGraph
+
+[N0] Entry (ControlRigGraphNode)
+    out Entry.ExecuteContext : Execute Context Structure -> N1.Return.ExecuteContext
+    out Entry.Item : Rig Element Key Structure -> N2.GetTransform.Item
+
+[N1] Return (ControlRigGraphNode)
+    in  Return.ExecuteContext : Execute Context Structure <- N0.Entry.ExecuteContext
+    in  Return.Hit Location : Vector <- N7.SphereTraceByTraceChannel_1.HitLocation
+    in  Return.Hit Location.X : Float (double-precision) = 0.000000
+    in  Return.Hit Location.Y : Float (double-precision) = 0.000000
+    in  Return.Hit Location.Z : Float (double-precision) = 0.000000
+
+[N2] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform.Transform.Translation.X : Float (double-precision) -> N4.MathVectorAdd.A.X, N5.MathVectorSub.A.X
+    out GetTransform.Transform.Translation.Y : Float (double-precision) -> N6.MathFloatAdd.A
+    in  GetTransform.Item : Rig Element Key Structure <- N0.Entry.Item
+    in  GetTransform.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform.Item.Name : Name = animation_root
+    in  GetTransform.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N3] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_1.Transform.Translation.Z : Float (double-precision) -> N4.MathVectorAdd.A.Z, N5.MathVectorSub.A.Z
+    in  GetTransform_1.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_1.Item.Name : Name = root
+    in  GetTransform_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N4] Add (ControlRigGraphNode)
+    out MathVectorAdd.Result : Vector -> N7.SphereTraceByTraceChannel_1.Start
+    in  MathVectorAdd.A.X : Float (double-precision) <- N2.GetTransform.Transform.Translation.X
+    in  MathVectorAdd.A.Y : Float (double-precision) <- N6.MathFloatAdd.Result
+    in  MathVectorAdd.A.Z : Float (double-precision) <- N3.GetTransform_1.Transform.Translation.Z
+    in  MathVectorAdd.B.X : Float (double-precision) = 0.000000
+    in  MathVectorAdd.B.Y : Float (double-precision) = 0.000000
+    in  MathVectorAdd.B.Z : Float (double-precision) = 30.000000
+
+[N5] Subtract (ControlRigGraphNode)
+    out MathVectorSub.Result : Vector -> N7.SphereTraceByTraceChannel_1.End
+    in  MathVectorSub.A.X : Float (double-precision) <- N2.GetTransform.Transform.Translation.X
+    in  MathVectorSub.A.Y : Float (double-precision) <- N6.MathFloatAdd.Result
+    in  MathVectorSub.A.Z : Float (double-precision) <- N3.GetTransform_1.Transform.Translation.Z
+    in  MathVectorSub.B.X : Float (double-precision) = 0.000000
+    in  MathVectorSub.B.Y : Float (double-precision) = 0.000000
+    in  MathVectorSub.B.Z : Float (double-precision) = 50.000000
+
+[N6] Add (ControlRigGraphNode)
+    out MathFloatAdd.Result : Float (single-precision) -> N5.MathVectorSub.A.Y, N4.MathVectorAdd.A.Y
+    in  MathFloatAdd.A : Float (single-precision) <- N2.GetTransform.Transform.Translation.Y
+    in  MathFloatAdd.B : Float (single-precision) = 5.000000
+
+[N7] Sphere Trace By Trace Channel (ControlRigGraphNode)
+    out SphereTraceByTraceChannel_1.HitLocation : Vector -> N1.Return.Hit Location
+    in  SphereTraceByTraceChannel_1.Start : Vector <- N4.MathVectorAdd.Result
+    in  SphereTraceByTraceChannel_1.Start.X : Float (double-precision) = 0.000000
+    in  SphereTraceByTraceChannel_1.Start.Y : Float (double-precision) = 0.000000
+    in  SphereTraceByTraceChannel_1.Start.Z : Float (double-precision) = 0.000000
+    in  SphereTraceByTraceChannel_1.End : Vector <- N5.MathVectorSub.Result
+    in  SphereTraceByTraceChannel_1.End.X : Float (double-precision) = 0.000000
+    in  SphereTraceByTraceChannel_1.End.Y : Float (double-precision) = 0.000000
+    in  SphereTraceByTraceChannel_1.End.Z : Float (double-precision) = 0.000000
+    in  SphereTraceByTraceChannel_1.TraceChannel : ETraceTypeQuery Enum = TraceTypeQuery1
+    in  SphereTraceByTraceChannel_1.Radius : Float (single-precision) = 5.000000
+

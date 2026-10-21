@@ -1,0 +1,18 @@
+Graph: b0t2_SubGraph
+
+[N0] Entry (ControlRigGraphNode)
+    out Entry.t : Float (double-precision) -> N2.MathFloatSub.B
+
+[N1] Return (ControlRigGraphNode)
+    in  Return.Result : Float (single-precision) <- N3.MathFloatPow.Result
+
+[N2] Subtract (ControlRigGraphNode)
+    out MathFloatSub.Result : Float (single-precision) -> N3.MathFloatPow.A
+    in  MathFloatSub.A : Float (single-precision) = 1.000000
+    in  MathFloatSub.B : Float (single-precision) <- N0.Entry.t
+
+[N3] Power (ControlRigGraphNode)
+    out MathFloatPow.Result : Float (single-precision) -> N1.Return.Result
+    in  MathFloatPow.A : Float (single-precision) <- N2.MathFloatSub.Result
+    in  MathFloatPow.B : Float (single-precision) = 3.000000
+

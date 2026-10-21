@@ -1,0 +1,49 @@
+Graph: Setup Clavicle
+
+[N0] Entry (ControlRigGraphNode)
+    out Entry.ExecuteContext : Execute Context Structure -> N3.SetTransform.ExecuteContext
+    out Entry.Bone : Rig Element Key Structure -> N2.GetTransform.Item
+    out Entry.Control : Rig Element Key Structure -> N3.SetTransform.Item
+
+[N1] Return (ControlRigGraphNode)
+    in  Return.ExecuteContext : Execute Context Structure <- N3.SetTransform.ExecuteContext
+
+[N2] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform.Transform : Transform -> N6.Get Negative Transform_1.Input
+    in  GetTransform.Item : Rig Element Key Structure <- N0.Entry.Bone
+    in  GetTransform.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform.Item.Name : Name = None
+    in  GetTransform.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N3] Set Transform - Bone Initial (ControlRigGraphNode)
+    in  SetTransform.ExecuteContext : Execute Context Structure <- N0.Entry.ExecuteContext
+    out SetTransform.ExecuteContext : Execute Context Structure -> N1.Return.ExecuteContext
+    in  SetTransform.Item : Rig Element Key Structure <- N0.Entry.Control
+    in  SetTransform.Item.Type : ERigElementType Enum = Bone
+    in  SetTransform.Item.Name : Name = None
+    in  SetTransform.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTransform.bInitial : Boolean = true
+    in  SetTransform.Value.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetTransform.Value.Translation.X : Float (double-precision) = 0.000000
+    in  SetTransform.Value.Translation.Y : Float (double-precision) = 0.000000
+    in  SetTransform.Value.Translation.Z : Float (double-precision) = 0.000000
+    in  SetTransform.Value.Scale3D.X : Float (double-precision) = 1.000000
+    in  SetTransform.Value.Scale3D.Y : Float (double-precision) = 1.000000
+    in  SetTransform.Value.Scale3D.Z : Float (double-precision) = 1.000000
+    in  SetTransform.Weight : Float (single-precision) = 1.000000
+    in  SetTransform.bPropagateToChildren : Boolean = True
+
+[N4] Get Negative Side (ControlRigGraphNode)
+
+[N5]  (ControlRigGraphNode)
+
+[N6] Get Negative Transform (ControlRigGraphNode)
+    in  Get Negative Transform_1.Input : Transform <- N2.GetTransform.Transform
+    in  Get Negative Transform_1.Input.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  Get Negative Transform_1.Input.Translation.X : Float (double-precision) = 0.000000
+    in  Get Negative Transform_1.Input.Translation.Y : Float (double-precision) = 0.000000
+    in  Get Negative Transform_1.Input.Translation.Z : Float (double-precision) = 0.000000
+    in  Get Negative Transform_1.Input.Scale3D.X : Float (double-precision) = 0.000000
+    in  Get Negative Transform_1.Input.Scale3D.Y : Float (double-precision) = 0.000000
+    in  Get Negative Transform_1.Input.Scale3D.Z : Float (double-precision) = 0.000000
+

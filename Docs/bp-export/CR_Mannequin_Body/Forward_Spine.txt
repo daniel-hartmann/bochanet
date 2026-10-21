@@ -1,0 +1,268 @@
+Graph: Forward Spine
+
+[N0] Entry (ControlRigGraphNode)
+    out Entry.ExecuteContext : Execute Context Structure -> N38.VariableNode_15.ExecuteContext
+
+[N1] Return (ControlRigGraphNode)
+    in  Return.ExecuteContext : Execute Context Structure <- N63.SequenceExecution_1.D
+
+[N2] Project to new Parent (ControlRigGraphNode)
+    out ProjectTransformToNewParent_1_2_1_4_1.Transform : Transform -> N6.SetTransform.Value
+    in  ProjectTransformToNewParent_1_2_1_4_1.Child : Rig Element Key Structure <- N3.VariableNode.Value
+    in  ProjectTransformToNewParent_1_2_1_4_1.Child.Type : ERigElementType Enum = Bone
+    in  ProjectTransformToNewParent_1_2_1_4_1.Child.Name : Name = spine_01
+    in  ProjectTransformToNewParent_1_2_1_4_1.bChildInitial : Boolean = True
+    in  ProjectTransformToNewParent_1_2_1_4_1.OldParent.Type : ERigElementType Enum = Control
+    in  ProjectTransformToNewParent_1_2_1_4_1.OldParent.Name : Name = hips_ctrl
+    in  ProjectTransformToNewParent_1_2_1_4_1.bOldParentInitial : Boolean = True
+    in  ProjectTransformToNewParent_1_2_1_4_1.NewParent.Type : ERigElementType Enum = Control
+    in  ProjectTransformToNewParent_1_2_1_4_1.NewParent.Name : Name = hips_ctrl
+
+[N3] Get Pelvis Bone (ControlRigGraphNode)
+    out VariableNode.Value : Rig Element Key Structure -> N2.ProjectTransformToNewParent_1_2_1_4_1.Child, N6.SetTransform.Item
+
+[N4]  (ControlRigGraphNode)
+
+[N5] Get FK Controls (ControlRigGraphNode)
+
+[N6] Set Transform - Bone (ControlRigGraphNode)
+    in  SetTransform.ExecuteContext : Execute Context Structure <- N62.SequenceExecution.B
+    in  SetTransform.Item : Rig Element Key Structure <- N3.VariableNode.Value
+    in  SetTransform.Item.Type : ERigElementType Enum = Bone
+    in  SetTransform.Item.Name : Name = None
+    in  SetTransform.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTransform.Value : Transform <- N2.ProjectTransformToNewParent_1_2_1_4_1.Transform
+    in  SetTransform.Value.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetTransform.Value.Translation.X : Float (double-precision) = 0.000000
+    in  SetTransform.Value.Translation.Y : Float (double-precision) = 0.000000
+    in  SetTransform.Value.Translation.Z : Float (double-precision) = 0.000000
+    in  SetTransform.Value.Scale3D.X : Float (double-precision) = 1.000000
+    in  SetTransform.Value.Scale3D.Y : Float (double-precision) = 1.000000
+    in  SetTransform.Value.Scale3D.Z : Float (double-precision) = 1.000000
+    in  SetTransform.Weight : Float (single-precision) = 1.000000
+    in  SetTransform.bPropagateToChildren : Boolean = True
+
+[N7] Comment (EdGraphNode_Comment)
+    // Pelvis
+
+[N8] Comment (EdGraphNode_Comment)
+    // FK Chain
+
+[N9] Get Bones (ControlRigGraphNode)
+    out VariableNode_2_1.Value : Array of Rig Element Key Structures -> N31.Spine IK Solve.Bones
+
+[N10]  (ControlRigGraphNode)
+
+[N11] Get IK Controls (ControlRigGraphNode)
+    out VariableNode_4.Value : Array of Rig Element Key Structures -> N31.Spine IK Solve.IK Controls
+
+[N12] Get Spine Offsets (ControlRigGraphNode)
+    out VariableNode_5.Value : Array of Transforms -> N31.Spine IK Solve.Spine Offsets
+
+[N13] Comment (EdGraphNode_Comment)
+    // IK
+
+[N14] Get FK Controls (ControlRigGraphNode)
+
+[N15] Get Bones (ControlRigGraphNode)
+
+[N16] Comment (EdGraphNode_Comment)
+    // Match FK onto IK
+
+[N17] Get FK Controls (ControlRigGraphNode)
+
+[N18] Get IK Controls (ControlRigGraphNode)
+
+[N19]  (ControlRigGraphNode)
+
+[N20]  (ControlRigGraphNode)
+
+[N21]  (ControlRigGraphNode)
+
+[N22]  (ControlRigGraphNode)
+
+[N23] Get Bones (ControlRigGraphNode)
+    out VariableNode_2_2_1.Value : Array of Rig Element Key Structures -> N61.Spine Match IK onto FK.Bones
+
+[N24] Comment (EdGraphNode_Comment)
+    // Match IK onto FK
+
+[N25] Get IK Controls (ControlRigGraphNode)
+    out VariableNode_9.Value : Array of Rig Element Key Structures -> N61.Spine Match IK onto FK.IK Controls
+
+[N26] Get Spine Offsets (ControlRigGraphNode)
+    out VariableNode_5_1.Value : Array of Transforms -> N61.Spine Match IK onto FK.Offsets
+
+[N27] Comment (EdGraphNode_Comment)
+    // Visibility
+
+[N28] Get FK Controls (ControlRigGraphNode)
+    out VariableNode_3.Value : Array of Rig Element Key Structures -> N54.FK Point At_1.FK Controls
+
+[N29] Get Bones (ControlRigGraphNode)
+    out VariableNode_2.Value : Array of Rig Element Key Structures -> N54.FK Point At_1.Bones
+
+[N30] Comment (EdGraphNode_Comment)
+    // Chest Space
+
+[N31] Spine IK Solve (ControlRigGraphNode)
+    in  Spine IK Solve.Completed : Execute Context Structure = ()
+    in  Spine IK Solve.Bones : Array of Rig Element Key Structures <- N9.VariableNode_2_1.Value
+    in  Spine IK Solve.IK Controls : Array of Rig Element Key Structures <- N11.VariableNode_4.Value
+    in  Spine IK Solve.Spine Offsets : Array of Transforms <- N12.VariableNode_5.Value
+    in  Spine IK Solve.Default Length : Float (double-precision) <- N37.VariableNode_14.Value
+    in  Spine IK Solve.Enable Stretch : Boolean <- N51.VariableNode_18.Value
+
+[N32] Comment (EdGraphNode_Comment)
+    // Set Keys
+
+[N33] Get Previous IK Mode (ControlRigGraphNode)
+    out VariableNode_10.Value : Boolean -> N53.Set IKFK Keys_1.Previous IK Mode
+
+[N34] Get FK Controls (ControlRigGraphNode)
+    out VariableNode_11.Value : Array of Rig Element Key Structures -> N53.Set IKFK Keys_1.FK Controls
+
+[N35] Get IK Controls (ControlRigGraphNode)
+    out VariableNode_12.Value : Array of Rig Element Key Structures -> N53.Set IKFK Keys_1.IK Controls 
+
+[N36] Get IKFK Switch Control (ControlRigGraphNode)
+    out VariableNode_13.Value : Rig Element Key Structure -> N53.Set IKFK Keys_1.Switch Control
+
+[N37] Get Default Length (ControlRigGraphNode)
+    out VariableNode_14.Value : Float (double-precision) -> N31.Spine IK Solve.Default Length
+
+[N38] Set IK Mode (ControlRigGraphNode)
+    in  VariableNode_15.ExecuteContext : Execute Context Structure <- N0.Entry.ExecuteContext
+    out VariableNode_15.ExecuteContext : Execute Context Structure -> N62.SequenceExecution.ExecuteContext
+    in  VariableNode_15.Value : Boolean <- N41.MathFloatGreater_3.Result
+
+[N39] Get IKFK Switch Control (ControlRigGraphNode)
+    out VariableNode_6_3.Value : Rig Element Key Structure -> N40.GetTransform_3.Item
+
+[N40] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_3.Transform.Translation.X : Float (double-precision) -> N41.MathFloatGreater_3.A
+    in  GetTransform_3.Item : Rig Element Key Structure <- N39.VariableNode_6_3.Value
+    in  GetTransform_3.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_3.Item.Name : Name = None
+    in  GetTransform_3.Space : ERigVMTransformSpace Enum = LocalSpace
+
+[N41] Greater (ControlRigGraphNode)
+    out MathFloatGreater_3.Result : Boolean -> N38.VariableNode_15.Value
+    in  MathFloatGreater_3.A : Float (single-precision) <- N40.GetTransform_3.Transform.Translation.X
+    in  MathFloatGreater_3.B : Float (single-precision) = 0.500000
+
+[N42] Get IK Mode (ControlRigGraphNode)
+
+[N43] Get IK Mode (ControlRigGraphNode)
+    out VariableNode_17.Value : Boolean -> N53.Set IKFK Keys_1.IK Mode
+
+[N44] Get Chest Space (ControlRigGraphNode)
+    out VariableNode_6_1_2_1.Value : Rig Element Key Structure -> N45.ProjectTransformToNewParent_1_2_1_4_1_1.Child, N50.SetTransform_1.Item
+
+[N45] Project to new Parent (ControlRigGraphNode)
+    out ProjectTransformToNewParent_1_2_1_4_1_1.Transform : Transform -> N50.SetTransform_1.Value
+    in  ProjectTransformToNewParent_1_2_1_4_1_1.Child : Rig Element Key Structure <- N44.VariableNode_6_1_2_1.Value
+    in  ProjectTransformToNewParent_1_2_1_4_1_1.Child.Type : ERigElementType Enum = Bone
+    in  ProjectTransformToNewParent_1_2_1_4_1_1.Child.Name : Name = spine_01
+    in  ProjectTransformToNewParent_1_2_1_4_1_1.bChildInitial : Boolean = True
+    in  ProjectTransformToNewParent_1_2_1_4_1_1.OldParent.Type : ERigElementType Enum = Control
+    in  ProjectTransformToNewParent_1_2_1_4_1_1.OldParent.Name : Name = hips_ctrl
+    in  ProjectTransformToNewParent_1_2_1_4_1_1.bOldParentInitial : Boolean = True
+    in  ProjectTransformToNewParent_1_2_1_4_1_1.NewParent.Type : ERigElementType Enum = Control
+    in  ProjectTransformToNewParent_1_2_1_4_1_1.NewParent.Name : Name = hips_ctrl
+
+[N46] Get Bones (ControlRigGraphNode)
+
+[N47]  (ControlRigGraphNode)
+
+[N48] Subtract (ControlRigGraphNode)
+    in  MathIntSub.B : Integer = 1
+
+[N49]  (ControlRigGraphNode)
+
+[N50] Set Transform - Bone (ControlRigGraphNode)
+    in  SetTransform_1.ExecuteContext : Execute Context Structure <- N63.SequenceExecution_1.A
+    in  SetTransform_1.Item : Rig Element Key Structure <- N44.VariableNode_6_1_2_1.Value
+    in  SetTransform_1.Item.Type : ERigElementType Enum = Bone
+    in  SetTransform_1.Item.Name : Name = None
+    in  SetTransform_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTransform_1.Value : Transform <- N45.ProjectTransformToNewParent_1_2_1_4_1_1.Transform
+    in  SetTransform_1.Value.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetTransform_1.Value.Translation.X : Float (double-precision) = 0.000000
+    in  SetTransform_1.Value.Translation.Y : Float (double-precision) = 0.000000
+    in  SetTransform_1.Value.Translation.Z : Float (double-precision) = 0.000000
+    in  SetTransform_1.Value.Scale3D.X : Float (double-precision) = 1.000000
+    in  SetTransform_1.Value.Scale3D.Y : Float (double-precision) = 1.000000
+    in  SetTransform_1.Value.Scale3D.Z : Float (double-precision) = 1.000000
+    in  SetTransform_1.Weight : Float (single-precision) = 1.000000
+    in  SetTransform_1.bPropagateToChildren : Boolean = True
+
+[N51] Get Enable Stretch  (ControlRigGraphNode)
+    out VariableNode_18.Value : Boolean -> N31.Spine IK Solve.Enable Stretch
+
+[N52] Set IKFK Visibility (ControlRigGraphNode)
+    in  Set IKFK Visibility.ExecuteContext : Execute Context Structure = ()
+    in  Set IKFK Visibility.FK Controls : Array of Rig Element Key Structures = ()
+    in  Set IKFK Visibility.IK Controls : Array of Rig Element Key Structures = ()
+    in  Set IKFK Visibility.IKFK Switch : Boolean <- N55.VariableNode_16_1.Value
+    in  Set IKFK Visibility.Show Controls : Boolean = true
+
+[N53] Set IKFK Keys (ControlRigGraphNode)
+    in  Set IKFK Keys_1.ExecuteContext : Execute Context Structure <- N63.SequenceExecution_1.B
+    in  Set IKFK Keys_1.IK Mode : Boolean <- N43.VariableNode_17.Value
+    in  Set IKFK Keys_1.Previous IK Mode : Boolean <- N33.VariableNode_10.Value
+    in  Set IKFK Keys_1.FK Controls : Array of Rig Element Key Structures <- N34.VariableNode_11.Value
+    in  Set IKFK Keys_1.IK Controls  : Array of Rig Element Key Structures <- N35.VariableNode_12.Value
+    in  Set IKFK Keys_1.Switch Control : Rig Element Key Structure <- N36.VariableNode_13.Value
+    in  Set IKFK Keys_1.Switch Control.Type : ERigElementType Enum = None
+    in  Set IKFK Keys_1.Switch Control.Name : Name = None
+
+[N54] FK Point At (ControlRigGraphNode)
+    in  FK Point At_1.ExecuteContext : Execute Context Structure = ()
+    out FK Point At_1.ExecuteContext : Execute Context Structure -> N61.Spine Match IK onto FK.Execute
+    in  FK Point At_1.Bones : Array of Rig Element Key Structures <- N29.VariableNode_2.Value
+    in  FK Point At_1.FK Controls : Array of Rig Element Key Structures <- N28.VariableNode_3.Value
+    in  FK Point At_1.Point At Axis.X : Float (double-precision) = 1.000000
+    in  FK Point At_1.Point At Axis.Y : Float (double-precision) = 0.000000
+    in  FK Point At_1.Point At Axis.Z : Float (double-precision) = 0.000000
+    in  FK Point At_1.Up Vector Axis.X : Float (double-precision) = 0.000000
+    in  FK Point At_1.Up Vector Axis.Y : Float (double-precision) = 0.000000
+    in  FK Point At_1.Up Vector Axis.Z : Float (double-precision) = -1.000000
+    in  FK Point At_1.Up Vector Target.X : Float (double-precision) = 1.000000
+    in  FK Point At_1.Up Vector Target.Y : Float (double-precision) = 0.000000
+    in  FK Point At_1.Up Vector Target.Z : Float (double-precision) = 0.000000
+
+[N55] Get IK Mode (ControlRigGraphNode)
+    out VariableNode_16_1.Value : Boolean -> N52.Set IKFK Visibility.IKFK Switch
+
+[N56] Project to New Parents (ControlRigGraphNode)
+    in  Project to New Parent.ExecuteContext : Execute Context Structure = ()
+    in  Project to New Parent.Children : Array of Rig Element Key Structures = ()
+    in  Project to New Parent.Parents : Array of Rig Element Key Structures = ()
+    in  Project to New Parent.Propagate to Children : Boolean = True
+
+[N57]  (ControlRigGraphNode)
+
+[N58]  (ControlRigGraphNode)
+
+[N59]  (ControlRigGraphNode)
+
+[N60]  (ControlRigGraphNode)
+
+[N61] Spine Match IK onto FK (ControlRigGraphNode)
+    in  Spine Match IK onto FK.Execute : Execute Context Structure <- N54.FK Point At_1.ExecuteContext
+    in  Spine Match IK onto FK.Bones : Array of Rig Element Key Structures <- N23.VariableNode_2_2_1.Value
+    in  Spine Match IK onto FK.IK Controls : Array of Rig Element Key Structures <- N25.VariableNode_9.Value
+    in  Spine Match IK onto FK.Offsets : Array of Transforms <- N26.VariableNode_5_1.Value
+
+[N62] Sequence (ControlRigGraphNode)
+    out SequenceExecution.B : Execute Context Structure -> N6.SetTransform.ExecuteContext
+    out SequenceExecution.D : Execute Context Structure -> N63.SequenceExecution_1.ExecuteContext
+    in  SequenceExecution.ExecuteContext : Execute Context Structure <- N38.VariableNode_15.ExecuteContext
+
+[N63] Sequence (ControlRigGraphNode)
+    out SequenceExecution_1.A : Execute Context Structure -> N50.SetTransform_1.ExecuteContext
+    out SequenceExecution_1.B : Execute Context Structure -> N53.Set IKFK Keys_1.ExecuteContext
+    out SequenceExecution_1.D : Execute Context Structure -> N1.Return.ExecuteContext
+    in  SequenceExecution_1.ExecuteContext : Execute Context Structure <- N62.SequenceExecution.D
+

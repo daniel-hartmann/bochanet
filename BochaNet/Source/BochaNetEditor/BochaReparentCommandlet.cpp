@@ -11,11 +11,21 @@
 #include "FileHelpers.h"
 #include "Blueprint/WidgetTree.h"
 #include "Components/Widget.h"
+#include "Animation/AnimMontage.h"
+#include "Animation/AnimNotifies/AnimNotify.h"
+#include "Animation/AnimSequence.h"
+#include "AssetToolsModule.h"
+#include "ObjectTools.h"
+#include "UObject/ObjectRedirector.h"
 #include "Engine/World.h"
+#include "Factories/AnimMontageFactory.h"
 #include "InputAction.h"
 #include "InputMappingContext.h"
 #include "InputModifiers.h"
 #include "WidgetBlueprint.h"
+#include "Blueprint/WidgetBlueprintGeneratedClass.h"
+#include "Components/PanelSlot.h"
+#include "Components/PanelWidget.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/GameModeBase.h"
 #include "GameFramework/WorldSettings.h"
@@ -116,12 +126,39 @@ int32 UBochaReparentCommandlet::Main(const FString& Params)
 	bool bOk = true;
 	TSet<UPackage*> ChangedPackages;
 
+	const TArray<TSharedPtr<FJsonValue>>* Duplicates = nullptr;
+	if (Spec->TryGetArrayField(TEXT("duplicateAssets"), Duplicates))
+	{
+		for (const TSharedPtr<FJsonValue>& Value : *Duplicates)
+		{
+			bOk &= DuplicateAsset(Value->AsObject(), ChangedPackages);
+		}
+	}
+
+	const TArray<TSharedPtr<FJsonValue>>* NewMontages = nullptr;
+	if (Spec->TryGetArrayField(TEXT("createMontages"), NewMontages))
+	{
+		for (const TSharedPtr<FJsonValue>& Value : *NewMontages)
+		{
+			bOk &= CreateMontage(Value->AsObject(), ChangedPackages);
+		}
+	}
+
 	const TArray<TSharedPtr<FJsonValue>>* NewBlueprints = nullptr;
 	if (Spec->TryGetArrayField(TEXT("createBlueprints"), NewBlueprints))
 	{
 		for (const TSharedPtr<FJsonValue>& Value : *NewBlueprints)
 		{
 			bOk &= CreateBlueprintAsset(Value->AsObject(), ChangedPackages);
+		}
+	}
+
+	const TArray<TSharedPtr<FJsonValue>>* NewWidgets = nullptr;
+	if (Spec->TryGetArrayField(TEXT("createWidgets"), NewWidgets))
+	{
+		for (const TSharedPtr<FJsonValue>& Value : *NewWidgets)
+		{
+			bOk &= CreateWidgetBlueprint(Value->AsObject(), ChangedPackages);
 		}
 	}
 
@@ -233,6 +270,23 @@ int32 UBochaReparentCommandlet::Main(const FString& Params)
 		bOk &= Compile(Blueprint);
 	}
 
+	// Organization steps: they rewrite many packages (and the referencers), so a dry run only lists them.
+	const TArray<TSharedPtr<FJsonValue>>* MapEdits = nullptr;
+	if (Spec->TryGetArrayField(TEXT("mapEdits"), MapEdits))
+	{
+		for (const TSharedPtr<FJsonValue>& Value : *MapEdits)
+		{
+			bOk &= EditMap(Value->AsObject(), bSave, ChangedPackages);
+		}
+	}
+	const TArray<FString> ToDelete = GetStringArray(Spec, TEXT("deleteAssets"));
+	const TArray<TSharedPtr<FJsonValue>>* Renames = nullptr;
+	Spec->TryGetArrayField(TEXT("renameAssets"), Renames);
+	if (bOk && (ToDelete.Num() > 0 || Renames))
+	{
+		bOk &= DeleteAndRenameAssets(ToDelete, Renames ? *Renames : TArray<TSharedPtr<FJsonValue>>(), bSave, ChangedPackages);
+	}
+
 	if (!bOk)
 	{
 		UE_LOG(LogBochaReparent, Error, TEXT("Errors found; nothing was saved."));
@@ -307,6 +361,29 @@ bool UBochaReparentCommandlet::ApplyBlueprintSpec(const TSharedPtr<FJsonObject>&
 			return false;
 		}
 		Blueprint->NewVariables.RemoveAt(Index);
+	}
+
+	// Descriptive names for designer widgets nobody references by name (not BindWidget ones).
+	const TSharedPtr<FJsonObject>* WidgetRenames = nullptr;
+	if (Spec->TryGetObjectField(TEXT("renameWidgets"), WidgetRenames))
+	{
+		UWidgetBlueprint* WidgetBlueprint = Cast<UWidgetBlueprint>(Blueprint);
+		for (const TPair<FString, TSharedPtr<FJsonValue>>& Pair : (*WidgetRenames)->Values)
+		{
+			UWidget* Widget = WidgetBlueprint && WidgetBlueprint->WidgetTree ? WidgetBlueprint->WidgetTree->FindWidget(FName(*Pair.Key)) : nullptr;
+			const FString NewName = Pair.Value->AsString();
+			if (!Widget || Widget->bIsVariable || WidgetBlueprint->WidgetTree->FindWidget(FName(*NewName)))
+			{
+				UE_LOG(LogBochaReparent, Error, TEXT("%s: cannot rename widget %s to %s (missing, a variable, or name taken)"),
+					*Blueprint->GetName(), *Pair.Key, *NewName);
+				return false;
+			}
+			Widget->Rename(*NewName, nullptr, REN_DontCreateRedirectors | REN_NonTransactional);
+#if WITH_EDITOR
+			Widget->SetDisplayLabel(FString());
+#endif
+			UE_LOG(LogBochaReparent, Display, TEXT("%s: widget %s -> %s"), *Blueprint->GetName(), *Pair.Key, *NewName);
+		}
 	}
 
 	// C++ widget bindings (BindWidget) need the designer widget to be a variable.
@@ -388,7 +465,371 @@ bool UBochaReparentCommandlet::ApplyBlueprintSpec(const TSharedPtr<FJsonObject>&
 		return false;
 	}
 
+	const TSharedPtr<FJsonObject>* ComponentValues = nullptr;
+	if (Spec->TryGetObjectField(TEXT("setComponents"), ComponentValues) && !SetComponentDefaults(Blueprint, *ComponentValues))
+	{
+		return false;
+	}
+
 	ChangedPackages.Add(Blueprint->GetPackage());
+	return true;
+}
+
+bool UBochaReparentCommandlet::EditMap(const TSharedPtr<FJsonObject>& Spec, bool bSave, TSet<UPackage*>& ChangedPackages) const
+{
+	const FString Path = Spec->GetStringField(TEXT("path"));
+	UWorld* World = LoadObject<UWorld>(nullptr, *Path);
+	if (!World || !World->PersistentLevel)
+	{
+		UE_LOG(LogBochaReparent, Error, TEXT("Map not found: %s"), *Path);
+		return false;
+	}
+
+	auto FindActor = [World](const FString& Name) -> AActor*
+	{
+		for (AActor* Actor : World->PersistentLevel->Actors)
+		{
+			if (Actor && Actor->GetName() == Name)
+			{
+				return Actor;
+			}
+		}
+		return nullptr;
+	};
+
+	bool bOk = true;
+	auto ForEachEntry = [&](const TCHAR* Field, TFunctionRef<void(AActor*, const FString&)> Apply)
+	{
+		const TSharedPtr<FJsonObject>* Entries = nullptr;
+		if (!Spec->TryGetObjectField(Field, Entries))
+		{
+			return;
+		}
+		for (const TPair<FString, TSharedPtr<FJsonValue>>& Pair : (*Entries)->Values)
+		{
+			AActor* Actor = FindActor(Pair.Key);
+			if (!Actor)
+			{
+				UE_LOG(LogBochaReparent, Error, TEXT("%s: actor %s not found"), *World->GetName(), *Pair.Key);
+				bOk = false;
+				continue;
+			}
+			UE_LOG(LogBochaReparent, Display, TEXT("%s: %s %s -> %s"), *World->GetName(), Field, *Pair.Key, *Pair.Value->AsString());
+			if (bSave)
+			{
+				Apply(Actor, Pair.Value->AsString());
+			}
+		}
+	};
+	ForEachEntry(TEXT("folders"), [](AActor* Actor, const FString& Folder) { Actor->SetFolderPath(FName(*Folder)); });
+	ForEachEntry(TEXT("labels"), [](AActor* Actor, const FString& Label) { Actor->SetActorLabel(Label); });
+
+	for (const FString& Name : GetStringArray(Spec, TEXT("removeActors")))
+	{
+		AActor* Actor = FindActor(Name);
+		if (!Actor)
+		{
+			UE_LOG(LogBochaReparent, Error, TEXT("%s: actor %s not found"), *World->GetName(), *Name);
+			bOk = false;
+			continue;
+		}
+		UE_LOG(LogBochaReparent, Display, TEXT("%s: remove %s"), *World->GetName(), *Name);
+		if (bSave)
+		{
+			World->EditorDestroyActor(Actor, true);
+		}
+	}
+
+	if (bOk && bSave)
+	{
+		World->MarkPackageDirty();
+		ChangedPackages.Add(World->GetPackage());
+		// Saved now: a later rename of this map must see the edited version on disk.
+		TArray<UPackage*> Packages = { World->GetPackage() };
+		bOk &= UEditorLoadingAndSavingUtils::SavePackages(Packages, false);
+	}
+	return bOk;
+}
+
+bool UBochaReparentCommandlet::DeleteAndRenameAssets(const TArray<FString>& ToDelete, const TArray<TSharedPtr<FJsonValue>>& Renames,
+	bool bSave, TSet<UPackage*>& ChangedPackages) const
+{
+	IAssetTools& AssetTools = FModuleManager::LoadModuleChecked<FAssetToolsModule>("AssetTools").Get();
+	bool bOk = true;
+
+	TArray<UObject*> Doomed;
+	for (const FString& Path : ToDelete)
+	{
+		UObject* Asset = LoadObject<UObject>(nullptr, *Path);
+		if (!Asset)
+		{
+			UE_LOG(LogBochaReparent, Error, TEXT("deleteAssets: %s not found"), *Path);
+			bOk = false;
+			continue;
+		}
+		UE_LOG(LogBochaReparent, Display, TEXT("delete %s"), *Path);
+		Doomed.Add(Asset);
+	}
+
+	TArray<FAssetRenameData> RenameData;
+	for (const TSharedPtr<FJsonValue>& Value : Renames)
+	{
+		const TSharedPtr<FJsonObject> Rename = Value->AsObject();
+		const FString From = Rename->GetStringField(TEXT("from"));
+		const FString To = Rename->GetStringField(TEXT("to"));
+		UObject* Asset = LoadObject<UObject>(nullptr, *From);
+		if (!Asset)
+		{
+			UE_LOG(LogBochaReparent, Error, TEXT("renameAssets: %s not found"), *From);
+			bOk = false;
+			continue;
+		}
+		if (FPackageName::DoesPackageExist(To))
+		{
+			UE_LOG(LogBochaReparent, Error, TEXT("renameAssets: %s already exists"), *To);
+			bOk = false;
+			continue;
+		}
+		UE_LOG(LogBochaReparent, Display, TEXT("rename %s -> %s"), *From, *To);
+		RenameData.Emplace(Asset, FPackageName::GetLongPackagePath(To), FPackageName::GetShortName(To));
+	}
+
+	if (!bOk || !bSave)
+	{
+		return bOk;
+	}
+
+	if (Doomed.Num() > 0)
+	{
+		const int32 Deleted = ObjectTools::DeleteObjects(Doomed, false);
+		UE_LOG(LogBochaReparent, Display, TEXT("Deleted %d of %d assets."), Deleted, Doomed.Num());
+		bOk &= Deleted == Doomed.Num();
+	}
+
+	if (RenameData.Num() > 0)
+	{
+		bOk &= AssetTools.RenameAssets(RenameData);
+		// Point every referencer at the new names, then drop the redirectors left behind.
+		TArray<UObjectRedirector*> Redirectors;
+		for (const FAssetRenameData& Rename : RenameData)
+		{
+			const FString OldPath = Rename.OldObjectPath.ToString();
+			if (UObjectRedirector* Redirector = FindObject<UObjectRedirector>(nullptr, *OldPath))
+			{
+				Redirectors.Add(Redirector);
+			}
+		}
+		AssetTools.FixupReferencers(Redirectors, false, ERedirectFixupMode::DeleteFixedUpRedirectors);
+		for (const FAssetRenameData& Rename : RenameData)
+		{
+			if (UObject* Asset = Rename.Asset.Get())
+			{
+				ChangedPackages.Add(Asset->GetPackage());
+			}
+		}
+	}
+	return bOk;
+}
+
+UWidget* UBochaReparentCommandlet::BuildWidget(UWidgetBlueprint* WidgetBlueprint, UPanelWidget* Parent, const TSharedPtr<FJsonObject>& Node) const
+{
+	const FString Type = Node->GetStringField(TEXT("type"));
+	const FString Name = Node->GetStringField(TEXT("name"));
+	UClass* WidgetClass = FindObject<UClass>(nullptr, *(TEXT("/Script/UMG.") + Type));
+	if (!WidgetClass || !WidgetClass->IsChildOf(UWidget::StaticClass()))
+	{
+		UE_LOG(LogBochaReparent, Error, TEXT("%s: unknown widget type %s"), *WidgetBlueprint->GetName(), *Type);
+		return nullptr;
+	}
+
+	UWidget* Widget = WidgetBlueprint->WidgetTree->ConstructWidget<UWidget>(WidgetClass, FName(*Name));
+	bool bVariable = false;
+	Widget->bIsVariable = Node->TryGetBoolField(TEXT("variable"), bVariable) && bVariable;
+
+	auto ImportValues = [this, WidgetBlueprint](UObject* Target, const TSharedPtr<FJsonObject>* Values) -> bool
+	{
+		if (!Values)
+		{
+			return true;
+		}
+		for (const TPair<FString, TSharedPtr<FJsonValue>>& Pair : (*Values)->Values)
+		{
+			FProperty* Property = FindFProperty<FProperty>(Target->GetClass(), FName(*Pair.Key));
+			if (!Property || !Property->ImportText_InContainer(*Pair.Value->AsString(), Target, Target, PPF_None))
+			{
+				UE_LOG(LogBochaReparent, Error, TEXT("%s: could not set %s.%s = %s"), *WidgetBlueprint->GetName(),
+					*Target->GetName(), *Pair.Key, *Pair.Value->AsString());
+				return false;
+			}
+		}
+		return true;
+	};
+
+	const TSharedPtr<FJsonObject>* Props = nullptr;
+	Node->TryGetObjectField(TEXT("props"), Props);
+	if (!ImportValues(Widget, Props))
+	{
+		return nullptr;
+	}
+
+	if (Parent)
+	{
+		UPanelSlot* Slot = Parent->AddChild(Widget);
+		const TSharedPtr<FJsonObject>* SlotProps = nullptr;
+		Node->TryGetObjectField(TEXT("slot"), SlotProps);
+		if (!Slot || !ImportValues(Slot, SlotProps))
+		{
+			return nullptr;
+		}
+		Slot->SynchronizeProperties();
+	}
+
+	const TArray<TSharedPtr<FJsonValue>>* Children = nullptr;
+	if (Node->TryGetArrayField(TEXT("children"), Children))
+	{
+		UPanelWidget* Panel = Cast<UPanelWidget>(Widget);
+		if (!Panel)
+		{
+			UE_LOG(LogBochaReparent, Error, TEXT("%s: %s cannot have children"), *WidgetBlueprint->GetName(), *Name);
+			return nullptr;
+		}
+		for (const TSharedPtr<FJsonValue>& Child : *Children)
+		{
+			if (!BuildWidget(WidgetBlueprint, Panel, Child->AsObject()))
+			{
+				return nullptr;
+			}
+		}
+	}
+	return Widget;
+}
+
+bool UBochaReparentCommandlet::CreateWidgetBlueprint(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const
+{
+	const FString PackageName = Spec->GetStringField(TEXT("path"));
+	const FString AssetName = FPackageName::GetShortName(PackageName);
+	if (FPackageName::DoesPackageExist(PackageName))
+	{
+		UE_LOG(LogBochaReparent, Display, TEXT("%s already exists"), *PackageName);
+		return true;
+	}
+	UClass* Parent = LoadClassByPath(Spec->GetStringField(TEXT("parent")));
+	if (!Parent)
+	{
+		return false;
+	}
+
+	UPackage* Package = CreatePackage(*PackageName);
+	UWidgetBlueprint* WidgetBlueprint = Cast<UWidgetBlueprint>(FKismetEditorUtilities::CreateBlueprint(Parent, Package,
+		FName(*AssetName), BPTYPE_Normal, UWidgetBlueprint::StaticClass(), UWidgetBlueprintGeneratedClass::StaticClass()));
+	if (!WidgetBlueprint)
+	{
+		UE_LOG(LogBochaReparent, Error, TEXT("Could not create %s"), *PackageName);
+		return false;
+	}
+
+	UWidget* Root = BuildWidget(WidgetBlueprint, nullptr, Spec->GetObjectField(TEXT("root")));
+	if (!Root)
+	{
+		return false;
+	}
+	WidgetBlueprint->WidgetTree->RootWidget = Root;
+	FBlueprintEditorUtils::MarkBlueprintAsStructurallyModified(WidgetBlueprint);
+	Compile(WidgetBlueprint);
+
+	FAssetRegistryModule::AssetCreated(WidgetBlueprint);
+	Package->MarkPackageDirty();
+	ChangedPackages.Add(Package);
+	UE_LOG(LogBochaReparent, Display, TEXT("Created %s (child of %s)"), *PackageName, *Parent->GetName());
+	return true;
+}
+
+bool UBochaReparentCommandlet::DuplicateAsset(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const
+{
+	const FString DestPath = Spec->GetStringField(TEXT("dest"));
+	const FString DestName = FPackageName::GetShortName(DestPath);
+	if (FindObject<UObject>(nullptr, *(DestPath + TEXT(".") + DestName)) || FPackageName::DoesPackageExist(DestPath))
+	{
+		UE_LOG(LogBochaReparent, Display, TEXT("%s already exists"), *DestPath);
+		return true;
+	}
+	UObject* Source = LoadObject<UObject>(nullptr, *Spec->GetStringField(TEXT("source")));
+	if (!Source)
+	{
+		UE_LOG(LogBochaReparent, Error, TEXT("duplicateAssets: %s not found"), *Spec->GetStringField(TEXT("source")));
+		return false;
+	}
+	IAssetTools& AssetTools = FModuleManager::LoadModuleChecked<FAssetToolsModule>("AssetTools").Get();
+	UObject* Copy = AssetTools.DuplicateAsset(DestName, FPackageName::GetLongPackagePath(DestPath), Source);
+	if (!Copy)
+	{
+		UE_LOG(LogBochaReparent, Error, TEXT("Could not duplicate %s"), *Source->GetPathName());
+		return false;
+	}
+	ChangedPackages.Add(Copy->GetPackage());
+	UE_LOG(LogBochaReparent, Display, TEXT("Duplicated %s -> %s"), *Source->GetPathName(), *Copy->GetPathName());
+	return true;
+}
+
+bool UBochaReparentCommandlet::CreateMontage(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const
+{
+	const FString PackageName = Spec->GetStringField(TEXT("path"));
+	const FString AssetName = FPackageName::GetShortName(PackageName);
+	if (FPackageName::DoesPackageExist(PackageName))
+	{
+		UE_LOG(LogBochaReparent, Display, TEXT("%s already exists"), *PackageName);
+		return true;
+	}
+	UAnimSequence* Sequence = LoadObject<UAnimSequence>(nullptr, *Spec->GetStringField(TEXT("sequence")));
+	if (!Sequence)
+	{
+		UE_LOG(LogBochaReparent, Error, TEXT("createMontages: %s not found"), *Spec->GetStringField(TEXT("sequence")));
+		return false;
+	}
+
+	UAnimMontageFactory* Factory = NewObject<UAnimMontageFactory>();
+	Factory->SourceAnimation = Sequence;
+	UPackage* Package = CreatePackage(*PackageName);
+	UAnimMontage* Montage = Cast<UAnimMontage>(Factory->FactoryCreateNew(UAnimMontage::StaticClass(), Package,
+		FName(*AssetName), RF_Public | RF_Standalone | RF_Transactional, nullptr, GWarn));
+	if (!Montage)
+	{
+		UE_LOG(LogBochaReparent, Error, TEXT("Could not create %s"), *PackageName);
+		return false;
+	}
+
+	// Notifies at a fraction of the montage length (moved later in the montage editor if needed).
+	const TArray<TSharedPtr<FJsonValue>>* Notifies = nullptr;
+	if (Spec->TryGetArrayField(TEXT("notifies"), Notifies))
+	{
+		if (Montage->AnimNotifyTracks.Num() == 0)
+		{
+			Montage->AnimNotifyTracks.Add(FAnimNotifyTrack(TEXT("1"), FLinearColor::White));
+		}
+		for (const TSharedPtr<FJsonValue>& Value : *Notifies)
+		{
+			const TSharedPtr<FJsonObject> NotifySpec = Value->AsObject();
+			UClass* NotifyClass = LoadClassByPath(NotifySpec->GetStringField(TEXT("class")));
+			if (!NotifyClass || !NotifyClass->IsChildOf(UAnimNotify::StaticClass()))
+			{
+				return false;
+			}
+			const float Time = Montage->GetPlayLength() * NotifySpec->GetNumberField(TEXT("fraction"));
+			FAnimNotifyEvent& Event = Montage->Notifies.AddDefaulted_GetRef();
+			Event.Notify = NewObject<UAnimNotify>(Montage, NotifyClass, NAME_None, RF_Transactional);
+			Event.NotifyName = FName(*Event.Notify->GetNotifyName());
+			Event.Link(Montage, Time);
+			Event.TriggerTimeOffset = GetTriggerTimeOffsetForType(Montage->CalculateOffsetForNotify(Time));
+			Event.TrackIndex = 0;
+			UE_LOG(LogBochaReparent, Display, TEXT("%s: notify %s at %.2f s"), *AssetName, *Event.NotifyName.ToString(), Time);
+		}
+		Montage->RefreshCacheData();
+	}
+
+	FAssetRegistryModule::AssetCreated(Montage);
+	Package->MarkPackageDirty();
+	ChangedPackages.Add(Package);
+	UE_LOG(LogBochaReparent, Display, TEXT("Created %s from %s (%.2f s)"), *PackageName, *Sequence->GetName(), Montage->GetPlayLength());
 	return true;
 }
 
@@ -825,15 +1266,45 @@ bool UBochaReparentCommandlet::ResetDefaults(UBlueprint* Blueprint, const TArray
 	return true;
 }
 
+bool UBochaReparentCommandlet::SetComponentDefaults(UBlueprint* Blueprint, const TSharedPtr<FJsonObject>& Components) const
+{
+	// Components added in the Blueprint (SCS): their templates hold the defaults.
+	for (const TPair<FString, TSharedPtr<FJsonValue>>& Component : Components->Values)
+	{
+		USCS_Node* Node = Blueprint->SimpleConstructionScript ? Blueprint->SimpleConstructionScript->FindSCSNode(FName(*Component.Key)) : nullptr;
+		UActorComponent* Template = Node ? Node->ComponentTemplate.Get() : nullptr;
+		if (!Template)
+		{
+			UE_LOG(LogBochaReparent, Error, TEXT("%s: component %s not found"), *Blueprint->GetName(), *Component.Key);
+			return false;
+		}
+		for (const TPair<FString, TSharedPtr<FJsonValue>>& Pair : Component.Value->AsObject()->Values)
+		{
+			FProperty* Property = FindFProperty<FProperty>(Template->GetClass(), FName(*Pair.Key));
+			if (!Property || !Property->ImportText_InContainer(*Pair.Value->AsString(), Template, Template, PPF_None))
+			{
+				UE_LOG(LogBochaReparent, Error, TEXT("%s.%s: could not set %s = %s"), *Blueprint->GetName(), *Component.Key, *Pair.Key, *Pair.Value->AsString());
+				return false;
+			}
+			UE_LOG(LogBochaReparent, Display, TEXT("%s.%s: %s = %s"), *Blueprint->GetName(), *Component.Key, *Pair.Key, *Pair.Value->AsString());
+		}
+		Template->MarkPackageDirty();
+	}
+	return true;
+}
+
 bool UBochaReparentCommandlet::SetDefaults(UBlueprint* Blueprint, const TSharedPtr<FJsonObject>& Values) const
 {
 	UObject* ClassDefaults = Blueprint->GeneratedClass->GetDefaultObject();
 	for (const TPair<FString, TSharedPtr<FJsonValue>>& Pair : Values->Values)
 	{
 		FProperty* Property = FindFProperty<FProperty>(ClassDefaults->GetClass(), FName(*Pair.Key));
-		if (!Property || !Property->ImportText_InContainer(*Pair.Value->AsString(), ClassDefaults, ClassDefaults, PPF_None))
+		const FObjectPropertyBase* ObjectProperty = CastField<FObjectPropertyBase>(Property);
+		if (!Property || !Property->ImportText_InContainer(*Pair.Value->AsString(), ClassDefaults, ClassDefaults, PPF_None)
+			|| (ObjectProperty && Pair.Value->AsString() != TEXT("None") && !ObjectProperty->GetObjectPropertyValue_InContainer(ClassDefaults)))
 		{
-			UE_LOG(LogBochaReparent, Error, TEXT("%s: could not set %s = %s"), *Blueprint->GetName(), *Pair.Key, *Pair.Value->AsString());
+			UE_LOG(LogBochaReparent, Error, TEXT("%s: could not set %s = %s (missing, or not a %s)"), *Blueprint->GetName(), *Pair.Key,
+				*Pair.Value->AsString(), ObjectProperty ? *ObjectProperty->PropertyClass->GetName() : TEXT("valid value"));
 			return false;
 		}
 		UE_LOG(LogBochaReparent, Display, TEXT("%s: %s = %s"), *Blueprint->GetName(), *Pair.Key, *Pair.Value->AsString());

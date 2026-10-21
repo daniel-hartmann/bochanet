@@ -1,0 +1,19 @@
+Graph: Is Last_SubGraph
+
+[N0] Entry (ControlRigGraphNode)
+    out Entry.Index : Integer -> N3.MathIntEquals.A
+    out Entry.Count : Integer -> N2.MathIntSub.A
+
+[N1] Return (ControlRigGraphNode)
+    in  Return.Result : Boolean <- N3.MathIntEquals.Result
+
+[N2] Subtract (ControlRigGraphNode)
+    out MathIntSub.Result : Integer -> N3.MathIntEquals.B
+    in  MathIntSub.A : Integer <- N0.Entry.Count
+    in  MathIntSub.B : Integer = 1
+
+[N3] Equals (ControlRigGraphNode)
+    out MathIntEquals.Result : Boolean -> N1.Return.Result
+    in  MathIntEquals.A : Integer <- N0.Entry.Index
+    in  MathIntEquals.B : Integer <- N2.MathIntSub.Result
+

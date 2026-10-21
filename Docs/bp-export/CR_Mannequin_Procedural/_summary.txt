@@ -1,0 +1,11 @@
+Blueprint: /Game/Characters/Mannequins/Rigs/CR_Mannequin_Procedural.CR_Mannequin_Procedural
+Parent: /Script/ControlRig.ControlRig
+
+[Variables]
+
+[Class Defaults overridden vs parent]
+    DynamicHierarchy = /Script/ControlRig.RigHierarchy'/Game/Characters/Mannequins/Rigs/CR_Mannequin_Procedural.Default__CR_Mannequin_Procedural_C:DynamicHierarchy'
+    ShapeLibraries = ("/ControlRig/Controls/DefaultGizmoLibrary.DefaultGizmoLibrary")
+
+[Graphs]
+Rig Graph (176 nodes) -> Rig_Graph.txt

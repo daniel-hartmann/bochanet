@@ -1,0 +1,5 @@
+Graph: Transition
+
+[N0] Result (AnimGraphNode_TransitionResult)
+    in  bCanEnterTransition : Boolean = False
+

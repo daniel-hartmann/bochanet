@@ -1,0 +1,112 @@
+Graph: Get Points on Spline_SubGraph
+
+[N0] Entry (ControlRigGraphNode)
+    out Entry.ExecuteContext : Execute Context Structure -> N25.SequenceExecution.ExecuteContext
+
+[N1] Return (ControlRigGraphNode)
+    in  Return.ExecuteContext : Execute Context Structure <- N25.SequenceExecution.D
+    in  Return.Positions : Array of Vectors <- N17.VariableNode_4_1.Value
+
+[N2] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_2.Transform.Translation : Vector -> N4.ControlRigSplineFromPoints.Points.3
+    in  GetTransform_2.Item : Rig Element Key Structure <- N14.VariableNode_2.Value
+    in  GetTransform_2.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_2.Item.Name : Name = None
+    in  GetTransform_2.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N3] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform.Transform.Translation : Vector -> N4.ControlRigSplineFromPoints.Points.0, N4.ControlRigSplineFromPoints.Points.1
+    in  GetTransform.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform.Item.Name : Name = None
+    in  GetTransform.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N4] Spline From Points (ControlRigGraphNode)
+    out ControlRigSplineFromPoints.Spline : Control Rig Spline Structure -> N6.ParameterAtPercentage.Spline, N7.PositionFromControlRigSpline.Spline, N24.GetLengthControlRigSpline.Spline
+    in  ControlRigSplineFromPoints.Points.0 : Vector <- N3.GetTransform.Transform.Translation
+    in  ControlRigSplineFromPoints.Points.0.X : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.0.Y : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.0.Z : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.1 : Vector <- N3.GetTransform.Transform.Translation
+    in  ControlRigSplineFromPoints.Points.1.X : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.1.Y : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.1.Z : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.2 : Vector <- N5.RigUnit_GetTransform.Transform.Translation
+    in  ControlRigSplineFromPoints.Points.2.X : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.2.Y : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.2.Z : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.3 : Vector <- N2.GetTransform_2.Transform.Translation
+    in  ControlRigSplineFromPoints.Points.3.X : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.3.Y : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.3.Z : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.SplineMode : ESplineType Enum = BSpline
+    in  ControlRigSplineFromPoints.bClosed : Boolean = False
+    in  ControlRigSplineFromPoints.SamplesPerSegment : Integer = 16
+
+[N5] Get Transform - Null (ControlRigGraphNode)
+    out RigUnit_GetTransform.Transform.Translation : Vector -> N4.ControlRigSplineFromPoints.Points.2
+    in  RigUnit_GetTransform.Item : Rig Element Key Structure <- N13.VariableNode_1.Value
+    in  RigUnit_GetTransform.Item.Type : ERigElementType Enum = Null
+    in  RigUnit_GetTransform.Item.Name : Name = head_mid
+    in  RigUnit_GetTransform.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N6] Parameter At Length Percentage (ControlRigGraphNode)
+    out ParameterAtPercentage.U : Float (single-precision) -> N7.PositionFromControlRigSpline.U
+    in  ParameterAtPercentage.Spline : Control Rig Spline Structure <- N4.ControlRigSplineFromPoints.Spline
+    in  ParameterAtPercentage.Percentage : Float (single-precision) <- N20.MathFloatMul.Result
+
+[N7] Position From Spline (ControlRigGraphNode)
+    in  PositionFromControlRigSpline.Spline : Control Rig Spline Structure <- N4.ControlRigSplineFromPoints.Spline
+    in  PositionFromControlRigSpline.U : Float (single-precision) <- N6.ParameterAtPercentage.U
+
+[N8]  (ControlRigGraphNode)
+
+[N9]  (ControlRigGraphNode)
+
+[N10]  (ControlRigGraphNode)
+
+[N11]  (ControlRigGraphNode)
+
+[N12] Get Bones (ControlRigGraphNode)
+
+[N13] Get Mid Null (ControlRigGraphNode)
+    out VariableNode_1.Value : Rig Element Key Structure -> N5.RigUnit_GetTransform.Item
+
+[N14] Get IK Control (ControlRigGraphNode)
+    out VariableNode_2.Value : Rig Element Key Structure -> N2.GetTransform_2.Item
+
+[N15] Get Bones (ControlRigGraphNode)
+
+[N16] Get Array (ControlRigGraphNode)
+
+[N17] Get Array (ControlRigGraphNode)
+    out VariableNode_4_1.Value : Array of Vectors -> N1.Return.Positions
+
+[N18] Divide (ControlRigGraphNode)
+    out MathFloatDiv.Result : Float (single-precision) -> N19.MathFloatMin.A
+    in  MathFloatDiv.A : Float (single-precision) <- N23.VariableNode_5.Value
+    in  MathFloatDiv.B : Float (single-precision) <- N24.GetLengthControlRigSpline.Length
+
+[N19] Minimum (ControlRigGraphNode)
+    in  MathFloatMin.A : Float (single-precision) <- N18.MathFloatDiv.Result
+    in  MathFloatMin.B : Float (single-precision) = 1.000000
+
+[N20] Multiply (ControlRigGraphNode)
+    out MathFloatMul.Result : Float (single-precision) -> N6.ParameterAtPercentage.Percentage
+    in  MathFloatMul.A : Float (single-precision) = 1.000000
+    in  MathFloatMul.B : Float (single-precision) = 1.000000
+
+[N21]  (ControlRigGraphNode)
+
+[N22] Get Enable Stretch (ControlRigGraphNode)
+
+[N23] Get Length (ControlRigGraphNode)
+    out VariableNode_5.Value : Float (double-precision) -> N18.MathFloatDiv.A
+
+[N24] Get Length Of Spline (ControlRigGraphNode)
+    out GetLengthControlRigSpline.Length : Float (single-precision) -> N18.MathFloatDiv.B
+    in  GetLengthControlRigSpline.Spline : Control Rig Spline Structure <- N4.ControlRigSplineFromPoints.Spline
+
+[N25] Sequence (ControlRigGraphNode)
+    out SequenceExecution.D : Execute Context Structure -> N1.Return.ExecuteContext
+    in  SequenceExecution.ExecuteContext : Execute Context Structure <- N0.Entry.ExecuteContext
+

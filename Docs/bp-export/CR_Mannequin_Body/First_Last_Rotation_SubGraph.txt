@@ -1,0 +1,58 @@
+Graph: First Last Rotation_SubGraph
+
+[N0] Entry (ControlRigGraphNode)
+    out Entry.IK Control : Rig Element Key Structure -> N2.GetTransform_2_1_1.Item
+    out Entry.First Bone : Rig Element Key Structure -> N4.ProjectTransformToNewParent.Child, N5.HierarchyGetParent.Child
+    out Entry.T : Float (single-precision) -> N6.MathQuaternionSlerp_1.T
+
+[N1] Return (ControlRigGraphNode)
+    in  Return.First : Quat Structure <- N4.ProjectTransformToNewParent.Transform.Rotation
+    in  Return.Last : Quat Structure <- N3.MathQuaternionMul.Result
+    in  Return.Interpolate : Quat Structure <- N6.MathQuaternionSlerp_1.Result
+
+[N2] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_2_1_1.Transform.Rotation : Quat Structure -> N3.MathQuaternionMul.A
+    in  GetTransform_2_1_1.Item : Rig Element Key Structure <- N0.Entry.IK Control
+    in  GetTransform_2_1_1.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_2_1_1.Item.Name : Name = None
+    in  GetTransform_2_1_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N3] Multiply (ControlRigGraphNode)
+    out MathQuaternionMul.Result : Quat Structure -> N1.Return.Last, N6.MathQuaternionSlerp_1.B
+    in  MathQuaternionMul.A : Quat Structure <- N2.GetTransform_2_1_1.Transform.Rotation
+    in  MathQuaternionMul.B : Quat Structure <- N7.MathQuaternionFromRotator.Result
+
+[N4] Project to new Parent (ControlRigGraphNode)
+    out ProjectTransformToNewParent.Transform.Rotation : Quat Structure -> N1.Return.First, N6.MathQuaternionSlerp_1.A
+    in  ProjectTransformToNewParent.Child : Rig Element Key Structure <- N0.Entry.First Bone
+    in  ProjectTransformToNewParent.Child.Type : ERigElementType Enum = Bone
+    in  ProjectTransformToNewParent.Child.Name : Name = None
+    in  ProjectTransformToNewParent.bChildInitial : Boolean = True
+    in  ProjectTransformToNewParent.OldParent : Rig Element Key Structure <- N5.HierarchyGetParent.Parent
+    in  ProjectTransformToNewParent.OldParent.Type : ERigElementType Enum = Bone
+    in  ProjectTransformToNewParent.OldParent.Name : Name = None
+    in  ProjectTransformToNewParent.bOldParentInitial : Boolean = True
+    in  ProjectTransformToNewParent.NewParent : Rig Element Key Structure <- N5.HierarchyGetParent.Parent
+    in  ProjectTransformToNewParent.NewParent.Type : ERigElementType Enum = Bone
+    in  ProjectTransformToNewParent.NewParent.Name : Name = None
+
+[N5] Get Parent (ControlRigGraphNode)
+    out HierarchyGetParent.Parent : Rig Element Key Structure -> N4.ProjectTransformToNewParent.OldParent, N4.ProjectTransformToNewParent.NewParent
+    in  HierarchyGetParent.Child : Rig Element Key Structure <- N0.Entry.First Bone
+    in  HierarchyGetParent.Child.Type : ERigElementType Enum = Bone
+    in  HierarchyGetParent.Child.Name : Name = None
+    in  HierarchyGetParent.bDefaultParent : Boolean = True
+
+[N6] Interpolate (ControlRigGraphNode)
+    out MathQuaternionSlerp_1.Result : Quat Structure -> N1.Return.Interpolate
+    in  MathQuaternionSlerp_1.A : Quat Structure <- N4.ProjectTransformToNewParent.Transform.Rotation
+    in  MathQuaternionSlerp_1.B : Quat Structure <- N3.MathQuaternionMul.Result
+    in  MathQuaternionSlerp_1.T : Float (single-precision) <- N0.Entry.T
+
+[N7] From Rotator (ControlRigGraphNode)
+    out MathQuaternionFromRotator.Result : Quat Structure -> N3.MathQuaternionMul.B
+    in  MathQuaternionFromRotator.Value : Rotator = ()
+    in  MathQuaternionFromRotator.Value.Pitch : Float (double-precision) = 90.000000
+    in  MathQuaternionFromRotator.Value.Yaw : Float (double-precision) = 0.000000
+    in  MathQuaternionFromRotator.Value.Roll : Float (double-precision) = 0.000000
+

@@ -1,0 +1,31 @@
+Graph: AnimGraph
+
+[N0] Output Pose (AnimGraphNode_Root)
+    in  Result : Pose Link Structure <- N7.Pose
+
+[N1] Locomotion (AnimGraphNode_StateMachine)
+    out Pose : Pose Link Structure -> N2.Pose
+
+[N2] Save cached pose 'Locomotion' (AnimGraphNode_SaveCachedPose)
+    in  Pose : Pose Link Structure <- N1.Pose
+
+[N3] Main States (AnimGraphNode_StateMachine)
+    out Pose : Pose Link Structure -> N4.Source
+
+[N4] Slot 'DefaultSlot' (AnimGraphNode_Slot)
+    in  Source : Pose Link Structure <- N3.Pose
+    out Pose : Pose Link Structure -> N7.Source
+
+[N5] Get IsFalling (K2Node_VariableGet)
+    out IsFalling : Boolean -> N6.A
+
+[N6] NOT Boolean (K2Node_CallFunction)
+    in  A : Boolean <- N5.IsFalling
+    out ReturnValue : Boolean -> N7.ShouldDoIKTrace
+
+[N7] Control Rig (AnimGraphNode_ControlRig)
+    in  Source : Pose Link Structure <- N4.Pose
+    in  Alpha : Float (single-precision) = 1.000000
+    out Pose : Pose Link Structure -> N0.Result
+    in  ShouldDoIKTrace : Boolean <- N6.ReturnValue
+

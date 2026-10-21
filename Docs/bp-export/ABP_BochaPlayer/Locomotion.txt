@@ -1,0 +1,21 @@
+Graph: Locomotion
+
+[N0] Locomotion (AnimStateEntryNode)
+    out Entry : Exec -> N1.In
+
+[N1] Idle (AnimStateNode)
+    in  In : Transition <- N0.Entry, N4.Out
+    out Out : Transition -> N3.In
+
+[N2] Walk / Run (AnimStateNode)
+    in  In : Transition <- N3.Out
+    out Out : Transition -> N4.In
+
+[N3] Idle to Walk / Run (AnimStateTransitionNode)
+    in  In : Transition <- N1.Out
+    out Out : Transition -> N2.In
+
+[N4] Walk / Run to Idle (AnimStateTransitionNode)
+    in  In : Transition <- N2.Out
+    out Out : Transition -> N1.In
+

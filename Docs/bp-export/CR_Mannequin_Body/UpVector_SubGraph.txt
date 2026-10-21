@@ -1,0 +1,40 @@
+Graph: UpVector_SubGraph
+
+[N0] Entry (ControlRigGraphNode)
+    out Entry.Start : Rig Element Key Structure -> N2.GetTransform_1.Item
+    out Entry.End : Rig Element Key Structure -> N3.GetTransform_2.Item
+    out Entry.T : Float (single-precision) -> N4.MathQuaternionSlerp.T
+
+[N1] Return (ControlRigGraphNode)
+    in  Return.Up Vector : Vector <- N5.MathQuaternionRotateVector.Result
+    in  Return.Up Vector.X : Float (double-precision) = 0.000000
+    in  Return.Up Vector.Y : Float (double-precision) = 0.000000
+    in  Return.Up Vector.Z : Float (double-precision) = 0.000000
+
+[N2] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_1.Transform.Rotation : Quat Structure -> N4.MathQuaternionSlerp.A
+    in  GetTransform_1.Item : Rig Element Key Structure <- N0.Entry.Start
+    in  GetTransform_1.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_1.Item.Name : Name = None
+    in  GetTransform_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N3] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_2.Transform.Rotation : Quat Structure -> N4.MathQuaternionSlerp.B
+    in  GetTransform_2.Item : Rig Element Key Structure <- N0.Entry.End
+    in  GetTransform_2.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_2.Item.Name : Name = None
+    in  GetTransform_2.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N4] Interpolate (ControlRigGraphNode)
+    out MathQuaternionSlerp.Result : Quat Structure -> N5.MathQuaternionRotateVector.Transform
+    in  MathQuaternionSlerp.A : Quat Structure <- N2.GetTransform_1.Transform.Rotation
+    in  MathQuaternionSlerp.B : Quat Structure <- N3.GetTransform_2.Transform.Rotation
+    in  MathQuaternionSlerp.T : Float (single-precision) <- N0.Entry.T
+
+[N5] Rotate Vector (ControlRigGraphNode)
+    out MathQuaternionRotateVector.Result : Vector -> N1.Return.Up Vector
+    in  MathQuaternionRotateVector.Transform : Quat Structure <- N4.MathQuaternionSlerp.Result
+    in  MathQuaternionRotateVector.Vector.X : Float (double-precision) = 0.000000
+    in  MathQuaternionRotateVector.Vector.Y : Float (double-precision) = 1.000000
+    in  MathQuaternionRotateVector.Vector.Z : Float (double-precision) = 0.000000
+

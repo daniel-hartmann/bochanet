@@ -1,0 +1,16 @@
+Graph: Walk / Run
+
+[N0] Output Animation Pose (AnimGraphNode_StateResult)
+    in  Result : Pose Link Structure <- N1.Pose
+
+[N1] Blendspace Player 'BS_Idle_Walk_Run' (AnimGraphNode_BlendSpacePlayer)
+    in  X : Float (single-precision) <- N3.Direction
+    in  Y : Float (single-precision) <- N2.GroundSpeed
+    out Pose : Pose Link Structure -> N0.Result
+
+[N2] Get GroundSpeed (K2Node_VariableGet)
+    out GroundSpeed : Float (double-precision) -> N1.Y
+
+[N3] Get Direction (K2Node_VariableGet)
+    out Direction : Float (double-precision) -> N1.X
+

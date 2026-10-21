@@ -1,0 +1,49 @@
+Graph: Main States
+
+[N0] Main States (AnimStateEntryNode)
+    out Entry : Exec -> N1.In
+
+[N1] Locomotion (AnimStateNode)
+    in  In : Transition <- N0.Entry, N11.Out, N12.Out
+
+[N2] To Falling (AnimStateAliasNode)
+    out Out : Transition -> N4.In, N6.In
+
+[N3] Jump (AnimStateNode)
+    in  In : Transition <- N4.Out
+    out Out : Transition -> N8.In
+
+[N4] To Falling to Jump (AnimStateTransitionNode)
+    in  In : Transition <- N2.Out
+    out Out : Transition -> N3.In
+
+[N5] Fall Loop (AnimStateNode)
+    in  In : Transition <- N6.Out, N8.Out
+
+[N6] To Falling to Fall Loop (AnimStateTransitionNode)
+    in  In : Transition <- N2.Out
+    out Out : Transition -> N5.In
+
+[N7] To Land (AnimStateAliasNode)
+    out Out : Transition -> N10.In
+
+[N8] Jump to Fall Loop (AnimStateTransitionNode)
+    in  In : Transition <- N3.Out
+    out Out : Transition -> N5.In
+
+[N9] Land (AnimStateNode)
+    in  In : Transition <- N10.Out
+    out Out : Transition -> N11.In, N12.In
+
+[N10] To Land to Land (AnimStateTransitionNode)
+    in  In : Transition <- N7.Out
+    out Out : Transition -> N9.In
+
+[N11] Land to Locomotion (AnimStateTransitionNode)
+    in  In : Transition <- N9.Out
+    out Out : Transition -> N1.In
+
+[N12] Land to Locomotion (AnimStateTransitionNode)
+    in  In : Transition <- N9.Out
+    out Out : Transition -> N1.In
+

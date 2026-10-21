@@ -1,0 +1,5 @@
+Map: /Game/ThirdPerson/Lvl_ThirdPerson.Lvl_ThirdPerson
+
+WorldSettings (WorldSettings) label=WorldSettings folder=None loc=V(0) rot=R(0) scale=V(X=1.00, Y=1.00, Z=1.00) tags=[]
+Brush_0 (Brush) label=Brush0 folder=None loc=V(0) rot=R(0) scale=V(X=1.00, Y=1.00, Z=1.00) tags=[]
+WorldDataLayers (WorldDataLayers) label=WorldDataLayers folder=None loc=V(0) rot=R(0) scale=V(X=1.00, Y=1.00, Z=1.00) tags=[]

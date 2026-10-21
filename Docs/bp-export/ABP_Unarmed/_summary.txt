@@ -1,0 +1,73 @@
+Blueprint: /Game/Characters/Mannequins/Anims/Unarmed/ABP_Unarmed.ABP_Unarmed
+Parent: /Script/Engine.AnimInstance
+
+[Variables]
+Character : Character Object Reference = '' [] Category=Default
+MovementComponent : Character Movement Component Object Reference = '' [] Category=Default
+Velocity : Vector = '' [] Category=Default
+GroundSpeed : Float (double-precision) = '' [] Category=Default
+Direction : Float (double-precision) = '' [] Category=Default
+ShouldMove : Boolean = '' [] Category=Default
+IsFalling : Boolean = '' [] Category=Default
+
+[Class Defaults overridden vs parent]
+    __AnimBlueprintMutables = () (own)
+    AnimBlueprintExtension_PropertyAccess = () (own)
+    AnimBlueprintExtension_Base = () (own)
+    AnimGraphNode_Root = (Result=(LinkID=28),Name="AnimGraph",LayerGroup="DefaultSharedGroup",InitialUpdateFunction=(),BecomeRelevantFunction=(),UpdateFunction=()) (own)
+    AnimGraphNode_TransitionResult_10 = (InitialUpdateFunction=(),BecomeRelevantFunction=(),UpdateFunction=()) (own)
+    AnimGraphNode_TransitionResult_9 = (InitialUpdateFunction=(),BecomeRelevantFunction=(),UpdateFunction=()) (own)
+    AnimGraphNode_BlendSpacePlayer = (GroupName="Locomotion",Method=SyncGroup,PlayRate=1.000000,bLoop=True,bResetPlayTimeWhenBlendSpaceChanges=True,BlendSpace="/Script/Engine.BlendSpace'/Game/Characters/Mannequins/Anims/Unarmed/BS_Idle_Walk_Run.BS_Idle_Walk_Run'",InitialUpdateFunction=(),BecomeRelevantFunction=(),UpdateFunction=()) (own)
+    AnimGraphNode_StateResult_5 = (StateIndex=1,StateEntryFunction=(),StateFullyBlendedInFunction=(),StateExitFunction=(),StateFullyBlendedOutFunction=(),Result=(LinkID=3,SourceLinkID=4),Name="Walk / Run",LayerGroup="DefaultSharedGroup",InitialUpdateFunction=(),BecomeRelevantFunction=(),UpdateFunction=()) (own)
+    AnimGraphNode_SequencePlayer_3 = (Sequence="/Script/Engine.AnimSequence'/Game/Characters/Mannequins/Anims/Unarmed/MM_Idle.MM_Idle'",PlayRateBasis=1.000000,PlayRate=1.000000,PlayRateScaleBiasClampConstants=(InRange=(Max=1.000000),OutRange=(Max=1.000000),Scale=1.000000,ClampMax=1.000000,InterpSpeedIncreasing=10.000000,InterpSpeedDecreasing=10.000000),bLoopAnimation=True,PlayRateScaleBiasClampState=(),InitialUpdateFunction=(),Become (own)
+    AnimGraphNode_StateResult_4 = (StateEntryFunction=(),StateFullyBlendedInFunction=(),StateExitFunction=(),StateFullyBlendedOutFunction=(),Result=(LinkID=5,SourceLinkID=6),Name="Idle",LayerGroup="DefaultSharedGroup",InitialUpdateFunction=(),BecomeRelevantFunction=(),UpdateFunction=()) (own)
+    AnimGraphNode_StateMachine_1 = (StateMachineIndexInClass=1,MaxTransitionsPerFrame=3,MaxTransitionsRequests=32,bSkipFirstUpdateTransition=True,bReinitializeOnBecomingRelevant=True,bCreateNotifyMetaData=True,InitialUpdateFunction=(),BecomeRelevantFunction=(),UpdateFunction=()) (own)
+    AnimGraphNode_SaveCachedPose = (Pose=(LinkID=7,SourceLinkID=8),CachePoseName="Locomotion",InitialUpdateFunction=(),BecomeRelevantFunction=(),UpdateFunction=()) (own)
+    AnimGraphNode_TransitionResult_8 = (InitialUpdateFunction=(),BecomeRelevantFunction=(),UpdateFunction=()) (own)
+    AnimGraphNode_TransitionResult_7 = (InitialUpdateFunction=(),BecomeRelevantFunction=(),UpdateFunction=()) (own)
+    AnimGraphNode_TransitionResult_6 = (InitialUpdateFunction=(),BecomeRelevantFunction=(),UpdateFunction=()) (own)
+    AnimGraphNode_TransitionResult_5 = (InitialUpdateFunction=(),BecomeRelevantFunction=(),UpdateFunction=()) (own)
+    AnimGraphNode_TransitionResult_4 = (InitialUpdateFunction=(),BecomeRelevantFunction=(),UpdateFunction=()) (own)
+    AnimGraphNode_TransitionResult_3 = (InitialUpdateFunction=(),BecomeRelevantFunction=(),UpdateFunction=()) (own)
+    AnimGraphNode_TransitionResult_2 = (InitialUpdateFunction=(),BecomeRelevantFunction=(),UpdateFunction=()) (own)
+    AnimGraphNode_TransitionResult_1 = (InitialUpdateFunction=(),BecomeRelevantFunction=(),UpdateFunction=()) (own)
+    AnimGraphNode_TransitionResult = (InitialUpdateFunction=(),BecomeRelevantFunction=(),UpdateFunction=()) (own)
+    AnimGraphNode_SequencePlayer_2 = (Sequence="/Script/Engine.AnimSequence'/Game/Characters/Mannequins/Anims/Unarmed/Jump/MM_Land.MM_Land'",PlayRateBasis=1.000000,PlayRate=1.000000,PlayRateScaleBiasClampConstants=(InRange=(Max=1.000000),OutRange=(Max=1.000000),Scale=1.000000,ClampMax=1.000000,InterpSpeedIncreasing=10.000000,InterpSpeedDecreasing=10.000000),PlayRateScaleBiasClampState=(),InitialUpdateFunction=(),BecomeRelevantFunctio (own)
+    AnimGraphNode_StateResult_3 = (StateIndex=3,StateEntryFunction=(),StateFullyBlendedInFunction=(),StateExitFunction=(),StateFullyBlendedOutFunction=(),Result=(LinkID=18,SourceLinkID=19),Name="Land",LayerGroup="DefaultSharedGroup",InitialUpdateFunction=(),BecomeRelevantFunction=(),UpdateFunction=()) (own)
+    AnimGraphNode_SequencePlayer_1 = (Sequence="/Script/Engine.AnimSequence'/Game/Characters/Mannequins/Anims/Unarmed/Jump/MM_Fall_Loop.MM_Fall_Loop'",PlayRateBasis=1.000000,PlayRate=1.000000,PlayRateScaleBiasClampConstants=(InRange=(Max=1.000000),OutRange=(Max=1.000000),Scale=1.000000,ClampMax=1.000000,InterpSpeedIncreasing=10.000000,InterpSpeedDecreasing=10.000000),bLoopAnimation=True,PlayRateScaleBiasClampState=(),InitialUpdateFun (own)
+    AnimGraphNode_StateResult_2 = (StateIndex=2,StateEntryFunction=(),StateFullyBlendedInFunction=(),StateExitFunction=(),StateFullyBlendedOutFunction=(),Result=(LinkID=20,SourceLinkID=21),Name="Fall Loop",LayerGroup="DefaultSharedGroup",InitialUpdateFunction=(),BecomeRelevantFunction=(),UpdateFunction=()) (own)
+    AnimGraphNode_SequencePlayer = (Sequence="/Script/Engine.AnimSequence'/Game/Characters/Mannequins/Anims/Unarmed/Jump/MM_Jump.MM_Jump'",PlayRateBasis=1.000000,PlayRate=1.000000,PlayRateScaleBiasClampConstants=(InRange=(Max=1.000000),OutRange=(Max=1.000000),Scale=1.000000,ClampMax=1.000000,InterpSpeedIncreasing=10.000000,InterpSpeedDecreasing=10.000000),StartPosition=0.080000,PlayRateScaleBiasClampState=(),InitialUpdateFunction=( (own)
+    AnimGraphNode_StateResult_1 = (StateIndex=1,StateEntryFunction=(),StateFullyBlendedInFunction=(),StateExitFunction=(),StateFullyBlendedOutFunction=(),Result=(LinkID=22,SourceLinkID=23),Name="Jump",LayerGroup="DefaultSharedGroup",InitialUpdateFunction=(),BecomeRelevantFunction=(),UpdateFunction=()) (own)
+    AnimGraphNode_UseCachedPose = (LinkToCachingNode=(LinkID=8,SourceLinkID=24),CachePoseName="Locomotion",InitialUpdateFunction=(),BecomeRelevantFunction=(),UpdateFunction=()) (own)
+    AnimGraphNode_StateResult = (StateEntryFunction=(),StateFullyBlendedInFunction=(),StateExitFunction=(),StateFullyBlendedOutFunction=(),Result=(LinkID=24,SourceLinkID=25),Name="Locomotion",LayerGroup="DefaultSharedGroup",InitialUpdateFunction=(),BecomeRelevantFunction=(),UpdateFunction=()) (own)
+    AnimGraphNode_StateMachine = (MaxTransitionsPerFrame=3,MaxTransitionsRequests=32,bSkipFirstUpdateTransition=True,bReinitializeOnBecomingRelevant=True,bCreateNotifyMetaData=True,InitialUpdateFunction=(),BecomeRelevantFunction=(),UpdateFunction=()) (own)
+    AnimGraphNode_Slot = (Source=(LinkID=26,SourceLinkID=27),SlotName="DefaultSlot",InitialUpdateFunction=(),BecomeRelevantFunction=(),UpdateFunction=()) (own)
+    AnimGraphNode_ControlRig = (ControlRigAssetReference=(BlueprintRigClass="/Script/ControlRig.ControlRigBlueprintGeneratedClass'/Game/Characters/Mannequins/Rigs/CR_Mannequin_FootIK.CR_Mannequin_FootIK_C'"),DefaultControlRigAssetReference=(),Alpha=1.000000,bAlphaBoolEnabled=True,AlphaScaleBias=(Scale=1.000000),AlphaBoolBlend=(),AlphaScaleBiasClamp=(InRange=(Max=1.000000),OutRange=(Max=1.000000),Scale=1.000000,ClampMax=1.000000 (own)
+    __CustomProperty_ShouldDoIKTrace_BDE61FFC4E653CE138E8E8BB38AA415C =  (own)
+    Character =  (own)
+    MovementComponent =  (own)
+    Velocity = (X=0.000000,Y=0.000000,Z=0.000000) (own)
+    GroundSpeed =  (own)
+    Direction =  (own)
+    ShouldMove =  (own)
+    IsFalling =  (own)
+
+[Graphs]
+AnimGraph (8 nodes) -> AnimGraph.txt
+Locomotion (5 nodes) -> Locomotion.txt
+Idle (2 nodes) -> Idle.txt
+Walk / Run (4 nodes) -> Walk___Run.txt
+Transition (2 nodes) -> Transition.txt
+Transition (3 nodes) -> Transition_1.txt
+Main States (13 nodes) -> Main_States.txt
+Locomotion (2 nodes) -> Locomotion_1.txt
+Jump (2 nodes) -> Jump.txt
+Transition (5 nodes) -> Transition_2.txt
+Fall Loop (2 nodes) -> Fall_Loop.txt
+Transition (2 nodes) -> Transition_3.txt
+Transition (1 nodes) -> Transition_4.txt
+Land (2 nodes) -> Land.txt
+Transition (3 nodes) -> Transition_5.txt
+Transition (1 nodes) -> Transition_6.txt
+Transition (2 nodes) -> Transition_7.txt
+EventGraph (42 nodes) -> EventGraph.txt

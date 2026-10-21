@@ -1,0 +1,17 @@
+{
+	"blueprints": [
+		{
+			"path": "/Game/ThirdPerson/Blueprints/BP_ThirdPersonCharacter.BP_ThirdPersonCharacter",
+			"setComponents": {
+				"CameraBoom": {
+					"bEnableCameraLag": "True",
+					"CameraLagSpeed": "10.0",
+					"bDoCollisionTest": "True",
+					"ProbeSize": "12.0",
+					"ProbeChannel": "ECC_Camera"
+				}
+			}
+		}
+	],
+	"compilePaths": ["/Game/Bocha", "/Game/Lobby", "/Game/ThirdPerson"]
+}

@@ -1,0 +1,1549 @@
+Graph: Rig Graph
+
+[N0] Forwards Solve (ControlRigGraphNode)
+
+[N1] To Swing & Twist (ControlRigGraphNode)
+    out MathQuaternionSwingTwist.Swing : Quat Structure -> N3.MathQuaternionInverse_2.Value
+    out MathQuaternionSwingTwist.Twist : Quat Structure -> N7.MathQuaternionInverse_3.Value
+    in  MathQuaternionSwingTwist.Input : Quat Structure <- N5.MathTransformMakeRelative_3.Local.Rotation
+    in  MathQuaternionSwingTwist.TwistAxis.X : Float (double-precision) = 1.000000
+    in  MathQuaternionSwingTwist.TwistAxis.Y : Float (double-precision) = 0.000000
+    in  MathQuaternionSwingTwist.TwistAxis.Z : Float (double-precision) = 0.000000
+
+[N2] Interpolate (ControlRigGraphNode)
+    in  MathQuaternionSlerp_1.A : Quat Structure <- N7.MathQuaternionInverse_3.Result
+    in  MathQuaternionSlerp_1.B : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathQuaternionSlerp_1.T : Float (single-precision) = 0.800000
+
+[N3] Inverse (ControlRigGraphNode)
+    out MathQuaternionInverse_2.Result : Quat Structure -> N4.MathQuaternionSlerp_2.A
+    in  MathQuaternionInverse_2.Value : Quat Structure <- N1.MathQuaternionSwingTwist.Swing
+
+[N4] Interpolate (ControlRigGraphNode)
+    out MathQuaternionSlerp_2.Result : Quat Structure -> N6.MathQuaternionMul.B
+    in  MathQuaternionSlerp_2.A : Quat Structure <- N3.MathQuaternionInverse_2.Result
+    in  MathQuaternionSlerp_2.B : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathQuaternionSlerp_2.T : Float (single-precision) = 0.650000
+
+[N5] Make Relative (ControlRigGraphNode)
+    out MathTransformMakeRelative_3.Local.Rotation : Quat Structure -> N1.MathQuaternionSwingTwist.Input
+    in  MathTransformMakeRelative_3.Global : Transform <- N126.GetTransform_6.Transform
+    in  MathTransformMakeRelative_3.Global.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformMakeRelative_3.Global.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3.Global.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3.Global.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3.Global.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3.Global.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3.Global.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3.Parent : Transform <- N127.GetTransform_6_1.Transform
+    in  MathTransformMakeRelative_3.Parent.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformMakeRelative_3.Parent.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3.Parent.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3.Parent.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3.Parent.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3.Parent.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3.Parent.Scale3D.Z : Float (double-precision) = 1.000000
+
+[N6] Multiply (ControlRigGraphNode)
+    in  MathQuaternionMul.A : Quat Structure <- N7.MathQuaternionInverse_3.Result
+    in  MathQuaternionMul.B : Quat Structure <- N4.MathQuaternionSlerp_2.Result
+
+[N7] Inverse (ControlRigGraphNode)
+    out MathQuaternionInverse_3.Result : Quat Structure -> N6.MathQuaternionMul.A, N2.MathQuaternionSlerp_1.A, N70.MathQuaternionSlerp.A
+    in  MathQuaternionInverse_3.Value : Quat Structure <- N1.MathQuaternionSwingTwist.Twist
+
+[N8] Inverse (ControlRigGraphNode)
+    out MathQuaternionInverse_3_1.Result : Quat Structure -> N14.MathQuaternionMul_1.A, N10.MathQuaternionSlerp_1_1.A, N71.MathQuaternionSlerp_3.A
+    in  MathQuaternionInverse_3_1.Value : Quat Structure <- N9.MathQuaternionSwingTwist_1.Twist
+
+[N9] To Swing & Twist (ControlRigGraphNode)
+    out MathQuaternionSwingTwist_1.Swing : Quat Structure -> N11.MathQuaternionInverse_2_1.Value
+    out MathQuaternionSwingTwist_1.Twist : Quat Structure -> N8.MathQuaternionInverse_3_1.Value
+    in  MathQuaternionSwingTwist_1.Input : Quat Structure <- N13.MathTransformMakeRelative_3_1.Local.Rotation
+    in  MathQuaternionSwingTwist_1.TwistAxis.X : Float (double-precision) = 1.000000
+    in  MathQuaternionSwingTwist_1.TwistAxis.Y : Float (double-precision) = 0.000000
+    in  MathQuaternionSwingTwist_1.TwistAxis.Z : Float (double-precision) = 0.000000
+
+[N10] Interpolate (ControlRigGraphNode)
+    in  MathQuaternionSlerp_1_1.A : Quat Structure <- N8.MathQuaternionInverse_3_1.Result
+    in  MathQuaternionSlerp_1_1.B : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathQuaternionSlerp_1_1.T : Float (single-precision) = 0.800000
+
+[N11] Inverse (ControlRigGraphNode)
+    out MathQuaternionInverse_2_1.Result : Quat Structure -> N12.MathQuaternionSlerp_2_1.A
+    in  MathQuaternionInverse_2_1.Value : Quat Structure <- N9.MathQuaternionSwingTwist_1.Swing
+
+[N12] Interpolate (ControlRigGraphNode)
+    out MathQuaternionSlerp_2_1.Result : Quat Structure -> N14.MathQuaternionMul_1.B
+    in  MathQuaternionSlerp_2_1.A : Quat Structure <- N11.MathQuaternionInverse_2_1.Result
+    in  MathQuaternionSlerp_2_1.B : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathQuaternionSlerp_2_1.T : Float (single-precision) = 0.650000
+
+[N13] Make Relative (ControlRigGraphNode)
+    out MathTransformMakeRelative_3_1.Local.Rotation : Quat Structure -> N9.MathQuaternionSwingTwist_1.Input
+    in  MathTransformMakeRelative_3_1.Global : Transform <- N131.GetTransform_6_3.Transform
+    in  MathTransformMakeRelative_3_1.Global.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformMakeRelative_3_1.Global.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_1.Global.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_1.Global.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_1.Global.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_1.Global.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_1.Global.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_1.Parent : Transform <- N130.GetTransform_6_1_2.Transform
+    in  MathTransformMakeRelative_3_1.Parent.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformMakeRelative_3_1.Parent.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_1.Parent.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_1.Parent.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_1.Parent.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_1.Parent.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_1.Parent.Scale3D.Z : Float (double-precision) = 1.000000
+
+[N14] Multiply (ControlRigGraphNode)
+    in  MathQuaternionMul_1.A : Quat Structure <- N8.MathQuaternionInverse_3_1.Result
+    in  MathQuaternionMul_1.B : Quat Structure <- N12.MathQuaternionSlerp_2_1.Result
+
+[N15] To Swing & Twist (ControlRigGraphNode)
+    out MathQuaternionSwingTwist_2.Swing : Quat Structure -> N17.MathQuaternionInverse_2_2.Value
+    out MathQuaternionSwingTwist_2.Twist : Quat Structure -> N21.MathQuaternionInverse_3_2.Value
+    in  MathQuaternionSwingTwist_2.Input : Quat Structure <- N19.MathTransformMakeRelative_3_2.Local.Rotation
+    in  MathQuaternionSwingTwist_2.TwistAxis.X : Float (double-precision) = 1.000000
+    in  MathQuaternionSwingTwist_2.TwistAxis.Y : Float (double-precision) = 0.000000
+    in  MathQuaternionSwingTwist_2.TwistAxis.Z : Float (double-precision) = 0.000000
+
+[N16] Interpolate (ControlRigGraphNode)
+    in  MathQuaternionSlerp_1_2.A : Quat Structure <- N21.MathQuaternionInverse_3_2.Result
+    in  MathQuaternionSlerp_1_2.B : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathQuaternionSlerp_1_2.T : Float (single-precision) = 0.500000
+
+[N17] Inverse (ControlRigGraphNode)
+    out MathQuaternionInverse_2_2.Result : Quat Structure -> N18.MathQuaternionSlerp_2_2.A
+    in  MathQuaternionInverse_2_2.Value : Quat Structure <- N15.MathQuaternionSwingTwist_2.Swing
+
+[N18] Interpolate (ControlRigGraphNode)
+    out MathQuaternionSlerp_2_2.Result : Quat Structure -> N20.MathQuaternionMul_2.B
+    in  MathQuaternionSlerp_2_2.A : Quat Structure <- N17.MathQuaternionInverse_2_2.Result
+    in  MathQuaternionSlerp_2_2.B : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathQuaternionSlerp_2_2.T : Float (single-precision) = 0.600000
+
+[N19] Make Relative (ControlRigGraphNode)
+    out MathTransformMakeRelative_3_2.Local.Rotation : Quat Structure -> N15.MathQuaternionSwingTwist_2.Input
+    in  MathTransformMakeRelative_3_2.Global : Transform <- N137.GetTransform_6_3_1.Transform
+    in  MathTransformMakeRelative_3_2.Global.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformMakeRelative_3_2.Global.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2.Global.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2.Global.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2.Global.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2.Global.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2.Global.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2.Parent : Transform <- N136.GetTransform_6_1_2_1.Transform
+    in  MathTransformMakeRelative_3_2.Parent.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformMakeRelative_3_2.Parent.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2.Parent.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2.Parent.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2.Parent.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2.Parent.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2.Parent.Scale3D.Z : Float (double-precision) = 1.000000
+
+[N20] Multiply (ControlRigGraphNode)
+    in  MathQuaternionMul_2.A : Quat Structure <- N21.MathQuaternionInverse_3_2.Result
+    in  MathQuaternionMul_2.B : Quat Structure <- N18.MathQuaternionSlerp_2_2.Result
+
+[N21] Inverse (ControlRigGraphNode)
+    out MathQuaternionInverse_3_2.Result : Quat Structure -> N20.MathQuaternionMul_2.A, N16.MathQuaternionSlerp_1_2.A
+    in  MathQuaternionInverse_3_2.Value : Quat Structure <- N15.MathQuaternionSwingTwist_2.Twist
+
+[N22] To Swing & Twist (ControlRigGraphNode)
+    out MathQuaternionSwingTwist_2_1.Swing : Quat Structure -> N24.MathQuaternionInverse_2_2_1.Value
+    out MathQuaternionSwingTwist_2_1.Twist : Quat Structure -> N28.MathQuaternionInverse_3_2_1.Value
+    in  MathQuaternionSwingTwist_2_1.Input : Quat Structure <- N26.MathTransformMakeRelative_3_2_1.Local.Rotation
+    in  MathQuaternionSwingTwist_2_1.TwistAxis.X : Float (double-precision) = 1.000000
+    in  MathQuaternionSwingTwist_2_1.TwistAxis.Y : Float (double-precision) = 0.000000
+    in  MathQuaternionSwingTwist_2_1.TwistAxis.Z : Float (double-precision) = 0.000000
+
+[N23] Interpolate (ControlRigGraphNode)
+    in  MathQuaternionSlerp_1_2_1.A : Quat Structure <- N28.MathQuaternionInverse_3_2_1.Result
+    in  MathQuaternionSlerp_1_2_1.B : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathQuaternionSlerp_1_2_1.T : Float (single-precision) = 0.500000
+
+[N24] Inverse (ControlRigGraphNode)
+    out MathQuaternionInverse_2_2_1.Result : Quat Structure -> N25.MathQuaternionSlerp_2_2_1.A
+    in  MathQuaternionInverse_2_2_1.Value : Quat Structure <- N22.MathQuaternionSwingTwist_2_1.Swing
+
+[N25] Interpolate (ControlRigGraphNode)
+    out MathQuaternionSlerp_2_2_1.Result : Quat Structure -> N27.MathQuaternionMul_2_1.B
+    in  MathQuaternionSlerp_2_2_1.A : Quat Structure <- N24.MathQuaternionInverse_2_2_1.Result
+    in  MathQuaternionSlerp_2_2_1.B : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathQuaternionSlerp_2_2_1.T : Float (single-precision) = 0.600000
+
+[N26] Make Relative (ControlRigGraphNode)
+    out MathTransformMakeRelative_3_2_1.Local.Rotation : Quat Structure -> N22.MathQuaternionSwingTwist_2_1.Input
+    in  MathTransformMakeRelative_3_2_1.Global : Transform <- N143.GetTransform_6_3_1_3.Transform
+    in  MathTransformMakeRelative_3_2_1.Global.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformMakeRelative_3_2_1.Global.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_1.Global.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_1.Global.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_1.Global.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2_1.Global.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2_1.Global.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2_1.Parent : Transform <- N142.GetTransform_6_1_2_1_3.Transform
+    in  MathTransformMakeRelative_3_2_1.Parent.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformMakeRelative_3_2_1.Parent.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_1.Parent.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_1.Parent.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_1.Parent.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2_1.Parent.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2_1.Parent.Scale3D.Z : Float (double-precision) = 1.000000
+
+[N27] Multiply (ControlRigGraphNode)
+    in  MathQuaternionMul_2_1.A : Quat Structure <- N28.MathQuaternionInverse_3_2_1.Result
+    in  MathQuaternionMul_2_1.B : Quat Structure <- N25.MathQuaternionSlerp_2_2_1.Result
+
+[N28] Inverse (ControlRigGraphNode)
+    out MathQuaternionInverse_3_2_1.Result : Quat Structure -> N27.MathQuaternionMul_2_1.A, N23.MathQuaternionSlerp_1_2_1.A
+    in  MathQuaternionInverse_3_2_1.Value : Quat Structure <- N22.MathQuaternionSwingTwist_2_1.Twist
+
+[N29] To Swing & Twist (ControlRigGraphNode)
+    out MathQuaternionSwingTwist_3.Twist : Quat Structure -> N30.MathQuaternionSlerp_1_3.A, N72.MathQuaternionSlerp_4.A
+    in  MathQuaternionSwingTwist_3.Input : Quat Structure <- N31.MathTransformMakeRelative_3_3.Local.Rotation
+    in  MathQuaternionSwingTwist_3.TwistAxis.X : Float (double-precision) = 1.000000
+    in  MathQuaternionSwingTwist_3.TwistAxis.Y : Float (double-precision) = 0.000000
+    in  MathQuaternionSwingTwist_3.TwistAxis.Z : Float (double-precision) = 0.000000
+
+[N30] Interpolate (ControlRigGraphNode)
+    in  MathQuaternionSlerp_1_3.A : Quat Structure <- N29.MathQuaternionSwingTwist_3.Twist
+    in  MathQuaternionSlerp_1_3.B : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathQuaternionSlerp_1_3.T : Float (single-precision) = 0.800000
+
+[N31] Make Relative (ControlRigGraphNode)
+    out MathTransformMakeRelative_3_3.Local.Rotation : Quat Structure -> N29.MathQuaternionSwingTwist_3.Input
+    in  MathTransformMakeRelative_3_3.Global : Transform <- N123.GetTransform_5_1.Transform
+    in  MathTransformMakeRelative_3_3.Global.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformMakeRelative_3_3.Global.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_3.Global.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_3.Global.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_3.Global.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_3.Global.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_3.Global.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_3.Parent : Transform <- N122.GetTransform_5.Transform
+    in  MathTransformMakeRelative_3_3.Parent.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformMakeRelative_3_3.Parent.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_3.Parent.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_3.Parent.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_3.Parent.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_3.Parent.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_3.Parent.Scale3D.Z : Float (double-precision) = 1.000000
+
+[N32] To Swing & Twist (ControlRigGraphNode)
+    out MathQuaternionSwingTwist_3_1.Twist : Quat Structure -> N33.MathQuaternionSlerp_1_3_1.A, N73.MathQuaternionSlerp_1_3_1_1.A
+    in  MathQuaternionSwingTwist_3_1.Input : Quat Structure <- N34.MathTransformMakeRelative_3_3_1.Local.Rotation
+    in  MathQuaternionSwingTwist_3_1.TwistAxis.X : Float (double-precision) = 1.000000
+    in  MathQuaternionSwingTwist_3_1.TwistAxis.Y : Float (double-precision) = 0.000000
+    in  MathQuaternionSwingTwist_3_1.TwistAxis.Z : Float (double-precision) = 0.000000
+
+[N33] Interpolate (ControlRigGraphNode)
+    in  MathQuaternionSlerp_1_3_1.A : Quat Structure <- N32.MathQuaternionSwingTwist_3_1.Twist
+    in  MathQuaternionSlerp_1_3_1.B : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathQuaternionSlerp_1_3_1.T : Float (single-precision) = 0.800000
+
+[N34] Make Relative (ControlRigGraphNode)
+    out MathTransformMakeRelative_3_3_1.Local.Rotation : Quat Structure -> N32.MathQuaternionSwingTwist_3_1.Input
+    in  MathTransformMakeRelative_3_3_1.Global : Transform <- N135.GetTransform_6_5.Transform
+    in  MathTransformMakeRelative_3_3_1.Global.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformMakeRelative_3_3_1.Global.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_3_1.Global.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_3_1.Global.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_3_1.Global.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_3_1.Global.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_3_1.Global.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_3_1.Parent : Transform <- N134.GetTransform_6_1_4.Transform
+    in  MathTransformMakeRelative_3_3_1.Parent.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformMakeRelative_3_3_1.Parent.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_3_1.Parent.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_3_1.Parent.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_3_1.Parent.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_3_1.Parent.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_3_1.Parent.Scale3D.Z : Float (double-precision) = 1.000000
+
+[N35] To Swing & Twist (ControlRigGraphNode)
+    out MathQuaternionSwingTwist_4.Swing : Quat Structure -> N36.MathQuaternionInverse_2_4.Value
+    out MathQuaternionSwingTwist_4.Twist : Quat Structure -> N40.MathQuaternionInverse_3_3.Value
+    in  MathQuaternionSwingTwist_4.Input : Quat Structure <- N38.MathTransformMakeRelative_3_4.Local.Rotation
+    in  MathQuaternionSwingTwist_4.TwistAxis.X : Float (double-precision) = 1.000000
+    in  MathQuaternionSwingTwist_4.TwistAxis.Y : Float (double-precision) = 0.000000
+    in  MathQuaternionSwingTwist_4.TwistAxis.Z : Float (double-precision) = 0.000000
+
+[N36] Inverse (ControlRigGraphNode)
+    out MathQuaternionInverse_2_4.Result : Quat Structure -> N37.MathQuaternionSlerp_2_3.A
+    in  MathQuaternionInverse_2_4.Value : Quat Structure <- N35.MathQuaternionSwingTwist_4.Swing
+
+[N37] Interpolate (ControlRigGraphNode)
+    out MathQuaternionSlerp_2_3.Result : Quat Structure -> N39.MathQuaternionMul_3.B
+    in  MathQuaternionSlerp_2_3.A : Quat Structure <- N36.MathQuaternionInverse_2_4.Result
+    in  MathQuaternionSlerp_2_3.B : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathQuaternionSlerp_2_3.T : Float (single-precision) = 0.500000
+
+[N38] Make Relative (ControlRigGraphNode)
+    out MathTransformMakeRelative_3_4.Local.Rotation : Quat Structure -> N35.MathQuaternionSwingTwist_4.Input
+    in  MathTransformMakeRelative_3_4.Global : Transform <- N129.GetTransform_6_2.Transform
+    in  MathTransformMakeRelative_3_4.Global.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformMakeRelative_3_4.Global.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_4.Global.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_4.Global.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_4.Global.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_4.Global.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_4.Global.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_4.Parent : Transform <- N128.GetTransform_6_1_1.Transform
+    in  MathTransformMakeRelative_3_4.Parent.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformMakeRelative_3_4.Parent.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_4.Parent.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_4.Parent.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_4.Parent.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_4.Parent.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_4.Parent.Scale3D.Z : Float (double-precision) = 1.000000
+
+[N39] Multiply (ControlRigGraphNode)
+    in  MathQuaternionMul_3.A : Quat Structure <- N40.MathQuaternionInverse_3_3.Result
+    in  MathQuaternionMul_3.B : Quat Structure <- N37.MathQuaternionSlerp_2_3.Result
+
+[N40] Inverse (ControlRigGraphNode)
+    out MathQuaternionInverse_3_3.Result : Quat Structure -> N39.MathQuaternionMul_3.A
+    in  MathQuaternionInverse_3_3.Value : Quat Structure <- N35.MathQuaternionSwingTwist_4.Twist
+
+[N41] To Swing & Twist (ControlRigGraphNode)
+    out MathQuaternionSwingTwist_4_1.Swing : Quat Structure -> N42.MathQuaternionInverse_2_4_1.Value
+    out MathQuaternionSwingTwist_4_1.Twist : Quat Structure -> N46.MathQuaternionInverse_3_3_1.Value
+    in  MathQuaternionSwingTwist_4_1.Input : Quat Structure <- N44.MathTransformMakeRelative_3_4_1.Local.Rotation
+    in  MathQuaternionSwingTwist_4_1.TwistAxis.X : Float (double-precision) = 1.000000
+    in  MathQuaternionSwingTwist_4_1.TwistAxis.Y : Float (double-precision) = 0.000000
+    in  MathQuaternionSwingTwist_4_1.TwistAxis.Z : Float (double-precision) = 0.000000
+
+[N42] Inverse (ControlRigGraphNode)
+    out MathQuaternionInverse_2_4_1.Result : Quat Structure -> N43.MathQuaternionSlerp_2_3_1.A
+    in  MathQuaternionInverse_2_4_1.Value : Quat Structure <- N41.MathQuaternionSwingTwist_4_1.Swing
+
+[N43] Interpolate (ControlRigGraphNode)
+    out MathQuaternionSlerp_2_3_1.Result : Quat Structure -> N45.MathQuaternionMul_3_1.B
+    in  MathQuaternionSlerp_2_3_1.A : Quat Structure <- N42.MathQuaternionInverse_2_4_1.Result
+    in  MathQuaternionSlerp_2_3_1.B : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathQuaternionSlerp_2_3_1.T : Float (single-precision) = 0.500000
+
+[N44] Make Relative (ControlRigGraphNode)
+    out MathTransformMakeRelative_3_4_1.Local.Rotation : Quat Structure -> N41.MathQuaternionSwingTwist_4_1.Input
+    in  MathTransformMakeRelative_3_4_1.Global : Transform <- N133.GetTransform_6_4.Transform
+    in  MathTransformMakeRelative_3_4_1.Global.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformMakeRelative_3_4_1.Global.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_4_1.Global.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_4_1.Global.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_4_1.Global.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_4_1.Global.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_4_1.Global.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_4_1.Parent : Transform <- N132.GetTransform_6_1_3.Transform
+    in  MathTransformMakeRelative_3_4_1.Parent.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformMakeRelative_3_4_1.Parent.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_4_1.Parent.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_4_1.Parent.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_4_1.Parent.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_4_1.Parent.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_4_1.Parent.Scale3D.Z : Float (double-precision) = 1.000000
+
+[N45] Multiply (ControlRigGraphNode)
+    in  MathQuaternionMul_3_1.A : Quat Structure <- N46.MathQuaternionInverse_3_3_1.Result
+    in  MathQuaternionMul_3_1.B : Quat Structure <- N43.MathQuaternionSlerp_2_3_1.Result
+
+[N46] Inverse (ControlRigGraphNode)
+    out MathQuaternionInverse_3_3_1.Result : Quat Structure -> N45.MathQuaternionMul_3_1.A
+    in  MathQuaternionInverse_3_3_1.Value : Quat Structure <- N41.MathQuaternionSwingTwist_4_1.Twist
+
+[N47] Comment (EdGraphNode_Comment)
+    // arm_right_twist_swing
+
+[N48] Comment (EdGraphNode_Comment)
+    // arm_left_swing_twist
+
+[N49] Comment (EdGraphNode_Comment)
+    // thigh_left_swing_twist
+
+[N50] Comment (EdGraphNode_Comment)
+    // thigh_right_swing_twist
+
+[N51] To Swing & Twist (ControlRigGraphNode)
+    out MathQuaternionSwingTwist_2_2.Swing : Quat Structure -> N52.MathQuaternionInverse_2_2_2.Value
+    out MathQuaternionSwingTwist_2_2.Twist : Quat Structure -> N56.MathQuaternionInverse_3_2_2.Value
+    in  MathQuaternionSwingTwist_2_2.Input : Quat Structure <- N54.MathTransformMakeRelative_3_2_2.Local.Rotation
+    in  MathQuaternionSwingTwist_2_2.TwistAxis.X : Float (double-precision) = 1.000000
+    in  MathQuaternionSwingTwist_2_2.TwistAxis.Y : Float (double-precision) = 0.000000
+    in  MathQuaternionSwingTwist_2_2.TwistAxis.Z : Float (double-precision) = 0.000000
+
+[N52] Inverse (ControlRigGraphNode)
+    out MathQuaternionInverse_2_2_2.Result : Quat Structure -> N53.MathQuaternionSlerp_2_2_2.A
+    in  MathQuaternionInverse_2_2_2.Value : Quat Structure <- N51.MathQuaternionSwingTwist_2_2.Swing
+
+[N53] Interpolate (ControlRigGraphNode)
+    out MathQuaternionSlerp_2_2_2.Result : Quat Structure -> N55.MathQuaternionMul_2_2.B
+    in  MathQuaternionSlerp_2_2_2.A : Quat Structure <- N52.MathQuaternionInverse_2_2_2.Result
+    in  MathQuaternionSlerp_2_2_2.B : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathQuaternionSlerp_2_2_2.T : Float (single-precision) = 0.500000
+
+[N54] Make Relative (ControlRigGraphNode)
+    out MathTransformMakeRelative_3_2_2.Local.Rotation : Quat Structure -> N51.MathQuaternionSwingTwist_2_2.Input
+    in  MathTransformMakeRelative_3_2_2.Global : Transform <- N139.GetTransform_6_3_1_1.Transform
+    in  MathTransformMakeRelative_3_2_2.Global.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformMakeRelative_3_2_2.Global.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_2.Global.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_2.Global.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_2.Global.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2_2.Global.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2_2.Global.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2_2.Parent : Transform <- N138.GetTransform_6_1_2_1_1.Transform
+    in  MathTransformMakeRelative_3_2_2.Parent.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformMakeRelative_3_2_2.Parent.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_2.Parent.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_2.Parent.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_2.Parent.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2_2.Parent.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2_2.Parent.Scale3D.Z : Float (double-precision) = 1.000000
+
+[N55] Multiply (ControlRigGraphNode)
+    in  MathQuaternionMul_2_2.A : Quat Structure <- N56.MathQuaternionInverse_3_2_2.Result
+    in  MathQuaternionMul_2_2.B : Quat Structure <- N53.MathQuaternionSlerp_2_2_2.Result
+
+[N56] Inverse (ControlRigGraphNode)
+    out MathQuaternionInverse_3_2_2.Result : Quat Structure -> N55.MathQuaternionMul_2_2.A
+    in  MathQuaternionInverse_3_2_2.Value : Quat Structure <- N51.MathQuaternionSwingTwist_2_2.Twist
+
+[N57] Sequence (OutDated) (ControlRigGraphNode)
+    in  SequenceExecution.ExecuteContext : Execute Context Structure = ()
+
+[N58] To Swing & Twist (ControlRigGraphNode)
+    out MathQuaternionSwingTwist_2_2_1.Twist : Quat Structure -> N59.MathQuaternionSlerp_2_2_2_1.A
+    in  MathQuaternionSwingTwist_2_2_1.Input : Quat Structure <- N60.MathTransformMakeRelative_3_2_2_1.Local.Rotation
+    in  MathQuaternionSwingTwist_2_2_1.TwistAxis.X : Float (double-precision) = 1.000000
+    in  MathQuaternionSwingTwist_2_2_1.TwistAxis.Y : Float (double-precision) = 0.000000
+    in  MathQuaternionSwingTwist_2_2_1.TwistAxis.Z : Float (double-precision) = 0.000000
+
+[N59] Interpolate (ControlRigGraphNode)
+    in  MathQuaternionSlerp_2_2_2_1.A : Quat Structure <- N58.MathQuaternionSwingTwist_2_2_1.Twist
+    in  MathQuaternionSlerp_2_2_2_1.B : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathQuaternionSlerp_2_2_2_1.T : Float (single-precision) = 0.500000
+
+[N60] Make Relative (ControlRigGraphNode)
+    out MathTransformMakeRelative_3_2_2_1.Local.Rotation : Quat Structure -> N58.MathQuaternionSwingTwist_2_2_1.Input
+    in  MathTransformMakeRelative_3_2_2_1.Global : Transform <- N141.GetTransform_6_3_1_2.Transform
+    in  MathTransformMakeRelative_3_2_2_1.Global.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformMakeRelative_3_2_2_1.Global.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_2_1.Global.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_2_1.Global.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_2_1.Global.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2_2_1.Global.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2_2_1.Global.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2_2_1.Parent : Transform <- N140.GetTransform_6_1_2_1_2.Transform
+    in  MathTransformMakeRelative_3_2_2_1.Parent.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformMakeRelative_3_2_2_1.Parent.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_2_1.Parent.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_2_1.Parent.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_2_1.Parent.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2_2_1.Parent.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2_2_1.Parent.Scale3D.Z : Float (double-precision) = 1.000000
+
+[N61] To Swing & Twist (ControlRigGraphNode)
+    out MathQuaternionSwingTwist_2_2_2.Swing : Quat Structure -> N62.MathQuaternionInverse_2_2_2_1.Value
+    out MathQuaternionSwingTwist_2_2_2.Twist : Quat Structure -> N66.MathQuaternionInverse_3_2_2_1.Value
+    in  MathQuaternionSwingTwist_2_2_2.Input : Quat Structure <- N64.MathTransformMakeRelative_3_2_2_2.Local.Rotation
+    in  MathQuaternionSwingTwist_2_2_2.TwistAxis.X : Float (double-precision) = 1.000000
+    in  MathQuaternionSwingTwist_2_2_2.TwistAxis.Y : Float (double-precision) = 0.000000
+    in  MathQuaternionSwingTwist_2_2_2.TwistAxis.Z : Float (double-precision) = 0.000000
+
+[N62] Inverse (ControlRigGraphNode)
+    out MathQuaternionInverse_2_2_2_1.Result : Quat Structure -> N63.MathQuaternionSlerp_2_2_2_2.A
+    in  MathQuaternionInverse_2_2_2_1.Value : Quat Structure <- N61.MathQuaternionSwingTwist_2_2_2.Swing
+
+[N63] Interpolate (ControlRigGraphNode)
+    out MathQuaternionSlerp_2_2_2_2.Result : Quat Structure -> N65.MathQuaternionMul_2_2_1.B
+    in  MathQuaternionSlerp_2_2_2_2.A : Quat Structure <- N62.MathQuaternionInverse_2_2_2_1.Result
+    in  MathQuaternionSlerp_2_2_2_2.B : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathQuaternionSlerp_2_2_2_2.T : Float (single-precision) = 0.500000
+
+[N64] Make Relative (ControlRigGraphNode)
+    out MathTransformMakeRelative_3_2_2_2.Local.Rotation : Quat Structure -> N61.MathQuaternionSwingTwist_2_2_2.Input
+    in  MathTransformMakeRelative_3_2_2_2.Global : Transform <- N145.GetTransform_6_3_1_4.Transform
+    in  MathTransformMakeRelative_3_2_2_2.Global.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformMakeRelative_3_2_2_2.Global.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_2_2.Global.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_2_2.Global.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_2_2.Global.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2_2_2.Global.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2_2_2.Global.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2_2_2.Parent : Transform <- N144.GetTransform_6_1_2_1_4.Transform
+    in  MathTransformMakeRelative_3_2_2_2.Parent.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformMakeRelative_3_2_2_2.Parent.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_2_2.Parent.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_2_2.Parent.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_2_2.Parent.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2_2_2.Parent.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2_2_2.Parent.Scale3D.Z : Float (double-precision) = 1.000000
+
+[N65] Multiply (ControlRigGraphNode)
+    in  MathQuaternionMul_2_2_1.A : Quat Structure <- N66.MathQuaternionInverse_3_2_2_1.Result
+    in  MathQuaternionMul_2_2_1.B : Quat Structure <- N63.MathQuaternionSlerp_2_2_2_2.Result
+
+[N66] Inverse (ControlRigGraphNode)
+    out MathQuaternionInverse_3_2_2_1.Result : Quat Structure -> N65.MathQuaternionMul_2_2_1.A
+    in  MathQuaternionInverse_3_2_2_1.Value : Quat Structure <- N61.MathQuaternionSwingTwist_2_2_2.Twist
+
+[N67] To Swing & Twist (ControlRigGraphNode)
+    out MathQuaternionSwingTwist_2_2_1_1.Twist : Quat Structure -> N68.MathQuaternionSlerp_2_2_2_1_1.A
+    in  MathQuaternionSwingTwist_2_2_1_1.Input : Quat Structure <- N69.MathTransformMakeRelative_3_2_2_1_1.Local.Rotation
+    in  MathQuaternionSwingTwist_2_2_1_1.TwistAxis.X : Float (double-precision) = 1.000000
+    in  MathQuaternionSwingTwist_2_2_1_1.TwistAxis.Y : Float (double-precision) = 0.000000
+    in  MathQuaternionSwingTwist_2_2_1_1.TwistAxis.Z : Float (double-precision) = 0.000000
+
+[N68] Interpolate (ControlRigGraphNode)
+    in  MathQuaternionSlerp_2_2_2_1_1.A : Quat Structure <- N67.MathQuaternionSwingTwist_2_2_1_1.Twist
+    in  MathQuaternionSlerp_2_2_2_1_1.B : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathQuaternionSlerp_2_2_2_1_1.T : Float (single-precision) = 0.500000
+
+[N69] Make Relative (ControlRigGraphNode)
+    out MathTransformMakeRelative_3_2_2_1_1.Local.Rotation : Quat Structure -> N67.MathQuaternionSwingTwist_2_2_1_1.Input
+    in  MathTransformMakeRelative_3_2_2_1_1.Global : Transform <- N147.GetTransform_6_3_1_5.Transform
+    in  MathTransformMakeRelative_3_2_2_1_1.Global.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformMakeRelative_3_2_2_1_1.Global.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_2_1_1.Global.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_2_1_1.Global.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_2_1_1.Global.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2_2_1_1.Global.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2_2_1_1.Global.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2_2_1_1.Parent : Transform <- N146.GetTransform_6_1_2_1_5.Transform
+    in  MathTransformMakeRelative_3_2_2_1_1.Parent.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformMakeRelative_3_2_2_1_1.Parent.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_2_1_1.Parent.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_2_1_1.Parent.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformMakeRelative_3_2_2_1_1.Parent.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2_2_1_1.Parent.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformMakeRelative_3_2_2_1_1.Parent.Scale3D.Z : Float (double-precision) = 1.000000
+
+[N70] Interpolate (ControlRigGraphNode)
+    in  MathQuaternionSlerp.A : Quat Structure <- N7.MathQuaternionInverse_3.Result
+    in  MathQuaternionSlerp.B : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathQuaternionSlerp.T : Float (single-precision) = 0.200000
+
+[N71] Interpolate (ControlRigGraphNode)
+    in  MathQuaternionSlerp_3.A : Quat Structure <- N8.MathQuaternionInverse_3_1.Result
+    in  MathQuaternionSlerp_3.B : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathQuaternionSlerp_3.T : Float (single-precision) = 0.200000
+
+[N72] Interpolate (ControlRigGraphNode)
+    in  MathQuaternionSlerp_4.A : Quat Structure <- N29.MathQuaternionSwingTwist_3.Twist
+    in  MathQuaternionSlerp_4.B : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathQuaternionSlerp_4.T : Float (single-precision) = 0.400000
+
+[N73] Interpolate (ControlRigGraphNode)
+    in  MathQuaternionSlerp_1_3_1_1.A : Quat Structure <- N32.MathQuaternionSwingTwist_3_1.Twist
+    in  MathQuaternionSlerp_1_3_1_1.B : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathQuaternionSlerp_1_3_1_1.T : Float (single-precision) = 0.400000
+
+[N74] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform.Transform : Transform -> N76.MathTransformLerp.A, N78.MathTransformLerp_1.A
+    in  GetTransform.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform.Item.Name : Name = upperarm_l
+    in  GetTransform.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N75] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_1.Transform : Transform -> N76.MathTransformLerp.B, N78.MathTransformLerp_1.B
+    in  GetTransform_1.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_1.Item.Name : Name = lowerarm_l
+    in  GetTransform_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N76] Interpolate (ControlRigGraphNode)
+    in  MathTransformLerp.A : Transform <- N74.GetTransform.Transform
+    in  MathTransformLerp.A.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp.A.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp.A.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp.A.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp.A.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp.A.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp.A.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp.B : Transform <- N75.GetTransform_1.Transform
+    in  MathTransformLerp.B.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp.B.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp.B.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp.B.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp.B.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp.B.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp.B.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp.T : Float (single-precision) = 0.333000
+
+[N77] Set Translation - Bone (ControlRigGraphNode)
+    in  SetTranslation.ExecuteContext : Execute Context Structure = ()
+    in  SetTranslation.Item.Type : ERigElementType Enum = Bone
+    in  SetTranslation.Item.Name : Name = upperarm_twist_01_l
+    in  SetTranslation.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTranslation.bInitial : Boolean = False
+    in  SetTranslation.Value.X : Float (double-precision) = 0.000000
+    in  SetTranslation.Value.Y : Float (double-precision) = 0.000000
+    in  SetTranslation.Value.Z : Float (double-precision) = 0.000000
+    in  SetTranslation.Weight : Float (single-precision) = 1.000000
+    in  SetTranslation.bPropagateToChildren : Boolean = true
+
+[N78] Interpolate (ControlRigGraphNode)
+    in  MathTransformLerp_1.A : Transform <- N74.GetTransform.Transform
+    in  MathTransformLerp_1.A.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_1.A.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1.A.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1.A.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1.A.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1.A.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1.A.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1.B : Transform <- N75.GetTransform_1.Transform
+    in  MathTransformLerp_1.B.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_1.B.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1.B.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1.B.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1.B.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1.B.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1.B.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1.T : Float (single-precision) = 0.667000
+
+[N79] Set Translation - Bone (ControlRigGraphNode)
+    in  SetTranslation_1.ExecuteContext : Execute Context Structure = ()
+    in  SetTranslation_1.Item.Type : ERigElementType Enum = Bone
+    in  SetTranslation_1.Item.Name : Name = upperarm_twist_02_l
+    in  SetTranslation_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTranslation_1.bInitial : Boolean = False
+    in  SetTranslation_1.Value.X : Float (double-precision) = 0.000000
+    in  SetTranslation_1.Value.Y : Float (double-precision) = 0.000000
+    in  SetTranslation_1.Value.Z : Float (double-precision) = 0.000000
+    in  SetTranslation_1.Weight : Float (single-precision) = 1.000000
+    in  SetTranslation_1.bPropagateToChildren : Boolean = true
+
+[N80] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_2.Transform : Transform -> N82.MathTransformLerp_2.A, N83.MathTransformLerp_1_1.A
+    in  GetTransform_2.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_2.Item.Name : Name = upperarm_r
+    in  GetTransform_2.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N81] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_1_1.Transform : Transform -> N82.MathTransformLerp_2.B, N83.MathTransformLerp_1_1.B
+    in  GetTransform_1_1.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_1_1.Item.Name : Name = lowerarm_r
+    in  GetTransform_1_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N82] Interpolate (ControlRigGraphNode)
+    in  MathTransformLerp_2.A : Transform <- N80.GetTransform_2.Transform
+    in  MathTransformLerp_2.A.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_2.A.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_2.A.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_2.A.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_2.A.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_2.A.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_2.A.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_2.B : Transform <- N81.GetTransform_1_1.Transform
+    in  MathTransformLerp_2.B.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_2.B.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_2.B.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_2.B.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_2.B.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_2.B.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_2.B.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_2.T : Float (single-precision) = 0.333000
+
+[N83] Interpolate (ControlRigGraphNode)
+    in  MathTransformLerp_1_1.A : Transform <- N80.GetTransform_2.Transform
+    in  MathTransformLerp_1_1.A.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_1_1.A.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_1.A.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_1.A.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_1.A.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_1.A.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_1.A.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_1.B : Transform <- N81.GetTransform_1_1.Transform
+    in  MathTransformLerp_1_1.B.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_1_1.B.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_1.B.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_1.B.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_1.B.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_1.B.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_1.B.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_1.T : Float (single-precision) = 0.667000
+
+[N84] Set Translation - Bone (ControlRigGraphNode)
+    in  SetTranslation_2.ExecuteContext : Execute Context Structure = ()
+    in  SetTranslation_2.Item.Type : ERigElementType Enum = Bone
+    in  SetTranslation_2.Item.Name : Name = upperarm_twist_01_r
+    in  SetTranslation_2.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTranslation_2.bInitial : Boolean = False
+    in  SetTranslation_2.Value.X : Float (double-precision) = 0.000000
+    in  SetTranslation_2.Value.Y : Float (double-precision) = 0.000000
+    in  SetTranslation_2.Value.Z : Float (double-precision) = 0.000000
+    in  SetTranslation_2.Weight : Float (single-precision) = 1.000000
+    in  SetTranslation_2.bPropagateToChildren : Boolean = true
+
+[N85] Set Translation - Bone (ControlRigGraphNode)
+    in  SetTranslation_2_1.ExecuteContext : Execute Context Structure = ()
+    in  SetTranslation_2_1.Item.Type : ERigElementType Enum = Bone
+    in  SetTranslation_2_1.Item.Name : Name = upperarm_twist_02_r
+    in  SetTranslation_2_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTranslation_2_1.bInitial : Boolean = False
+    in  SetTranslation_2_1.Value.X : Float (double-precision) = 0.000000
+    in  SetTranslation_2_1.Value.Y : Float (double-precision) = 0.000000
+    in  SetTranslation_2_1.Value.Z : Float (double-precision) = 0.000000
+    in  SetTranslation_2_1.Weight : Float (single-precision) = 1.000000
+    in  SetTranslation_2_1.bPropagateToChildren : Boolean = true
+
+[N86] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_3.Transform : Transform -> N88.MathTransformLerp_3.A, N89.MathTransformLerp_1_2.A
+    in  GetTransform_3.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_3.Item.Name : Name = thigh_l
+    in  GetTransform_3.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N87] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_1_2.Transform : Transform -> N88.MathTransformLerp_3.B, N89.MathTransformLerp_1_2.B
+    in  GetTransform_1_2.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_1_2.Item.Name : Name = calf_l
+    in  GetTransform_1_2.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N88] Interpolate (ControlRigGraphNode)
+    in  MathTransformLerp_3.A : Transform <- N86.GetTransform_3.Transform
+    in  MathTransformLerp_3.A.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_3.A.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_3.A.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_3.A.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_3.A.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_3.A.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_3.A.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_3.B : Transform <- N87.GetTransform_1_2.Transform
+    in  MathTransformLerp_3.B.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_3.B.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_3.B.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_3.B.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_3.B.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_3.B.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_3.B.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_3.T : Float (single-precision) = 0.333000
+
+[N89] Interpolate (ControlRigGraphNode)
+    in  MathTransformLerp_1_2.A : Transform <- N86.GetTransform_3.Transform
+    in  MathTransformLerp_1_2.A.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_1_2.A.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_2.A.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_2.A.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_2.A.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_2.A.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_2.A.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_2.B : Transform <- N87.GetTransform_1_2.Transform
+    in  MathTransformLerp_1_2.B.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_1_2.B.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_2.B.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_2.B.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_2.B.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_2.B.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_2.B.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_2.T : Float (single-precision) = 0.667000
+
+[N90] Set Translation - Bone (ControlRigGraphNode)
+    in  SetTranslation_3.ExecuteContext : Execute Context Structure = ()
+    in  SetTranslation_3.Item.Type : ERigElementType Enum = Bone
+    in  SetTranslation_3.Item.Name : Name = thigh_twist_01_l
+    in  SetTranslation_3.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTranslation_3.bInitial : Boolean = False
+    in  SetTranslation_3.Value.X : Float (double-precision) = 0.000000
+    in  SetTranslation_3.Value.Y : Float (double-precision) = 0.000000
+    in  SetTranslation_3.Value.Z : Float (double-precision) = 0.000000
+    in  SetTranslation_3.Weight : Float (single-precision) = 1.000000
+    in  SetTranslation_3.bPropagateToChildren : Boolean = true
+
+[N91] Set Translation - Bone (ControlRigGraphNode)
+    in  SetTranslation_3_1.ExecuteContext : Execute Context Structure = ()
+    in  SetTranslation_3_1.Item.Type : ERigElementType Enum = Bone
+    in  SetTranslation_3_1.Item.Name : Name = thigh_twist_02_l
+    in  SetTranslation_3_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTranslation_3_1.bInitial : Boolean = False
+    in  SetTranslation_3_1.Value.X : Float (double-precision) = 0.000000
+    in  SetTranslation_3_1.Value.Y : Float (double-precision) = 0.000000
+    in  SetTranslation_3_1.Value.Z : Float (double-precision) = 0.000000
+    in  SetTranslation_3_1.Weight : Float (single-precision) = 1.000000
+    in  SetTranslation_3_1.bPropagateToChildren : Boolean = true
+
+[N92] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_3_1.Transform : Transform -> N94.MathTransformLerp_3_1.A, N95.MathTransformLerp_1_2_1.A
+    in  GetTransform_3_1.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_3_1.Item.Name : Name = thigh_r
+    in  GetTransform_3_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N93] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_1_2_1.Transform : Transform -> N94.MathTransformLerp_3_1.B, N95.MathTransformLerp_1_2_1.B
+    in  GetTransform_1_2_1.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_1_2_1.Item.Name : Name = calf_r
+    in  GetTransform_1_2_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N94] Interpolate (ControlRigGraphNode)
+    in  MathTransformLerp_3_1.A : Transform <- N92.GetTransform_3_1.Transform
+    in  MathTransformLerp_3_1.A.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_3_1.A.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_3_1.A.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_3_1.A.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_3_1.A.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_3_1.A.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_3_1.A.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_3_1.B : Transform <- N93.GetTransform_1_2_1.Transform
+    in  MathTransformLerp_3_1.B.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_3_1.B.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_3_1.B.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_3_1.B.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_3_1.B.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_3_1.B.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_3_1.B.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_3_1.T : Float (single-precision) = 0.333000
+
+[N95] Interpolate (ControlRigGraphNode)
+    in  MathTransformLerp_1_2_1.A : Transform <- N92.GetTransform_3_1.Transform
+    in  MathTransformLerp_1_2_1.A.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_1_2_1.A.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_2_1.A.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_2_1.A.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_2_1.A.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_2_1.A.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_2_1.A.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_2_1.B : Transform <- N93.GetTransform_1_2_1.Transform
+    in  MathTransformLerp_1_2_1.B.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_1_2_1.B.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_2_1.B.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_2_1.B.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_2_1.B.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_2_1.B.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_2_1.B.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_2_1.T : Float (single-precision) = 0.667000
+
+[N96] Set Translation - Bone (ControlRigGraphNode)
+    in  SetTranslation_4.ExecuteContext : Execute Context Structure = ()
+    in  SetTranslation_4.Item.Type : ERigElementType Enum = Bone
+    in  SetTranslation_4.Item.Name : Name = thigh_twist_01_r
+    in  SetTranslation_4.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTranslation_4.bInitial : Boolean = False
+    in  SetTranslation_4.Value.X : Float (double-precision) = 0.000000
+    in  SetTranslation_4.Value.Y : Float (double-precision) = 0.000000
+    in  SetTranslation_4.Value.Z : Float (double-precision) = 0.000000
+    in  SetTranslation_4.Weight : Float (single-precision) = 1.000000
+    in  SetTranslation_4.bPropagateToChildren : Boolean = true
+
+[N97] Set Translation - Bone (ControlRigGraphNode)
+    in  SetTranslation_4_1.ExecuteContext : Execute Context Structure = ()
+    in  SetTranslation_4_1.Item.Type : ERigElementType Enum = Bone
+    in  SetTranslation_4_1.Item.Name : Name = thigh_twist_02_r
+    in  SetTranslation_4_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTranslation_4_1.bInitial : Boolean = False
+    in  SetTranslation_4_1.Value.X : Float (double-precision) = 0.000000
+    in  SetTranslation_4_1.Value.Y : Float (double-precision) = 0.000000
+    in  SetTranslation_4_1.Value.Z : Float (double-precision) = 0.000000
+    in  SetTranslation_4_1.Weight : Float (single-precision) = 1.000000
+    in  SetTranslation_4_1.bPropagateToChildren : Boolean = true
+
+[N98] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_4.Transform : Transform -> N100.MathTransformLerp_4.A, N101.MathTransformLerp_1_3.A
+    in  GetTransform_4.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_4.Item.Name : Name = lowerarm_l
+    in  GetTransform_4.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N99] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_1_3.Transform : Transform -> N100.MathTransformLerp_4.B, N101.MathTransformLerp_1_3.B
+    in  GetTransform_1_3.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_1_3.Item.Name : Name = hand_l
+    in  GetTransform_1_3.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N100] Interpolate (ControlRigGraphNode)
+    in  MathTransformLerp_4.A : Transform <- N98.GetTransform_4.Transform
+    in  MathTransformLerp_4.A.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_4.A.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_4.A.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_4.A.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_4.A.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_4.A.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_4.A.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_4.B : Transform <- N99.GetTransform_1_3.Transform
+    in  MathTransformLerp_4.B.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_4.B.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_4.B.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_4.B.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_4.B.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_4.B.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_4.B.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_4.T : Float (single-precision) = 0.333000
+
+[N101] Interpolate (ControlRigGraphNode)
+    in  MathTransformLerp_1_3.A : Transform <- N98.GetTransform_4.Transform
+    in  MathTransformLerp_1_3.A.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_1_3.A.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_3.A.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_3.A.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_3.A.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_3.A.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_3.A.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_3.B : Transform <- N99.GetTransform_1_3.Transform
+    in  MathTransformLerp_1_3.B.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_1_3.B.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_3.B.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_3.B.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_3.B.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_3.B.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_3.B.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_3.T : Float (single-precision) = 0.667000
+
+[N102] Set Translation - Bone (ControlRigGraphNode)
+    in  SetTranslation_5.ExecuteContext : Execute Context Structure = ()
+    in  SetTranslation_5.Item.Type : ERigElementType Enum = Bone
+    in  SetTranslation_5.Item.Name : Name = lowerarm_twist_01_l
+    in  SetTranslation_5.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTranslation_5.bInitial : Boolean = False
+    in  SetTranslation_5.Value.X : Float (double-precision) = 0.000000
+    in  SetTranslation_5.Value.Y : Float (double-precision) = 0.000000
+    in  SetTranslation_5.Value.Z : Float (double-precision) = 0.000000
+    in  SetTranslation_5.Weight : Float (single-precision) = 1.000000
+    in  SetTranslation_5.bPropagateToChildren : Boolean = true
+
+[N103] Set Translation - Bone (ControlRigGraphNode)
+    in  SetTranslation_5_1.ExecuteContext : Execute Context Structure = ()
+    in  SetTranslation_5_1.Item.Type : ERigElementType Enum = Bone
+    in  SetTranslation_5_1.Item.Name : Name = lowerarm_twist_02_l
+    in  SetTranslation_5_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTranslation_5_1.bInitial : Boolean = False
+    in  SetTranslation_5_1.Value.X : Float (double-precision) = 0.000000
+    in  SetTranslation_5_1.Value.Y : Float (double-precision) = 0.000000
+    in  SetTranslation_5_1.Value.Z : Float (double-precision) = 0.000000
+    in  SetTranslation_5_1.Weight : Float (single-precision) = 1.000000
+    in  SetTranslation_5_1.bPropagateToChildren : Boolean = true
+
+[N104] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_4_1.Transform : Transform -> N106.MathTransformLerp_4_1.A, N107.MathTransformLerp_1_3_1.A
+    in  GetTransform_4_1.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_4_1.Item.Name : Name = lowerarm_r
+    in  GetTransform_4_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N105] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_1_3_1.Transform : Transform -> N106.MathTransformLerp_4_1.B, N107.MathTransformLerp_1_3_1.B
+    in  GetTransform_1_3_1.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_1_3_1.Item.Name : Name = hand_r
+    in  GetTransform_1_3_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N106] Interpolate (ControlRigGraphNode)
+    in  MathTransformLerp_4_1.A : Transform <- N104.GetTransform_4_1.Transform
+    in  MathTransformLerp_4_1.A.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_4_1.A.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_4_1.A.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_4_1.A.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_4_1.A.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_4_1.A.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_4_1.A.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_4_1.B : Transform <- N105.GetTransform_1_3_1.Transform
+    in  MathTransformLerp_4_1.B.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_4_1.B.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_4_1.B.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_4_1.B.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_4_1.B.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_4_1.B.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_4_1.B.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_4_1.T : Float (single-precision) = 0.333000
+
+[N107] Interpolate (ControlRigGraphNode)
+    in  MathTransformLerp_1_3_1.A : Transform <- N104.GetTransform_4_1.Transform
+    in  MathTransformLerp_1_3_1.A.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_1_3_1.A.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_3_1.A.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_3_1.A.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_3_1.A.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_3_1.A.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_3_1.A.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_3_1.B : Transform <- N105.GetTransform_1_3_1.Transform
+    in  MathTransformLerp_1_3_1.B.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_1_3_1.B.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_3_1.B.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_3_1.B.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_3_1.B.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_3_1.B.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_3_1.B.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_3_1.T : Float (single-precision) = 0.667000
+
+[N108] Set Translation - Bone (ControlRigGraphNode)
+    in  SetTranslation_2_1_1.ExecuteContext : Execute Context Structure = ()
+    in  SetTranslation_2_1_1.Item.Type : ERigElementType Enum = Bone
+    in  SetTranslation_2_1_1.Item.Name : Name = lowerarm_twist_01_r
+    in  SetTranslation_2_1_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTranslation_2_1_1.bInitial : Boolean = False
+    in  SetTranslation_2_1_1.Value.X : Float (double-precision) = 0.000000
+    in  SetTranslation_2_1_1.Value.Y : Float (double-precision) = 0.000000
+    in  SetTranslation_2_1_1.Value.Z : Float (double-precision) = 0.000000
+    in  SetTranslation_2_1_1.Weight : Float (single-precision) = 1.000000
+    in  SetTranslation_2_1_1.bPropagateToChildren : Boolean = true
+
+[N109] Set Translation - Bone (ControlRigGraphNode)
+    in  SetTranslation_2_1_1_1.ExecuteContext : Execute Context Structure = ()
+    in  SetTranslation_2_1_1_1.Item.Type : ERigElementType Enum = Bone
+    in  SetTranslation_2_1_1_1.Item.Name : Name = lowerarm_twist_02_r
+    in  SetTranslation_2_1_1_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTranslation_2_1_1_1.bInitial : Boolean = False
+    in  SetTranslation_2_1_1_1.Value.X : Float (double-precision) = 0.000000
+    in  SetTranslation_2_1_1_1.Value.Y : Float (double-precision) = 0.000000
+    in  SetTranslation_2_1_1_1.Value.Z : Float (double-precision) = 0.000000
+    in  SetTranslation_2_1_1_1.Weight : Float (single-precision) = 1.000000
+    in  SetTranslation_2_1_1_1.bPropagateToChildren : Boolean = true
+
+[N110] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_3_2.Transform : Transform -> N112.MathTransformLerp_3_2.A, N113.MathTransformLerp_1_2_2.A
+    in  GetTransform_3_2.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_3_2.Item.Name : Name = calf_l
+    in  GetTransform_3_2.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N111] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_1_2_2.Transform : Transform -> N112.MathTransformLerp_3_2.B, N113.MathTransformLerp_1_2_2.B
+    in  GetTransform_1_2_2.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_1_2_2.Item.Name : Name = foot_l
+    in  GetTransform_1_2_2.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N112] Interpolate (ControlRigGraphNode)
+    in  MathTransformLerp_3_2.A : Transform <- N110.GetTransform_3_2.Transform
+    in  MathTransformLerp_3_2.A.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_3_2.A.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_3_2.A.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_3_2.A.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_3_2.A.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_3_2.A.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_3_2.A.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_3_2.B : Transform <- N111.GetTransform_1_2_2.Transform
+    in  MathTransformLerp_3_2.B.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_3_2.B.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_3_2.B.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_3_2.B.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_3_2.B.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_3_2.B.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_3_2.B.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_3_2.T : Float (single-precision) = 0.333000
+
+[N113] Interpolate (ControlRigGraphNode)
+    in  MathTransformLerp_1_2_2.A : Transform <- N110.GetTransform_3_2.Transform
+    in  MathTransformLerp_1_2_2.A.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_1_2_2.A.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_2_2.A.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_2_2.A.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_2_2.A.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_2_2.A.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_2_2.A.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_2_2.B : Transform <- N111.GetTransform_1_2_2.Transform
+    in  MathTransformLerp_1_2_2.B.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_1_2_2.B.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_2_2.B.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_2_2.B.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_2_2.B.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_2_2.B.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_2_2.B.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_2_2.T : Float (single-precision) = 0.667000
+
+[N114] Set Translation - Bone (ControlRigGraphNode)
+    in  SetTranslation_3_1_1.ExecuteContext : Execute Context Structure = ()
+    in  SetTranslation_3_1_1.Item.Type : ERigElementType Enum = Bone
+    in  SetTranslation_3_1_1.Item.Name : Name = calf_twist_01_l
+    in  SetTranslation_3_1_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTranslation_3_1_1.bInitial : Boolean = False
+    in  SetTranslation_3_1_1.Value.X : Float (double-precision) = 0.000000
+    in  SetTranslation_3_1_1.Value.Y : Float (double-precision) = 0.000000
+    in  SetTranslation_3_1_1.Value.Z : Float (double-precision) = 0.000000
+    in  SetTranslation_3_1_1.Weight : Float (single-precision) = 1.000000
+    in  SetTranslation_3_1_1.bPropagateToChildren : Boolean = true
+
+[N115] Set Translation - Bone (ControlRigGraphNode)
+    in  SetTranslation_3_1_1_1.ExecuteContext : Execute Context Structure = ()
+    in  SetTranslation_3_1_1_1.Item.Type : ERigElementType Enum = Bone
+    in  SetTranslation_3_1_1_1.Item.Name : Name = calf_twist_02_l
+    in  SetTranslation_3_1_1_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTranslation_3_1_1_1.bInitial : Boolean = False
+    in  SetTranslation_3_1_1_1.Value.X : Float (double-precision) = 0.000000
+    in  SetTranslation_3_1_1_1.Value.Y : Float (double-precision) = 0.000000
+    in  SetTranslation_3_1_1_1.Value.Z : Float (double-precision) = 0.000000
+    in  SetTranslation_3_1_1_1.Weight : Float (single-precision) = 1.000000
+    in  SetTranslation_3_1_1_1.bPropagateToChildren : Boolean = true
+
+[N116] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_3_2_1.Transform : Transform -> N118.MathTransformLerp_3_2_1.A, N119.MathTransformLerp_1_2_2_1.A
+    in  GetTransform_3_2_1.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_3_2_1.Item.Name : Name = calf_r
+    in  GetTransform_3_2_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N117] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_1_2_2_1.Transform : Transform -> N118.MathTransformLerp_3_2_1.B, N119.MathTransformLerp_1_2_2_1.B
+    in  GetTransform_1_2_2_1.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_1_2_2_1.Item.Name : Name = foot_r
+    in  GetTransform_1_2_2_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N118] Interpolate (ControlRigGraphNode)
+    in  MathTransformLerp_3_2_1.A : Transform <- N116.GetTransform_3_2_1.Transform
+    in  MathTransformLerp_3_2_1.A.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_3_2_1.A.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_3_2_1.A.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_3_2_1.A.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_3_2_1.A.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_3_2_1.A.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_3_2_1.A.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_3_2_1.B : Transform <- N117.GetTransform_1_2_2_1.Transform
+    in  MathTransformLerp_3_2_1.B.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_3_2_1.B.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_3_2_1.B.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_3_2_1.B.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_3_2_1.B.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_3_2_1.B.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_3_2_1.B.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_3_2_1.T : Float (single-precision) = 0.333000
+
+[N119] Interpolate (ControlRigGraphNode)
+    in  MathTransformLerp_1_2_2_1.A : Transform <- N116.GetTransform_3_2_1.Transform
+    in  MathTransformLerp_1_2_2_1.A.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_1_2_2_1.A.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_2_2_1.A.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_2_2_1.A.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_2_2_1.A.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_2_2_1.A.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_2_2_1.A.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_2_2_1.B : Transform <- N117.GetTransform_1_2_2_1.Transform
+    in  MathTransformLerp_1_2_2_1.B.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformLerp_1_2_2_1.B.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_2_2_1.B.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_2_2_1.B.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformLerp_1_2_2_1.B.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_2_2_1.B.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_2_2_1.B.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformLerp_1_2_2_1.T : Float (single-precision) = 0.667000
+
+[N120] Set Translation - Bone (ControlRigGraphNode)
+    in  SetTranslation_4_1_1.ExecuteContext : Execute Context Structure = ()
+    in  SetTranslation_4_1_1.Item.Type : ERigElementType Enum = Bone
+    in  SetTranslation_4_1_1.Item.Name : Name = calf_twist_01_r
+    in  SetTranslation_4_1_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTranslation_4_1_1.bInitial : Boolean = False
+    in  SetTranslation_4_1_1.Value.X : Float (double-precision) = 0.000000
+    in  SetTranslation_4_1_1.Value.Y : Float (double-precision) = 0.000000
+    in  SetTranslation_4_1_1.Value.Z : Float (double-precision) = 0.000000
+    in  SetTranslation_4_1_1.Weight : Float (single-precision) = 1.000000
+    in  SetTranslation_4_1_1.bPropagateToChildren : Boolean = true
+
+[N121] Set Translation - Bone (ControlRigGraphNode)
+    in  SetTranslation_4_1_2.ExecuteContext : Execute Context Structure = ()
+    in  SetTranslation_4_1_2.Item.Type : ERigElementType Enum = Bone
+    in  SetTranslation_4_1_2.Item.Name : Name = calf_twist_02_r
+    in  SetTranslation_4_1_2.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTranslation_4_1_2.bInitial : Boolean = False
+    in  SetTranslation_4_1_2.Value.X : Float (double-precision) = 0.000000
+    in  SetTranslation_4_1_2.Value.Y : Float (double-precision) = 0.000000
+    in  SetTranslation_4_1_2.Value.Z : Float (double-precision) = 0.000000
+    in  SetTranslation_4_1_2.Weight : Float (single-precision) = 1.000000
+    in  SetTranslation_4_1_2.bPropagateToChildren : Boolean = true
+
+[N122] Get Transform - Bone Initial (ControlRigGraphNode)
+    out GetTransform_5.Transform : Transform -> N31.MathTransformMakeRelative_3_3.Parent
+    in  GetTransform_5.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_5.Item.Name : Name = hand_l
+    in  GetTransform_5.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  GetTransform_5.bInitial : Boolean = true
+
+[N123] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_5_1.Transform : Transform -> N31.MathTransformMakeRelative_3_3.Global
+    in  GetTransform_5_1.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_5_1.Item.Name : Name = hand_l
+    in  GetTransform_5_1.Space : ERigVMTransformSpace Enum = LocalSpace
+
+[N124] Set Rotation - Bone (ControlRigGraphNode)
+    in  SetRotation.ExecuteContext : Execute Context Structure = ()
+    in  SetRotation.Item.Type : ERigElementType Enum = Bone
+    in  SetRotation.Item.Name : Name = lowerarm_twist_02_l
+    in  SetRotation.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  SetRotation.bInitial : Boolean = False
+    in  SetRotation.Value : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetRotation.Weight : Float (single-precision) = 1.000000
+    in  SetRotation.bPropagateToChildren : Boolean = True
+
+[N125] Set Rotation - Bone (ControlRigGraphNode)
+    in  SetRotation_1.ExecuteContext : Execute Context Structure = ()
+    in  SetRotation_1.Item.Type : ERigElementType Enum = Bone
+    in  SetRotation_1.Item.Name : Name = lowerarm_twist_01_l
+    in  SetRotation_1.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  SetRotation_1.bInitial : Boolean = False
+    in  SetRotation_1.Value : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetRotation_1.Weight : Float (single-precision) = 1.000000
+    in  SetRotation_1.bPropagateToChildren : Boolean = True
+
+[N126] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_6.Transform : Transform -> N5.MathTransformMakeRelative_3.Global
+    in  GetTransform_6.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_6.Item.Name : Name = upperarm_l
+    in  GetTransform_6.Space : ERigVMTransformSpace Enum = LocalSpace
+
+[N127] Get Transform - Bone Initial (ControlRigGraphNode)
+    out GetTransform_6_1.Transform : Transform -> N5.MathTransformMakeRelative_3.Parent
+    in  GetTransform_6_1.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_6_1.Item.Name : Name = upperarm_l
+    in  GetTransform_6_1.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  GetTransform_6_1.bInitial : Boolean = true
+
+[N128] Get Transform - Bone Initial (ControlRigGraphNode)
+    out GetTransform_6_1_1.Transform : Transform -> N38.MathTransformMakeRelative_3_4.Parent
+    in  GetTransform_6_1_1.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_6_1_1.Item.Name : Name = lowerarm_l
+    in  GetTransform_6_1_1.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  GetTransform_6_1_1.bInitial : Boolean = true
+
+[N129] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_6_2.Transform : Transform -> N38.MathTransformMakeRelative_3_4.Global
+    in  GetTransform_6_2.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_6_2.Item.Name : Name = lowerarm_l
+    in  GetTransform_6_2.Space : ERigVMTransformSpace Enum = LocalSpace
+
+[N130] Get Transform - Bone Initial (ControlRigGraphNode)
+    out GetTransform_6_1_2.Transform : Transform -> N13.MathTransformMakeRelative_3_1.Parent
+    in  GetTransform_6_1_2.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_6_1_2.Item.Name : Name = upperarm_r
+    in  GetTransform_6_1_2.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  GetTransform_6_1_2.bInitial : Boolean = true
+
+[N131] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_6_3.Transform : Transform -> N13.MathTransformMakeRelative_3_1.Global
+    in  GetTransform_6_3.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_6_3.Item.Name : Name = upperarm_r
+    in  GetTransform_6_3.Space : ERigVMTransformSpace Enum = LocalSpace
+
+[N132] Get Transform - Bone Initial (ControlRigGraphNode)
+    out GetTransform_6_1_3.Transform : Transform -> N44.MathTransformMakeRelative_3_4_1.Parent
+    in  GetTransform_6_1_3.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_6_1_3.Item.Name : Name = lowerarm_r
+    in  GetTransform_6_1_3.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  GetTransform_6_1_3.bInitial : Boolean = true
+
+[N133] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_6_4.Transform : Transform -> N44.MathTransformMakeRelative_3_4_1.Global
+    in  GetTransform_6_4.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_6_4.Item.Name : Name = lowerarm_r
+    in  GetTransform_6_4.Space : ERigVMTransformSpace Enum = LocalSpace
+
+[N134] Get Transform - Bone Initial (ControlRigGraphNode)
+    out GetTransform_6_1_4.Transform : Transform -> N34.MathTransformMakeRelative_3_3_1.Parent
+    in  GetTransform_6_1_4.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_6_1_4.Item.Name : Name = hand_r
+    in  GetTransform_6_1_4.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  GetTransform_6_1_4.bInitial : Boolean = true
+
+[N135] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_6_5.Transform : Transform -> N34.MathTransformMakeRelative_3_3_1.Global
+    in  GetTransform_6_5.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_6_5.Item.Name : Name = hand_r
+    in  GetTransform_6_5.Space : ERigVMTransformSpace Enum = LocalSpace
+
+[N136] Get Transform - Bone Initial (ControlRigGraphNode)
+    out GetTransform_6_1_2_1.Transform : Transform -> N19.MathTransformMakeRelative_3_2.Parent
+    in  GetTransform_6_1_2_1.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_6_1_2_1.Item.Name : Name = thigh_l
+    in  GetTransform_6_1_2_1.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  GetTransform_6_1_2_1.bInitial : Boolean = true
+
+[N137] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_6_3_1.Transform : Transform -> N19.MathTransformMakeRelative_3_2.Global
+    in  GetTransform_6_3_1.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_6_3_1.Item.Name : Name = thigh_l
+    in  GetTransform_6_3_1.Space : ERigVMTransformSpace Enum = LocalSpace
+
+[N138] Get Transform - Bone Initial (ControlRigGraphNode)
+    out GetTransform_6_1_2_1_1.Transform : Transform -> N54.MathTransformMakeRelative_3_2_2.Parent
+    in  GetTransform_6_1_2_1_1.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_6_1_2_1_1.Item.Name : Name = calf_l
+    in  GetTransform_6_1_2_1_1.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  GetTransform_6_1_2_1_1.bInitial : Boolean = true
+
+[N139] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_6_3_1_1.Transform : Transform -> N54.MathTransformMakeRelative_3_2_2.Global
+    in  GetTransform_6_3_1_1.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_6_3_1_1.Item.Name : Name = calf_l
+    in  GetTransform_6_3_1_1.Space : ERigVMTransformSpace Enum = LocalSpace
+
+[N140] Get Transform - Bone Initial (ControlRigGraphNode)
+    out GetTransform_6_1_2_1_2.Transform : Transform -> N60.MathTransformMakeRelative_3_2_2_1.Parent
+    in  GetTransform_6_1_2_1_2.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_6_1_2_1_2.Item.Name : Name = foot_l
+    in  GetTransform_6_1_2_1_2.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  GetTransform_6_1_2_1_2.bInitial : Boolean = true
+
+[N141] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_6_3_1_2.Transform : Transform -> N60.MathTransformMakeRelative_3_2_2_1.Global
+    in  GetTransform_6_3_1_2.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_6_3_1_2.Item.Name : Name = foot_l
+    in  GetTransform_6_3_1_2.Space : ERigVMTransformSpace Enum = LocalSpace
+
+[N142] Get Transform - Bone Initial (ControlRigGraphNode)
+    out GetTransform_6_1_2_1_3.Transform : Transform -> N26.MathTransformMakeRelative_3_2_1.Parent
+    in  GetTransform_6_1_2_1_3.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_6_1_2_1_3.Item.Name : Name = thigh_r
+    in  GetTransform_6_1_2_1_3.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  GetTransform_6_1_2_1_3.bInitial : Boolean = true
+
+[N143] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_6_3_1_3.Transform : Transform -> N26.MathTransformMakeRelative_3_2_1.Global
+    in  GetTransform_6_3_1_3.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_6_3_1_3.Item.Name : Name = thigh_r
+    in  GetTransform_6_3_1_3.Space : ERigVMTransformSpace Enum = LocalSpace
+
+[N144] Get Transform - Bone Initial (ControlRigGraphNode)
+    out GetTransform_6_1_2_1_4.Transform : Transform -> N64.MathTransformMakeRelative_3_2_2_2.Parent
+    in  GetTransform_6_1_2_1_4.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_6_1_2_1_4.Item.Name : Name = calf_r
+    in  GetTransform_6_1_2_1_4.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  GetTransform_6_1_2_1_4.bInitial : Boolean = true
+
+[N145] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_6_3_1_4.Transform : Transform -> N64.MathTransformMakeRelative_3_2_2_2.Global
+    in  GetTransform_6_3_1_4.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_6_3_1_4.Item.Name : Name = calf_r
+    in  GetTransform_6_3_1_4.Space : ERigVMTransformSpace Enum = LocalSpace
+
+[N146] Get Transform - Bone Initial (ControlRigGraphNode)
+    out GetTransform_6_1_2_1_5.Transform : Transform -> N69.MathTransformMakeRelative_3_2_2_1_1.Parent
+    in  GetTransform_6_1_2_1_5.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_6_1_2_1_5.Item.Name : Name = foot_r
+    in  GetTransform_6_1_2_1_5.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  GetTransform_6_1_2_1_5.bInitial : Boolean = true
+
+[N147] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_6_3_1_5.Transform : Transform -> N69.MathTransformMakeRelative_3_2_2_1_1.Global
+    in  GetTransform_6_3_1_5.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_6_3_1_5.Item.Name : Name = foot_r
+    in  GetTransform_6_3_1_5.Space : ERigVMTransformSpace Enum = LocalSpace
+
+[N148] Set Rotation - Bone (ControlRigGraphNode)
+    in  SetRotation_2.ExecuteContext : Execute Context Structure = ()
+    in  SetRotation_2.Item.Type : ERigElementType Enum = Bone
+    in  SetRotation_2.Item.Name : Name = upperarm_correctiveRoot_l
+    in  SetRotation_2.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  SetRotation_2.bInitial : Boolean = False
+    in  SetRotation_2.Value : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetRotation_2.Weight : Float (single-precision) = 1.000000
+    in  SetRotation_2.bPropagateToChildren : Boolean = true
+
+[N149] Set Rotation - Bone (ControlRigGraphNode)
+    in  SetRotation_2_1.ExecuteContext : Execute Context Structure = ()
+    in  SetRotation_2_1.Item.Type : ERigElementType Enum = Bone
+    in  SetRotation_2_1.Item.Name : Name = upperarm_twist_01_l
+    in  SetRotation_2_1.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  SetRotation_2_1.bInitial : Boolean = False
+    in  SetRotation_2_1.Value : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetRotation_2_1.Weight : Float (single-precision) = 1.000000
+    in  SetRotation_2_1.bPropagateToChildren : Boolean = true
+
+[N150] Set Rotation - Bone (ControlRigGraphNode)
+    in  SetRotation_2_1_1.ExecuteContext : Execute Context Structure = ()
+    in  SetRotation_2_1_1.Item.Type : ERigElementType Enum = Bone
+    in  SetRotation_2_1_1.Item.Name : Name = upperarm_twist_02_l
+    in  SetRotation_2_1_1.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  SetRotation_2_1_1.bInitial : Boolean = False
+    in  SetRotation_2_1_1.Value : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetRotation_2_1_1.Weight : Float (single-precision) = 1.000000
+    in  SetRotation_2_1_1.bPropagateToChildren : Boolean = true
+
+[N151] Set Rotation - Bone (ControlRigGraphNode)
+    in  SetRotation_2_1_2.ExecuteContext : Execute Context Structure = ()
+    in  SetRotation_2_1_2.Item.Type : ERigElementType Enum = Bone
+    in  SetRotation_2_1_2.Item.Name : Name = lowerarm_correctiveRoot_l
+    in  SetRotation_2_1_2.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  SetRotation_2_1_2.bInitial : Boolean = False
+    in  SetRotation_2_1_2.Value : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetRotation_2_1_2.Weight : Float (single-precision) = 1.000000
+    in  SetRotation_2_1_2.bPropagateToChildren : Boolean = true
+
+[N152] Set Rotation - Bone (ControlRigGraphNode)
+    in  SetRotation_2_2.ExecuteContext : Execute Context Structure = ()
+    in  SetRotation_2_2.Item.Type : ERigElementType Enum = Bone
+    in  SetRotation_2_2.Item.Name : Name = upperarm_correctiveRoot_r
+    in  SetRotation_2_2.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  SetRotation_2_2.bInitial : Boolean = False
+    in  SetRotation_2_2.Value : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetRotation_2_2.Weight : Float (single-precision) = 1.000000
+    in  SetRotation_2_2.bPropagateToChildren : Boolean = true
+
+[N153] Set Rotation - Bone (ControlRigGraphNode)
+    in  SetRotation_2_1_3.ExecuteContext : Execute Context Structure = ()
+    in  SetRotation_2_1_3.Item.Type : ERigElementType Enum = Bone
+    in  SetRotation_2_1_3.Item.Name : Name = upperarm_twist_01_r
+    in  SetRotation_2_1_3.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  SetRotation_2_1_3.bInitial : Boolean = False
+    in  SetRotation_2_1_3.Value : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetRotation_2_1_3.Weight : Float (single-precision) = 1.000000
+    in  SetRotation_2_1_3.bPropagateToChildren : Boolean = true
+
+[N154] Set Rotation - Bone (ControlRigGraphNode)
+    in  SetRotation_2_1_3_1.ExecuteContext : Execute Context Structure = ()
+    in  SetRotation_2_1_3_1.Item.Type : ERigElementType Enum = Bone
+    in  SetRotation_2_1_3_1.Item.Name : Name = upperarm_twist_02_r
+    in  SetRotation_2_1_3_1.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  SetRotation_2_1_3_1.bInitial : Boolean = False
+    in  SetRotation_2_1_3_1.Value : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetRotation_2_1_3_1.Weight : Float (single-precision) = 1.000000
+    in  SetRotation_2_1_3_1.bPropagateToChildren : Boolean = true
+
+[N155] Set Rotation - Bone (ControlRigGraphNode)
+    in  SetRotation_2_1_3_1_1.ExecuteContext : Execute Context Structure = ()
+    in  SetRotation_2_1_3_1_1.Item.Type : ERigElementType Enum = Bone
+    in  SetRotation_2_1_3_1_1.Item.Name : Name = lowerarm_correctiveRoot_r
+    in  SetRotation_2_1_3_1_1.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  SetRotation_2_1_3_1_1.bInitial : Boolean = False
+    in  SetRotation_2_1_3_1_1.Value : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetRotation_2_1_3_1_1.Weight : Float (single-precision) = 1.000000
+    in  SetRotation_2_1_3_1_1.bPropagateToChildren : Boolean = true
+
+[N156] Set Rotation - Bone (ControlRigGraphNode)
+    in  SetRotation_2_1_3_1_1_1.ExecuteContext : Execute Context Structure = ()
+    in  SetRotation_2_1_3_1_1_1.Item.Type : ERigElementType Enum = Bone
+    in  SetRotation_2_1_3_1_1_1.Item.Name : Name = lowerarm_twist_01_r
+    in  SetRotation_2_1_3_1_1_1.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  SetRotation_2_1_3_1_1_1.bInitial : Boolean = False
+    in  SetRotation_2_1_3_1_1_1.Value : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetRotation_2_1_3_1_1_1.Weight : Float (single-precision) = 1.000000
+    in  SetRotation_2_1_3_1_1_1.bPropagateToChildren : Boolean = true
+
+[N157] Set Rotation - Bone (ControlRigGraphNode)
+    in  SetRotation_2_1_3_1_1_1_1.ExecuteContext : Execute Context Structure = ()
+    in  SetRotation_2_1_3_1_1_1_1.Item.Type : ERigElementType Enum = Bone
+    in  SetRotation_2_1_3_1_1_1_1.Item.Name : Name = lowerarm_twist_02_r
+    in  SetRotation_2_1_3_1_1_1_1.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  SetRotation_2_1_3_1_1_1_1.bInitial : Boolean = False
+    in  SetRotation_2_1_3_1_1_1_1.Value : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetRotation_2_1_3_1_1_1_1.Weight : Float (single-precision) = 1.000000
+    in  SetRotation_2_1_3_1_1_1_1.bPropagateToChildren : Boolean = true
+
+[N158] Execute Context (ControlRigGraphNode)
+    in  RerouteNode.Value : Execute Context Structure = ()
+
+[N159] Execute Context (ControlRigGraphNode)
+    in  RerouteNode_1.Value : Execute Context Structure = ()
+
+[N160] Execute Context (ControlRigGraphNode)
+    in  RerouteNode_2.Value : Execute Context Structure = ()
+
+[N161] Execute Context (ControlRigGraphNode)
+    in  RerouteNode_3.Value : Execute Context Structure = ()
+
+[N162] Execute Context (ControlRigGraphNode)
+    in  RerouteNode_4.Value : Execute Context Structure = ()
+
+[N163] Execute Context (ControlRigGraphNode)
+    in  RerouteNode_5.Value : Execute Context Structure = ()
+
+[N164] Set Rotation - Bone (ControlRigGraphNode)
+    in  SetRotation_2_2_1.ExecuteContext : Execute Context Structure = ()
+    in  SetRotation_2_2_1.Item.Type : ERigElementType Enum = Bone
+    in  SetRotation_2_2_1.Item.Name : Name = thigh_correctiveRoot_l
+    in  SetRotation_2_2_1.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  SetRotation_2_2_1.bInitial : Boolean = False
+    in  SetRotation_2_2_1.Value : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetRotation_2_2_1.Weight : Float (single-precision) = 1.000000
+    in  SetRotation_2_2_1.bPropagateToChildren : Boolean = true
+
+[N165] Set Rotation - Bone (ControlRigGraphNode)
+    in  SetRotation_2_1_3_2.ExecuteContext : Execute Context Structure = ()
+    in  SetRotation_2_1_3_2.Item.Type : ERigElementType Enum = Bone
+    in  SetRotation_2_1_3_2.Item.Name : Name = thigh_twist_01_l
+    in  SetRotation_2_1_3_2.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  SetRotation_2_1_3_2.bInitial : Boolean = False
+    in  SetRotation_2_1_3_2.Value : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetRotation_2_1_3_2.Weight : Float (single-precision) = 1.000000
+    in  SetRotation_2_1_3_2.bPropagateToChildren : Boolean = true
+
+[N166] Set Rotation - Bone (ControlRigGraphNode)
+    in  SetRotation_3.ExecuteContext : Execute Context Structure = ()
+    in  SetRotation_3.Item.Type : ERigElementType Enum = Bone
+    in  SetRotation_3.Item.Name : Name = thigh_twist_02_l
+    in  SetRotation_3.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  SetRotation_3.bInitial : Boolean = False
+    in  SetRotation_3.Value : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetRotation_3.Weight : Float (single-precision) = 1.000000
+    in  SetRotation_3.bPropagateToChildren : Boolean = true
+
+[N167] Set Rotation - Bone (ControlRigGraphNode)
+    in  SetRotation_2_1_3_2_1.ExecuteContext : Execute Context Structure = ()
+    in  SetRotation_2_1_3_2_1.Item.Type : ERigElementType Enum = Bone
+    in  SetRotation_2_1_3_2_1.Item.Name : Name = calf_correctiveRoot_l
+    in  SetRotation_2_1_3_2_1.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  SetRotation_2_1_3_2_1.bInitial : Boolean = False
+    in  SetRotation_2_1_3_2_1.Value : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetRotation_2_1_3_2_1.Weight : Float (single-precision) = 1.000000
+    in  SetRotation_2_1_3_2_1.bPropagateToChildren : Boolean = true
+
+[N168] Set Rotation - Bone (ControlRigGraphNode)
+    in  SetRotation_2_1_3_2_1_1.ExecuteContext : Execute Context Structure = ()
+    in  SetRotation_2_1_3_2_1_1.Item.Type : ERigElementType Enum = Bone
+    in  SetRotation_2_1_3_2_1_1.Item.Name : Name = calf_twist_01_l
+    in  SetRotation_2_1_3_2_1_1.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  SetRotation_2_1_3_2_1_1.bInitial : Boolean = False
+    in  SetRotation_2_1_3_2_1_1.Value : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetRotation_2_1_3_2_1_1.Weight : Float (single-precision) = 1.000000
+    in  SetRotation_2_1_3_2_1_1.bPropagateToChildren : Boolean = true
+
+[N169] Set Rotation - Bone (ControlRigGraphNode)
+    in  SetRotation_2_1_3_2_1_1_1.ExecuteContext : Execute Context Structure = ()
+    in  SetRotation_2_1_3_2_1_1_1.Item.Type : ERigElementType Enum = Bone
+    in  SetRotation_2_1_3_2_1_1_1.Item.Name : Name = calf_twist_02_l
+    in  SetRotation_2_1_3_2_1_1_1.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  SetRotation_2_1_3_2_1_1_1.bInitial : Boolean = False
+    in  SetRotation_2_1_3_2_1_1_1.Value : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetRotation_2_1_3_2_1_1_1.Weight : Float (single-precision) = 1.000000
+    in  SetRotation_2_1_3_2_1_1_1.bPropagateToChildren : Boolean = true
+
+[N170] Set Rotation - Bone (ControlRigGraphNode)
+    in  SetRotation_2_2_1_1.ExecuteContext : Execute Context Structure = ()
+    in  SetRotation_2_2_1_1.Item.Type : ERigElementType Enum = Bone
+    in  SetRotation_2_2_1_1.Item.Name : Name = thigh_correctiveRoot_r
+    in  SetRotation_2_2_1_1.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  SetRotation_2_2_1_1.bInitial : Boolean = False
+    in  SetRotation_2_2_1_1.Value : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetRotation_2_2_1_1.Weight : Float (single-precision) = 1.000000
+    in  SetRotation_2_2_1_1.bPropagateToChildren : Boolean = true
+
+[N171] Set Rotation - Bone (ControlRigGraphNode)
+    in  SetRotation_2_1_3_2_2.ExecuteContext : Execute Context Structure = ()
+    in  SetRotation_2_1_3_2_2.Item.Type : ERigElementType Enum = Bone
+    in  SetRotation_2_1_3_2_2.Item.Name : Name = thigh_twist_01_r
+    in  SetRotation_2_1_3_2_2.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  SetRotation_2_1_3_2_2.bInitial : Boolean = False
+    in  SetRotation_2_1_3_2_2.Value : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetRotation_2_1_3_2_2.Weight : Float (single-precision) = 1.000000
+    in  SetRotation_2_1_3_2_2.bPropagateToChildren : Boolean = true
+
+[N172] Set Rotation - Bone (ControlRigGraphNode)
+    in  SetRotation_3_1.ExecuteContext : Execute Context Structure = ()
+    in  SetRotation_3_1.Item.Type : ERigElementType Enum = Bone
+    in  SetRotation_3_1.Item.Name : Name = thigh_twist_02_r
+    in  SetRotation_3_1.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  SetRotation_3_1.bInitial : Boolean = False
+    in  SetRotation_3_1.Value : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetRotation_3_1.Weight : Float (single-precision) = 1.000000
+    in  SetRotation_3_1.bPropagateToChildren : Boolean = true
+
+[N173] Set Rotation - Bone (ControlRigGraphNode)
+    in  SetRotation_3_2.ExecuteContext : Execute Context Structure = ()
+    in  SetRotation_3_2.Item.Type : ERigElementType Enum = Bone
+    in  SetRotation_3_2.Item.Name : Name = calf_correctiveRoot_r
+    in  SetRotation_3_2.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  SetRotation_3_2.bInitial : Boolean = False
+    in  SetRotation_3_2.Value : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetRotation_3_2.Weight : Float (single-precision) = 1.000000
+    in  SetRotation_3_2.bPropagateToChildren : Boolean = true
+
+[N174] Set Rotation - Bone (ControlRigGraphNode)
+    in  SetRotation_3_2_1.ExecuteContext : Execute Context Structure = ()
+    in  SetRotation_3_2_1.Item.Type : ERigElementType Enum = Bone
+    in  SetRotation_3_2_1.Item.Name : Name = calf_twist_01_r
+    in  SetRotation_3_2_1.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  SetRotation_3_2_1.bInitial : Boolean = False
+    in  SetRotation_3_2_1.Value : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetRotation_3_2_1.Weight : Float (single-precision) = 1.000000
+    in  SetRotation_3_2_1.bPropagateToChildren : Boolean = true
+
+[N175] Set Rotation - Bone (ControlRigGraphNode)
+    in  SetRotation_3_2_1_1.ExecuteContext : Execute Context Structure = ()
+    in  SetRotation_3_2_1_1.Item.Type : ERigElementType Enum = Bone
+    in  SetRotation_3_2_1_1.Item.Name : Name = calf_twistCor_02_r
+    in  SetRotation_3_2_1_1.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  SetRotation_3_2_1_1.bInitial : Boolean = False
+    in  SetRotation_3_2_1_1.Value : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetRotation_3_2_1_1.Weight : Float (single-precision) = 1.000000
+    in  SetRotation_3_2_1_1.bPropagateToChildren : Boolean = true
+

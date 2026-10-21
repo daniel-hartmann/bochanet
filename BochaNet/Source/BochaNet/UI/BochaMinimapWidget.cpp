@@ -47,6 +47,36 @@ void UBochaMinimapWidget::NativeConstruct()
 
 	// Drawn over the game; never takes the mouse.
 	SetVisibility(ESlateVisibility::HitTestInvisible);
+
+	// The balls already in play, once; from now on the balls' events keep the list.
+	for (TActorIterator<ABochaBall> It(GetWorld()); It; ++It)
+	{
+		AddBall(*It);
+	}
+	ABochaBall::OnBallBeginPlay.AddUObject(this, &UBochaMinimapWidget::AddBall);
+	ABochaBall::OnBallEndPlay.AddUObject(this, &UBochaMinimapWidget::RemoveBall);
+}
+
+void UBochaMinimapWidget::NativeDestruct()
+{
+	ABochaBall::OnBallBeginPlay.RemoveAll(this);
+	ABochaBall::OnBallEndPlay.RemoveAll(this);
+	Balls.Reset();
+	Super::NativeDestruct();
+}
+
+void UBochaMinimapWidget::AddBall(ABochaBall* Ball)
+{
+	// The delegates are shared by every world (several PIE players run in one process).
+	if (Ball && Ball->GetWorld() == GetWorld())
+	{
+		Balls.AddUnique(Ball);
+	}
+}
+
+void UBochaMinimapWidget::RemoveBall(ABochaBall* Ball)
+{
+	Balls.Remove(Ball);
 }
 
 int32 UBochaMinimapWidget::NativePaint(const FPaintArgs& Args, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect,
@@ -54,8 +84,11 @@ int32 UBochaMinimapWidget::NativePaint(const FPaintArgs& Args, const FGeometry& 
 {
 	LayerId = Super::NativePaint(Args, AllottedGeometry, MyCullingRect, OutDrawElements, LayerId, InWidgetStyle, bParentEnabled);
 
-	const ABochaMatch* Match = ABochaMatch::Find(this);
-	if (!Match)
+	if (!Match.IsValid())
+	{
+		Match = ABochaMatch::Find(this);
+	}
+	if (!Match.IsValid())
 	{
 		return LayerId;
 	}
@@ -63,17 +96,18 @@ int32 UBochaMinimapWidget::NativePaint(const FPaintArgs& Args, const FGeometry& 
 
 	// Thrown balls only: the one in the player's hand is attached to the character.
 	const ABochaBall* Bolim = nullptr;
-	TArray<const ABochaBall*> Balls;
-	for (TActorIterator<ABochaBall> It(GetWorld()); It; ++It)
+	TArray<const ABochaBall*> InPlay;
+	for (const TWeakObjectPtr<ABochaBall>& WeakBall : Balls)
 	{
-		if (It->GetAttachParentActor())
+		const ABochaBall* Ball = WeakBall.Get();
+		if (!Ball || Ball->GetAttachParentActor())
 		{
 			continue;
 		}
-		Balls.Add(*It);
-		if (It->IsA<ABochaBolim>())
+		InPlay.Add(Ball);
+		if (Ball->IsA<ABochaBolim>())
 		{
-			Bolim = *It;
+			Bolim = Ball;
 		}
 	}
 
@@ -120,8 +154,8 @@ int32 UBochaMinimapWidget::NativePaint(const FPaintArgs& Args, const FGeometry& 
 	DrawLine(Court.APrime, FLinearColor::White, 4.f);
 
 	// Balls: dark outline, then the color; the jack last so it stays visible among the bochas.
-	Balls.Sort([](const ABochaBall& A, const ABochaBall& B) { return !A.IsA<ABochaBolim>() && B.IsA<ABochaBolim>(); });
-	for (const ABochaBall* Ball : Balls)
+	InPlay.Sort([](const ABochaBall& A, const ABochaBall& B) { return !A.IsA<ABochaBolim>() && B.IsA<ABochaBolim>(); });
+	for (const ABochaBall* Ball : InPlay)
 	{
 		const FVector Location = Match->ToCourt(Ball->GetActorLocation());
 		if (Location.X < WindowMin || Location.X > WindowMax)

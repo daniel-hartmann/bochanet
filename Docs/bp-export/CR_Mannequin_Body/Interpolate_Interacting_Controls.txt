@@ -1,0 +1,237 @@
+Graph: Interpolate Interacting Controls
+
+[N0] Entry (ControlRigGraphNode)
+    out Entry.ExecuteContext : Execute Context Structure -> N45.SequenceAggregate.ExecuteContext
+
+[N1] Return (ControlRigGraphNode)
+    in  Return.ExecuteContext : Execute Context Structure <- N45.SequenceAggregate.C
+
+[N2]  (ControlRigGraphNode)
+
+[N3] Greater (ControlRigGraphNode)
+    out Greater.Result : Boolean -> N6.MathBoolAnd.B
+    in  Greater.A : Integer = 0
+    in  Greater.B : Integer = 2
+
+[N4]  (ControlRigGraphNode)
+
+[N5] Get Interaction (ControlRigGraphNode)
+    out IsInteracting_1.bIsInteracting : Boolean -> N6.MathBoolAnd.A
+
+[N6] And (ControlRigGraphNode)
+    in  MathBoolAnd.A : Boolean <- N5.IsInteracting_1.bIsInteracting
+    in  MathBoolAnd.B : Boolean <- N3.Greater.Result
+
+[N7] Comment (EdGraphNode_Comment)
+    // Is Interacting
+
+[N8] Get Controls (ControlRigGraphNode)
+
+[N9] Get Interaction (ControlRigGraphNode)
+
+[N10]  (ControlRigGraphNode)
+
+[N11]  (ControlRigGraphNode)
+
+[N12]  (ControlRigGraphNode)
+
+[N13] Equals (ControlRigGraphNode)
+    out DISPATCH_RigDispatch_CoreEquals_1.Result : Boolean -> N17.MathBoolOr_1.B
+    in  DISPATCH_RigDispatch_CoreEquals_1.A : Integer = 0
+    in  DISPATCH_RigDispatch_CoreEquals_1.B : Integer = 0
+
+[N14]  (ControlRigGraphNode)
+
+[N15] Subtract (ControlRigGraphNode)
+    out Subtract_1.Result : Integer -> N16.DISPATCH_RigDispatch_CoreEquals_2.B
+    in  Subtract_1.A : Integer = 0
+    in  Subtract_1.B : Integer = 1
+
+[N16] Equals (ControlRigGraphNode)
+    out DISPATCH_RigDispatch_CoreEquals_2.Result : Boolean -> N17.MathBoolOr_1.A
+    in  DISPATCH_RigDispatch_CoreEquals_2.A : Integer = 0
+    in  DISPATCH_RigDispatch_CoreEquals_2.B : Integer <- N15.Subtract_1.Result
+
+[N17] Or (ControlRigGraphNode)
+    in  MathBoolOr_1.A : Boolean <- N16.DISPATCH_RigDispatch_CoreEquals_2.Result
+    in  MathBoolOr_1.B : Boolean <- N13.DISPATCH_RigDispatch_CoreEquals_1.Result
+
+[N18] Set Interacting Item (ControlRigGraphNode)
+    in  VariableNode_1.ExecuteContext : Execute Context Structure = ()
+    in  VariableNode_1.Value.Type : ERigElementType Enum = None
+    in  VariableNode_1.Value.Name : Name = None
+
+[N19] Get Interacting Item (ControlRigGraphNode)
+
+[N20] Get Controls (ControlRigGraphNode)
+
+[N21] Get Controls (ControlRigGraphNode)
+
+[N22] Comment (EdGraphNode_Comment)
+    // Interacting with First or last Control
+
+[N23]  (ControlRigGraphNode)
+
+[N24]  (ControlRigGraphNode)
+
+[N25] Set Transform Metadata (ControlRigGraphNode)
+    in  DISPATCH_RigDispatch_SetMetadata_1.ExecuteContext : Execute Context Structure = ()
+    in  DISPATCH_RigDispatch_SetMetadata_1.Item.Type : ERigElementType Enum = Control
+    in  DISPATCH_RigDispatch_SetMetadata_1.Item.Name : Name = pinky_metacarpal_l_ctrl
+    in  DISPATCH_RigDispatch_SetMetadata_1.Name : Name = Previous Transform
+    in  DISPATCH_RigDispatch_SetMetadata_1.NameSpace : ERigMetaDataNameSpace Enum = Self
+    in  DISPATCH_RigDispatch_SetMetadata_1.Value : Transform <- N26.RigUnit_GetTransform_2.Transform
+    in  DISPATCH_RigDispatch_SetMetadata_1.Value.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  DISPATCH_RigDispatch_SetMetadata_1.Value.Translation.X : Float (double-precision) = 0.000000
+    in  DISPATCH_RigDispatch_SetMetadata_1.Value.Translation.Y : Float (double-precision) = 0.000000
+    in  DISPATCH_RigDispatch_SetMetadata_1.Value.Translation.Z : Float (double-precision) = 0.000000
+    in  DISPATCH_RigDispatch_SetMetadata_1.Value.Scale3D.X : Float (double-precision) = 1.000000
+    in  DISPATCH_RigDispatch_SetMetadata_1.Value.Scale3D.Y : Float (double-precision) = 1.000000
+    in  DISPATCH_RigDispatch_SetMetadata_1.Value.Scale3D.Z : Float (double-precision) = 1.000000
+
+[N26] Get Transform - Control (ControlRigGraphNode)
+    out RigUnit_GetTransform_2.Transform : Transform -> N25.DISPATCH_RigDispatch_SetMetadata_1.Value
+    in  RigUnit_GetTransform_2.Item.Type : ERigElementType Enum = Control
+    in  RigUnit_GetTransform_2.Item.Name : Name = pinky_metacarpal_l_ctrl
+    in  RigUnit_GetTransform_2.Space : ERigVMTransformSpace Enum = LocalSpace
+
+[N27] Sequence (ControlRigGraphNode)
+    out SequenceAggregate_3.A : Execute Context Structure -> N28.VariableNode_3_2.ExecuteContext
+    in  SequenceAggregate_3.ExecuteContext : Execute Context Structure = ()
+
+[N28] Set Loop Controls (ControlRigGraphNode)
+    in  VariableNode_3_2.ExecuteContext : Execute Context Structure <- N27.SequenceAggregate_3.A
+    in  VariableNode_3_2.Value : Array of Rig Element Key Structures <- N31.VariableNode_6.Value
+
+[N29] Get Loop Controls (ControlRigGraphNode)
+
+[N30] Comment (EdGraphNode_Comment)
+    // Save Pose
+
+[N31] Get Controls (ControlRigGraphNode)
+    out VariableNode_6.Value : Array of Rig Element Key Structures -> N28.VariableNode_3_2.Value
+
+[N32] Comment (EdGraphNode_Comment)
+    // If Interacting with last Control we reverse the array
+
+[N33] Get Transform - Control (ControlRigGraphNode)
+    out RigUnit_GetTransform_1_1.Transform : Transform -> N35.Make Relative_1.Global
+    in  RigUnit_GetTransform_1_1.Item : Rig Element Key Structure <- N43.VariableNode_5_1.Value
+    in  RigUnit_GetTransform_1_1.Item.Type : ERigElementType Enum = Control
+    in  RigUnit_GetTransform_1_1.Item.Name : Name = pinky_metacarpal_l_ctrl
+    in  RigUnit_GetTransform_1_1.Space : ERigVMTransformSpace Enum = LocalSpace
+
+[N34] Get Transform Metadata (ControlRigGraphNode)
+    out DISPATCH_RigDispatch_GetMetadata_1.Value : Transform -> N35.Make Relative_1.Parent
+    in  DISPATCH_RigDispatch_GetMetadata_1.Item : Rig Element Key Structure <- N43.VariableNode_5_1.Value
+    in  DISPATCH_RigDispatch_GetMetadata_1.Item.Type : ERigElementType Enum = Control
+    in  DISPATCH_RigDispatch_GetMetadata_1.Item.Name : Name = pinky_metacarpal_l_ctrl
+    in  DISPATCH_RigDispatch_GetMetadata_1.Name : Name = Previous Transform
+    in  DISPATCH_RigDispatch_GetMetadata_1.NameSpace : ERigMetaDataNameSpace Enum = Self
+    in  DISPATCH_RigDispatch_GetMetadata_1.Default.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  DISPATCH_RigDispatch_GetMetadata_1.Default.Translation.X : Float (double-precision) = 0.000000
+    in  DISPATCH_RigDispatch_GetMetadata_1.Default.Translation.Y : Float (double-precision) = 0.000000
+    in  DISPATCH_RigDispatch_GetMetadata_1.Default.Translation.Z : Float (double-precision) = 0.000000
+    in  DISPATCH_RigDispatch_GetMetadata_1.Default.Scale3D.X : Float (double-precision) = 1.000000
+    in  DISPATCH_RigDispatch_GetMetadata_1.Default.Scale3D.Y : Float (double-precision) = 1.000000
+    in  DISPATCH_RigDispatch_GetMetadata_1.Default.Scale3D.Z : Float (double-precision) = 1.000000
+
+[N35] Make Relative (ControlRigGraphNode)
+    out Make Relative_1.Local : Transform -> N36.Interpolate_1.B
+    in  Make Relative_1.Global : Transform <- N33.RigUnit_GetTransform_1_1.Transform
+    in  Make Relative_1.Global.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  Make Relative_1.Global.Translation.X : Float (double-precision) = 0.000000
+    in  Make Relative_1.Global.Translation.Y : Float (double-precision) = 0.000000
+    in  Make Relative_1.Global.Translation.Z : Float (double-precision) = 0.000000
+    in  Make Relative_1.Global.Scale3D.X : Float (double-precision) = 1.000000
+    in  Make Relative_1.Global.Scale3D.Y : Float (double-precision) = 1.000000
+    in  Make Relative_1.Global.Scale3D.Z : Float (double-precision) = 1.000000
+    in  Make Relative_1.Parent : Transform <- N34.DISPATCH_RigDispatch_GetMetadata_1.Value
+    in  Make Relative_1.Parent.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  Make Relative_1.Parent.Translation.X : Float (double-precision) = 0.000000
+    in  Make Relative_1.Parent.Translation.Y : Float (double-precision) = 0.000000
+    in  Make Relative_1.Parent.Translation.Z : Float (double-precision) = 0.000000
+    in  Make Relative_1.Parent.Scale3D.X : Float (double-precision) = 1.000000
+    in  Make Relative_1.Parent.Scale3D.Y : Float (double-precision) = 1.000000
+    in  Make Relative_1.Parent.Scale3D.Z : Float (double-precision) = 1.000000
+
+[N36] Interpolate (ControlRigGraphNode)
+    out Interpolate_1.Result : Transform -> N41.OffsetTransformForItem_1.OffsetTransform
+    in  Interpolate_1.A.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  Interpolate_1.A.Translation.X : Float (double-precision) = 0.000000
+    in  Interpolate_1.A.Translation.Y : Float (double-precision) = 0.000000
+    in  Interpolate_1.A.Translation.Z : Float (double-precision) = 0.000000
+    in  Interpolate_1.A.Scale3D.X : Float (double-precision) = 1.000000
+    in  Interpolate_1.A.Scale3D.Y : Float (double-precision) = 1.000000
+    in  Interpolate_1.A.Scale3D.Z : Float (double-precision) = 1.000000
+    in  Interpolate_1.B : Transform <- N35.Make Relative_1.Local
+    in  Interpolate_1.B.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  Interpolate_1.B.Translation.X : Float (double-precision) = 0.000000
+    in  Interpolate_1.B.Translation.Y : Float (double-precision) = 0.000000
+    in  Interpolate_1.B.Translation.Z : Float (double-precision) = 0.000000
+    in  Interpolate_1.B.Scale3D.X : Float (double-precision) = 1.000000
+    in  Interpolate_1.B.Scale3D.Y : Float (double-precision) = 1.000000
+    in  Interpolate_1.B.Scale3D.Z : Float (double-precision) = 1.000000
+    in  Interpolate_1.T : Float (single-precision) <- N40.Subtract_2.Result
+
+[N37]  (ControlRigGraphNode)
+
+[N38] Equals (ControlRigGraphNode)
+    in  DISPATCH_RigDispatch_CoreEquals_3.A : Integer = 0
+    in  DISPATCH_RigDispatch_CoreEquals_3.B : Integer = 0
+
+[N39]  (ControlRigGraphNode)
+
+[N40] Subtract (ControlRigGraphNode)
+    out Subtract_2.Result : Float (double-precision) -> N36.Interpolate_1.T
+    in  Subtract_2.A : Float (double-precision) = 1.000000
+    in  Subtract_2.B : Float (double-precision) = 0.000000
+
+[N41] Offset Transform (ControlRigGraphNode)
+    in  OffsetTransformForItem_1.ExecuteContext : Execute Context Structure = ()
+    in  OffsetTransformForItem_1.Item.Type : ERigElementType Enum = Bone
+    in  OffsetTransformForItem_1.Item.Name : Name = None
+    in  OffsetTransformForItem_1.OffsetTransform : Transform <- N36.Interpolate_1.Result
+    in  OffsetTransformForItem_1.OffsetTransform.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  OffsetTransformForItem_1.OffsetTransform.Translation.X : Float (double-precision) = 0.000000
+    in  OffsetTransformForItem_1.OffsetTransform.Translation.Y : Float (double-precision) = 0.000000
+    in  OffsetTransformForItem_1.OffsetTransform.Translation.Z : Float (double-precision) = 0.000000
+    in  OffsetTransformForItem_1.OffsetTransform.Scale3D.X : Float (double-precision) = 1.000000
+    in  OffsetTransformForItem_1.OffsetTransform.Scale3D.Y : Float (double-precision) = 1.000000
+    in  OffsetTransformForItem_1.OffsetTransform.Scale3D.Z : Float (double-precision) = 1.000000
+    in  OffsetTransformForItem_1.Weight : Float (single-precision) = 1.000000
+    in  OffsetTransformForItem_1.bPropagateToChildren : Boolean = True
+
+[N42] Get Loop Controls (ControlRigGraphNode)
+
+[N43] Get Interacting Item (ControlRigGraphNode)
+    out VariableNode_5_1.Value : Rig Element Key Structure -> N33.RigUnit_GetTransform_1_1.Item, N34.DISPATCH_RigDispatch_GetMetadata_1.Item
+
+[N44] Comment (EdGraphNode_Comment)
+    // Interpolate in between controls
+
+[N45] Sequence (ControlRigGraphNode)
+    out SequenceAggregate.C : Execute Context Structure -> N1.Return.ExecuteContext
+    in  SequenceAggregate.ExecuteContext : Execute Context Structure <- N0.Entry.ExecuteContext
+
+[N46] Get Controls (ControlRigGraphNode)
+
+[N47]  (ControlRigGraphNode)
+
+[N48] Get Controls (ControlRigGraphNode)
+
+[N49]  (ControlRigGraphNode)
+
+[N50] Send Event (ControlRigGraphNode)
+    in  SendEvent.ExecuteContext : Execute Context Structure = ()
+    in  SendEvent.Event : ERigEvent Enum = RequestAutoKey
+    in  SendEvent.Item.Type : ERigElementType Enum = None
+    in  SendEvent.Item.Name : Name = None
+    in  SendEvent.bEnable : Boolean = True
+    in  SendEvent.bOnlyDuringInteraction : Boolean = True
+
+[N51] Comment (EdGraphNode_Comment)
+    // Auto Key
+
+[N52]  (ControlRigGraphNode)
+

@@ -1,0 +1,262 @@
+Graph: BSpline Passing thru 4 Points
+
+[N0] Entry (ControlRigGraphNode)
+    out Entry.Execute : Execute Context Structure -> N43.RerouteNode_2.Value
+    out Entry.Point 0 : Vector -> N2.MathVectorDistance.B
+    out Entry.Point 1 : Vector -> N2.MathVectorDistance.A, N3.MathVectorDistance_1.A
+    out Entry.Point 2 : Vector -> N3.MathVectorDistance_1.B, N4.MathVectorDistance_2.A
+    out Entry.Point 3 : Vector -> N4.MathVectorDistance_2.B
+
+[N1] Return (ControlRigGraphNode)
+    in  Return.Execute : Execute Context Structure = ()
+    in  Return.Control Points : Array of Vectors = ()
+    in  Return.Spline : Control Rig Spline Structure <- N34.ControlRigSplineFromPoints.Spline
+
+[N2] Distance Between (ControlRigGraphNode)
+    out MathVectorDistance.Result : Float (single-precision) -> N5.MathFloatAdd.A, N7.MathFloatDiv.A
+    in  MathVectorDistance.A : Vector <- N0.Entry.Point 1
+    in  MathVectorDistance.A.X : Float (double-precision) = 0.000000
+    in  MathVectorDistance.A.Y : Float (double-precision) = 0.000000
+    in  MathVectorDistance.A.Z : Float (double-precision) = 0.000000
+    in  MathVectorDistance.B : Vector <- N0.Entry.Point 0
+    in  MathVectorDistance.B.X : Float (double-precision) = 0.000000
+    in  MathVectorDistance.B.Y : Float (double-precision) = 0.000000
+    in  MathVectorDistance.B.Z : Float (double-precision) = 0.000000
+
+[N3] Distance Between (ControlRigGraphNode)
+    out MathVectorDistance_1.Result : Float (single-precision) -> N5.MathFloatAdd.B
+    in  MathVectorDistance_1.A : Vector <- N0.Entry.Point 1
+    in  MathVectorDistance_1.A.X : Float (double-precision) = 0.000000
+    in  MathVectorDistance_1.A.Y : Float (double-precision) = 0.000000
+    in  MathVectorDistance_1.A.Z : Float (double-precision) = 0.000000
+    in  MathVectorDistance_1.B : Vector <- N0.Entry.Point 2
+    in  MathVectorDistance_1.B.X : Float (double-precision) = 0.000000
+    in  MathVectorDistance_1.B.Y : Float (double-precision) = 0.000000
+    in  MathVectorDistance_1.B.Z : Float (double-precision) = 0.000000
+
+[N4] Distance Between (ControlRigGraphNode)
+    out MathVectorDistance_2.Result : Float (single-precision) -> N6.MathFloatAdd_1.B
+    in  MathVectorDistance_2.A : Vector <- N0.Entry.Point 2
+    in  MathVectorDistance_2.A.X : Float (double-precision) = 0.000000
+    in  MathVectorDistance_2.A.Y : Float (double-precision) = 0.000000
+    in  MathVectorDistance_2.A.Z : Float (double-precision) = 0.000000
+    in  MathVectorDistance_2.B : Vector <- N0.Entry.Point 3
+    in  MathVectorDistance_2.B.X : Float (double-precision) = 0.000000
+    in  MathVectorDistance_2.B.Y : Float (double-precision) = 0.000000
+    in  MathVectorDistance_2.B.Z : Float (double-precision) = 0.000000
+
+[N5] Add (ControlRigGraphNode)
+    out MathFloatAdd.Result : Float (single-precision) -> N6.MathFloatAdd_1.A, N8.MathFloatDiv_1.A
+    in  MathFloatAdd.A : Float (single-precision) <- N2.MathVectorDistance.Result
+    in  MathFloatAdd.B : Float (single-precision) <- N3.MathVectorDistance_1.Result
+
+[N6] Add (ControlRigGraphNode)
+    out MathFloatAdd_1.Result : Float (single-precision) -> N7.MathFloatDiv.B, N8.MathFloatDiv_1.B
+    in  MathFloatAdd_1.A : Float (single-precision) <- N5.MathFloatAdd.Result
+    in  MathFloatAdd_1.B : Float (single-precision) <- N4.MathVectorDistance_2.Result
+
+[N7] Divide (ControlRigGraphNode)
+    in  MathFloatDiv.A : Float (single-precision) <- N2.MathVectorDistance.Result
+    in  MathFloatDiv.B : Float (single-precision) <- N6.MathFloatAdd_1.Result
+
+[N8] Divide (ControlRigGraphNode)
+    in  MathFloatDiv_1.A : Float (single-precision) <- N5.MathFloatAdd.Result
+    in  MathFloatDiv_1.B : Float (single-precision) <- N6.MathFloatAdd_1.Result
+
+[N9] Comment (EdGraphNode_Comment)
+    // t1
+
+[N10] Comment (EdGraphNode_Comment)
+    // t2
+
+[N11] Scale (ControlRigGraphNode)
+    out MathVectorScale.Result : Vector -> N14.MathVectorSub_1.B
+    in  MathVectorScale.Value : Vector <- N18.VariableNode_2.Value
+    in  MathVectorScale.Value.X : Float (double-precision) = 0.000000
+    in  MathVectorScale.Value.Y : Float (double-precision) = 0.000000
+    in  MathVectorScale.Value.Z : Float (double-precision) = 0.000000
+    in  MathVectorScale.Factor : Float (single-precision) <- N28.b0t1.Result
+
+[N12] Scale (ControlRigGraphNode)
+    out MathVectorScale_1.Result : Vector -> N13.MathVectorSub.B
+    in  MathVectorScale_1.Value : Vector <- N19.VariableNode_3.Value
+    in  MathVectorScale_1.Value.X : Float (double-precision) = 0.000000
+    in  MathVectorScale_1.Value.Y : Float (double-precision) = 0.000000
+    in  MathVectorScale_1.Value.Z : Float (double-precision) = 0.000000
+    in  MathVectorScale_1.Factor : Float (single-precision) <- N29.b3t1.Result
+
+[N13] Subtract (ControlRigGraphNode)
+    out MathVectorSub.Result : Vector -> N23.Solve.c
+    in  MathVectorSub.A : Vector <- N14.MathVectorSub_1.Result
+    in  MathVectorSub.A.X : Float (double-precision) = 0.000000
+    in  MathVectorSub.A.Y : Float (double-precision) = 0.000000
+    in  MathVectorSub.A.Z : Float (double-precision) = 0.000000
+    in  MathVectorSub.B : Vector <- N12.MathVectorScale_1.Result
+    in  MathVectorSub.B.X : Float (double-precision) = 0.000000
+    in  MathVectorSub.B.Y : Float (double-precision) = 0.000000
+    in  MathVectorSub.B.Z : Float (double-precision) = 0.000000
+
+[N14] Subtract (ControlRigGraphNode)
+    out MathVectorSub_1.Result : Vector -> N13.MathVectorSub.A
+    in  MathVectorSub_1.A : Vector <- N15.VariableNode.Value
+    in  MathVectorSub_1.A.X : Float (double-precision) = 0.000000
+    in  MathVectorSub_1.A.Y : Float (double-precision) = 0.000000
+    in  MathVectorSub_1.A.Z : Float (double-precision) = 0.000000
+    in  MathVectorSub_1.B : Vector <- N11.MathVectorScale.Result
+    in  MathVectorSub_1.B.X : Float (double-precision) = 0.000000
+    in  MathVectorSub_1.B.Y : Float (double-precision) = 0.000000
+    in  MathVectorSub_1.B.Z : Float (double-precision) = 0.000000
+
+[N15] Get Point 1 (ControlRigGraphNode)
+    out VariableNode.Value : Vector -> N14.MathVectorSub_1.A
+
+[N16] Scale (ControlRigGraphNode)
+    out MathVectorScale_2.Result : Vector -> N22.MathVectorSub_1_3.B
+    in  MathVectorScale_2.Value : Vector <- N18.VariableNode_2.Value
+    in  MathVectorScale_2.Value.X : Float (double-precision) = 0.000000
+    in  MathVectorScale_2.Value.Y : Float (double-precision) = 0.000000
+    in  MathVectorScale_2.Value.Z : Float (double-precision) = 0.000000
+    in  MathVectorScale_2.Factor : Float (single-precision) <- N30.b0t2.Result
+
+[N17] Scale (ControlRigGraphNode)
+    out MathVectorScale_1_1.Result : Vector -> N21.MathVectorSub_4.B
+    in  MathVectorScale_1_1.Value : Vector <- N19.VariableNode_3.Value
+    in  MathVectorScale_1_1.Value.X : Float (double-precision) = 0.000000
+    in  MathVectorScale_1_1.Value.Y : Float (double-precision) = 0.000000
+    in  MathVectorScale_1_1.Value.Z : Float (double-precision) = 0.000000
+    in  MathVectorScale_1_1.Factor : Float (single-precision) <- N31.b3t2.Result
+
+[N18] Get Point 0 (ControlRigGraphNode)
+    out VariableNode_2.Value : Vector -> N11.MathVectorScale.Value, N16.MathVectorScale_2.Value
+
+[N19] Get Point 3 (ControlRigGraphNode)
+    out VariableNode_3.Value : Vector -> N12.MathVectorScale_1.Value, N17.MathVectorScale_1_1.Value
+
+[N20] Get Point 2 (ControlRigGraphNode)
+    out VariableNode_1.Value : Vector -> N22.MathVectorSub_1_3.A
+
+[N21] Subtract (ControlRigGraphNode)
+    out MathVectorSub_4.Result : Vector -> N23.Solve.f
+    in  MathVectorSub_4.A : Vector <- N22.MathVectorSub_1_3.Result
+    in  MathVectorSub_4.A.X : Float (double-precision) = 0.000000
+    in  MathVectorSub_4.A.Y : Float (double-precision) = 0.000000
+    in  MathVectorSub_4.A.Z : Float (double-precision) = 0.000000
+    in  MathVectorSub_4.B : Vector <- N17.MathVectorScale_1_1.Result
+    in  MathVectorSub_4.B.X : Float (double-precision) = 0.000000
+    in  MathVectorSub_4.B.Y : Float (double-precision) = 0.000000
+    in  MathVectorSub_4.B.Z : Float (double-precision) = 0.000000
+
+[N22] Subtract (ControlRigGraphNode)
+    out MathVectorSub_1_3.Result : Vector -> N21.MathVectorSub_4.A
+    in  MathVectorSub_1_3.A : Vector <- N20.VariableNode_1.Value
+    in  MathVectorSub_1_3.A.X : Float (double-precision) = 0.000000
+    in  MathVectorSub_1_3.A.Y : Float (double-precision) = 0.000000
+    in  MathVectorSub_1_3.A.Z : Float (double-precision) = 0.000000
+    in  MathVectorSub_1_3.B : Vector <- N16.MathVectorScale_2.Result
+    in  MathVectorSub_1_3.B.X : Float (double-precision) = 0.000000
+    in  MathVectorSub_1_3.B.Y : Float (double-precision) = 0.000000
+    in  MathVectorSub_1_3.B.Z : Float (double-precision) = 0.000000
+
+[N23] Solve (ControlRigGraphNode)
+    out Solve.i : Vector -> N34.ControlRigSplineFromPoints.Points.1
+    out Solve.j : Vector -> N34.ControlRigSplineFromPoints.Points.2
+    in  Solve.a : Float (double-precision) <- N24.b1t1.Result
+    in  Solve.b : Float (double-precision) <- N25.b2t1.Result
+    in  Solve.c : Vector <- N13.MathVectorSub.Result
+    in  Solve.c.X : Float (double-precision) = 0.000000
+    in  Solve.c.Y : Float (double-precision) = 0.000000
+    in  Solve.c.Z : Float (double-precision) = 0.000000
+    in  Solve.d : Float (double-precision) <- N26.b1t2.Result
+    in  Solve.e : Float (double-precision) <- N27.b2t2.Result
+    in  Solve.f : Vector <- N21.MathVectorSub_4.Result
+    in  Solve.f.X : Float (double-precision) = 0.000000
+    in  Solve.f.Y : Float (double-precision) = 0.000000
+    in  Solve.f.Z : Float (double-precision) = 0.000000
+
+[N24] b1t1 (ControlRigGraphNode)
+    out b1t1.Result : Float (single-precision) -> N23.Solve.a
+
+[N25] b2t1 (ControlRigGraphNode)
+    out b2t1.Result : Float (single-precision) -> N23.Solve.b
+
+[N26] b1t2 (ControlRigGraphNode)
+    out b1t2.Result : Float (single-precision) -> N23.Solve.d
+
+[N27] b2t2 (ControlRigGraphNode)
+    out b2t2.Result : Float (single-precision) -> N23.Solve.e
+
+[N28] b0t1 (ControlRigGraphNode)
+    out b0t1.Result : Float (single-precision) -> N11.MathVectorScale.Factor
+    in  b0t1.t : Float (double-precision) <- N33.RerouteNode_1.Value
+
+[N29] b3t1 (ControlRigGraphNode)
+    out b3t1.Result : Float (single-precision) -> N12.MathVectorScale_1.Factor
+    in  b3t1.t : Float (double-precision) <- N33.RerouteNode_1.Value
+
+[N30] b0t2 (ControlRigGraphNode)
+    out b0t2.Result : Float (single-precision) -> N16.MathVectorScale_2.Factor
+    in  b0t2.t : Float (double-precision) <- N32.RerouteNode.Value
+
+[N31] b3t2 (ControlRigGraphNode)
+    out b3t2.Result : Float (single-precision) -> N17.MathVectorScale_1_1.Factor
+    in  b3t2.t : Float (double-precision) <- N32.RerouteNode.Value
+
+[N32] Float (ControlRigGraphNode)
+    out RerouteNode.Value : Float (single-precision) -> N30.b0t2.t, N31.b3t2.t
+
+[N33] Float (ControlRigGraphNode)
+    out RerouteNode_1.Value : Float (single-precision) -> N28.b0t1.t, N29.b3t1.t
+
+[N34] Spline From Points (ControlRigGraphNode)
+    out ControlRigSplineFromPoints.Spline : Control Rig Spline Structure -> N1.Return.Spline
+    in  ControlRigSplineFromPoints.Points.0 : Vector <- N35.VariableNode_4.Value
+    in  ControlRigSplineFromPoints.Points.0.X : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.0.Y : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.0.Z : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.1 : Vector <- N23.Solve.i
+    in  ControlRigSplineFromPoints.Points.1.X : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.1.Y : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.1.Z : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.2 : Vector <- N23.Solve.j
+    in  ControlRigSplineFromPoints.Points.2.X : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.2.Y : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.2.Z : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.3 : Vector <- N36.VariableNode_5.Value
+    in  ControlRigSplineFromPoints.Points.3.X : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.3.Y : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.3.Z : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.SplineMode : ESplineType Enum = BSpline
+    in  ControlRigSplineFromPoints.bClosed : Boolean = False
+    in  ControlRigSplineFromPoints.SamplesPerSegment : Integer = 16
+
+[N35] Get Point 0 (ControlRigGraphNode)
+    out VariableNode_4.Value : Vector -> N34.ControlRigSplineFromPoints.Points.0
+
+[N36] Get Point 3 (ControlRigGraphNode)
+    out VariableNode_5.Value : Vector -> N34.ControlRigSplineFromPoints.Points.3
+
+[N37] Get Outputs (ControlRigGraphNode)
+
+[N38]  (ControlRigGraphNode)
+
+[N39]  (ControlRigGraphNode)
+
+[N40]  (ControlRigGraphNode)
+
+[N41]  (ControlRigGraphNode)
+
+[N42]  (ControlRigGraphNode)
+
+[N43] Execute Context (ControlRigGraphNode)
+    in  RerouteNode_2.Value : Execute Context Structure <- N0.Entry.Execute
+
+[N44]  (ControlRigGraphNode)
+
+[N45]  (ControlRigGraphNode)
+
+[N46] Get Auto Weights (ControlRigGraphNode)
+
+[N47] Get Weight 1 (ControlRigGraphNode)
+
+[N48] Get Weight 2 (ControlRigGraphNode)
+

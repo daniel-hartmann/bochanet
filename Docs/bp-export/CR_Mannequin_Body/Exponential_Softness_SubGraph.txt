@@ -1,0 +1,49 @@
+Graph: Exponential Softness_SubGraph
+
+[N0] Entry (ControlRigGraphNode)
+    out Entry.Distance : Float (single-precision) -> N2.MathFloatSub_1.A
+    out Entry.Stretch Distance : Float (single-precision) -> N8.MathFloatDiv_2.A
+    out Entry.DA : Float (single-precision) -> N2.MathFloatSub_1.B, N7.MathFloatAdd_1.B
+    out Entry.Softness : Float (single-precision) -> N6.MathFloatMul_6.B, N4.MathFloatDiv_1.B
+
+[N1] Return (ControlRigGraphNode)
+    in  Return.Result : Float (single-precision) <- N8.MathFloatDiv_2.Result
+
+[N2] Subtract (ControlRigGraphNode)
+    out MathFloatSub_1.Result : Float (single-precision) -> N4.MathFloatDiv_1.A
+    in  MathFloatSub_1.A : Float (single-precision) <- N0.Entry.Distance
+    in  MathFloatSub_1.B : Float (single-precision) <- N0.Entry.DA
+
+[N3] Subtract (ControlRigGraphNode)
+    out MathFloatSub_2.Result : Float (single-precision) -> N6.MathFloatMul_6.A
+    in  MathFloatSub_2.A : Float (single-precision) = 1.000000
+    in  MathFloatSub_2.B : Float (single-precision) <- N9.MathFloatExponential.Result
+
+[N4] Divide (ControlRigGraphNode)
+    out MathFloatDiv_1.Result : Float (single-precision) -> N5.MathFloatNegate.Value
+    in  MathFloatDiv_1.A : Float (single-precision) <- N2.MathFloatSub_1.Result
+    in  MathFloatDiv_1.B : Float (single-precision) <- N0.Entry.Softness
+
+[N5] Negate (ControlRigGraphNode)
+    out MathFloatNegate.Result : Float (single-precision) -> N9.MathFloatExponential.Value
+    in  MathFloatNegate.Value : Float (single-precision) <- N4.MathFloatDiv_1.Result
+
+[N6] Multiply (ControlRigGraphNode)
+    out MathFloatMul_6.Result : Float (single-precision) -> N7.MathFloatAdd_1.A
+    in  MathFloatMul_6.A : Float (single-precision) <- N3.MathFloatSub_2.Result
+    in  MathFloatMul_6.B : Float (single-precision) <- N0.Entry.Softness
+
+[N7] Add (ControlRigGraphNode)
+    out MathFloatAdd_1.Result : Float (single-precision) -> N8.MathFloatDiv_2.B
+    in  MathFloatAdd_1.A : Float (single-precision) <- N6.MathFloatMul_6.Result
+    in  MathFloatAdd_1.B : Float (single-precision) <- N0.Entry.DA
+
+[N8] Divide (ControlRigGraphNode)
+    out MathFloatDiv_2.Result : Float (single-precision) -> N1.Return.Result
+    in  MathFloatDiv_2.A : Float (single-precision) <- N0.Entry.Stretch Distance
+    in  MathFloatDiv_2.B : Float (single-precision) <- N7.MathFloatAdd_1.Result
+
+[N9] Exponential (ControlRigGraphNode)
+    out MathFloatExponential.Result : Float (single-precision) -> N3.MathFloatSub_2.B
+    in  MathFloatExponential.Value : Float (single-precision) <- N5.MathFloatNegate.Result
+

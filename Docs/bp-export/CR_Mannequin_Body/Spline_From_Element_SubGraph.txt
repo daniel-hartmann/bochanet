@@ -1,0 +1,38 @@
+Graph: Spline From Element_SubGraph
+
+[N0] Entry (ControlRigGraphNode)
+    out Entry.Items : Array of Rig Element Key Structures -> N3.GetTransformItemArray.Items
+
+[N1] Return (ControlRigGraphNode)
+    in  Return.Spline : Control Rig Spline Structure <- N2.ControlRigSplineFromPoints.Spline
+
+[N2] Spline From Points (ControlRigGraphNode)
+    out ControlRigSplineFromPoints.Spline : Control Rig Spline Structure -> N1.Return.Spline
+    in  ControlRigSplineFromPoints.Points.0.X : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.0.Y : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.0.Z : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.1.X : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.1.Y : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.1.Z : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.2.X : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.2.Y : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.2.Z : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.3.X : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.3.Y : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.Points.3.Z : Float (double-precision) = 0.000000
+    in  ControlRigSplineFromPoints.SplineMode : ESplineType Enum = BSpline
+    in  ControlRigSplineFromPoints.bClosed : Boolean = False
+    in  ControlRigSplineFromPoints.SamplesPerSegment : Integer = 16
+
+[N3] Get Transform Array (ControlRigGraphNode)
+    in  GetTransformItemArray.Items : Array of Rig Element Key Structures <- N0.Entry.Items
+    in  GetTransformItemArray.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N4]  (ControlRigGraphNode)
+
+[N5]  (ControlRigGraphNode)
+
+[N6]  (ControlRigGraphNode)
+
+[N7]  (ControlRigGraphNode)
+

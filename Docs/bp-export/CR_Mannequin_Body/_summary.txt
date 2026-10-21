@@ -1,0 +1,127 @@
+Blueprint: /Game/Characters/Mannequins/Rigs/CR_Mannequin_Body.CR_Mannequin_Body
+Parent: /Script/ControlRig.ControlRig
+
+[Variables]
+L Arm IK Mode : Boolean = '' [] Category=Default
+R Arm IK Mode : Boolean = '' [] Category=Default
+L Leg IK Mode  : Boolean = '' [] Category=Default
+R Leg IK Mode : Boolean = '' [] Category=Default
+Spine IK Mode : Boolean = '' [] Category=Default
+Neck IK Mode : Boolean = '' [] Category=Default
+Spine Offsets : Array of Transforms = '' [] Category=Default
+Spine Length : Float (double-precision) = '' [] Category=Default
+Neck Length : Float (double-precision) = '' [] Category=Default
+L Arm IK Align : Boolean = '' [] Category=Default
+R Arm IK Align : Boolean = '' [] Category=Default
+
+[Class Defaults overridden vs parent]
+    L Arm IK Mode =  (own)
+    R Arm IK Mode =  (own)
+    L Leg IK Mode  = True (own)
+    R Leg IK Mode = True (own)
+    Spine IK Mode =  (own)
+    Neck IK Mode =  (own)
+    Spine Offsets =  (own)
+    Spine Length =  (own)
+    Neck Length =  (own)
+    L Arm IK Align =  (own)
+    R Arm IK Align =  (own)
+    DynamicHierarchy = /Script/ControlRig.RigHierarchy'/Game/Characters/Mannequins/Rigs/CR_Mannequin_Body.Default__CR_Mannequin_Body_C:DynamicHierarchy'
+    ShapeLibraries = ("/ControlRig/Controls/DefaultGizmoLibraryNormalized.DefaultGizmoLibraryNormalized")
+    Influences = (Maps=((EventName="Forwards Solve")),EventToIndex=(("Forwards Solve", 0)))
+
+[Graphs]
+Get Negative Transform (7 nodes) -> Get_Negative_Transform.txt
+Setup Arm (65 nodes) -> Setup_Arm.txt
+SequenceExecution_SubGraph (5 nodes) -> SequenceExecution_SubGraph.txt
+Setup Clavicle (7 nodes) -> Setup_Clavicle.txt
+Setup Fingers (14 nodes) -> Setup_Fingers.txt
+Setup Leg (57 nodes) -> Setup_Leg.txt
+SequenceExecution_SubGraph (6 nodes) -> SequenceExecution_SubGraph_1.txt
+Setup Foot (30 nodes) -> Setup_Foot.txt
+SequenceExecution_SubGraph (5 nodes) -> SequenceExecution_SubGraph_2.txt
+Forward Arm (102 nodes) -> Forward_Arm.txt
+SequenceExecution_SubGraph (5 nodes) -> SequenceExecution_SubGraph_3.txt
+SequenceExecution_1_SubGraph (5 nodes) -> SequenceExecution_1_SubGraph.txt
+Forward Fingers (27 nodes) -> Forward_Fingers.txt
+SequenceAggregate_SubGraph (5 nodes) -> SequenceAggregate_SubGraph.txt
+Forward Clavicle (4 nodes) -> Forward_Clavicle.txt
+Forward Leg (49 nodes) -> Forward_Leg.txt
+SequenceExecution_SubGraph (5 nodes) -> SequenceExecution_SubGraph_4.txt
+Forward Foot (75 nodes) -> Forward_Foot.txt
+SequenceExecution_SubGraph (5 nodes) -> SequenceExecution_SubGraph_5.txt
+Set IKFK Visibility (12 nodes) -> Set_IKFK_Visibility.txt
+SequenceExecution_SubGraph (5 nodes) -> SequenceExecution_SubGraph_6.txt
+Backward Spine (17 nodes) -> Backward_Spine.txt
+SequenceExecution_SubGraph (5 nodes) -> SequenceExecution_SubGraph_7.txt
+Backward Neck (29 nodes) -> Backward_Neck.txt
+SequenceExecution_SubGraph (5 nodes) -> SequenceExecution_SubGraph_8.txt
+Backward Clavicle (4 nodes) -> Backward_Clavicle.txt
+Backward Arm (33 nodes) -> Backward_Arm.txt
+SequenceExecution_SubGraph (5 nodes) -> SequenceExecution_SubGraph_9.txt
+Backward Fingers (6 nodes) -> Backward_Fingers.txt
+Backward Leg (23 nodes) -> Backward_Leg.txt
+SequenceExecution_SubGraph (5 nodes) -> SequenceExecution_SubGraph_10.txt
+Backward Foot (18 nodes) -> Backward_Foot.txt
+SequenceExecution_SubGraph (5 nodes) -> SequenceExecution_SubGraph_11.txt
+FK Point At (33 nodes) -> FK_Point_At.txt
+SequenceExecution_SubGraph (5 nodes) -> SequenceExecution_SubGraph_12.txt
+Match 2 Bones IK onto FK (14 nodes) -> Match_2_Bones_IK_onto_FK.txt
+IK 2 Bones (53 nodes) -> IK_2_Bones.txt
+Softness_SubGraph (29 nodes) -> Softness_SubGraph.txt
+Exponential Softness_SubGraph (10 nodes) -> Exponential_Softness_SubGraph.txt
+SequenceExecution_SubGraph (5 nodes) -> SequenceExecution_SubGraph_13.txt
+MathBoolAnd_SubGraph (4 nodes) -> MathBoolAnd_SubGraph.txt
+Project to New Parents (6 nodes) -> Project_to_New_Parents.txt
+Set IKFK Keys (14 nodes) -> Set_IKFK_Keys.txt
+SequenceExecution_1_SubGraph (5 nodes) -> SequenceExecution_1_SubGraph_1.txt
+SequenceExecution_SubGraph (5 nodes) -> SequenceExecution_SubGraph_14.txt
+Setup Reverse Foot (29 nodes) -> Setup_Reverse_Foot.txt
+SequenceExecution_SubGraph (5 nodes) -> SequenceExecution_SubGraph_15.txt
+Forward Reverse Foot (84 nodes) -> Forward_Reverse_Foot.txt
+SequenceExecution_SubGraph (5 nodes) -> SequenceExecution_SubGraph_16.txt
+SequenceExecution_1_SubGraph (5 nodes) -> SequenceExecution_1_SubGraph_2.txt
+BSpline Passing thru 4 Points (49 nodes) -> BSpline_Passing_thru_4_Points.txt
+Solve_SubGraph (27 nodes) -> Solve_SubGraph.txt
+b1t1_SubGraph (6 nodes) -> b1t1_SubGraph.txt
+b2t1_SubGraph (6 nodes) -> b2t1_SubGraph.txt
+b1t2_SubGraph (6 nodes) -> b1t2_SubGraph.txt
+b2t2_SubGraph (6 nodes) -> b2t2_SubGraph.txt
+b0t1_SubGraph (4 nodes) -> b0t1_SubGraph.txt
+b3t1_SubGraph (3 nodes) -> b3t1_SubGraph.txt
+b0t2_SubGraph (4 nodes) -> b0t2_SubGraph.txt
+b3t2_SubGraph (3 nodes) -> b3t2_SubGraph.txt
+Setup Spine (43 nodes) -> Setup_Spine.txt
+Spline From Element Setup_SubGraph (8 nodes) -> Spline_From_Element_Setup_SubGraph.txt
+SequenceExecution_SubGraph (5 nodes) -> SequenceExecution_SubGraph_17.txt
+Forward Spine (64 nodes) -> Forward_Spine.txt
+Spine IK Solve_SubGraph (41 nodes) -> Spine_IK_Solve_SubGraph.txt
+Spline From Element_SubGraph (8 nodes) -> Spline_From_Element_SubGraph.txt
+UpVector_SubGraph (6 nodes) -> UpVector_SubGraph.txt
+Is First or Last_SubGraph (6 nodes) -> Is_First_or_Last_SubGraph.txt
+SequenceExecution_SubGraph (10 nodes) -> SequenceExecution_SubGraph_18.txt
+SequenceExecution_SubGraph (5 nodes) -> SequenceExecution_SubGraph_19.txt
+SequenceExecution_1_SubGraph (5 nodes) -> SequenceExecution_1_SubGraph_3.txt
+Setup Neck (36 nodes) -> Setup_Neck.txt
+SequenceExecution_SubGraph (5 nodes) -> SequenceExecution_SubGraph_20.txt
+Forward Neck (67 nodes) -> Forward_Neck.txt
+Neck IK Neck_SubGraph (18 nodes) -> Neck_IK_Neck_SubGraph.txt
+Get Points on Spline_SubGraph (26 nodes) -> Get_Points_on_Spline_SubGraph.txt
+SequenceExecution_SubGraph (10 nodes) -> SequenceExecution_SubGraph_21.txt
+Is Last_SubGraph (4 nodes) -> Is_Last_SubGraph.txt
+At and Next_SubGraph (5 nodes) -> At_and_Next_SubGraph.txt
+First Last Rotation_SubGraph (8 nodes) -> First_Last_Rotation_SubGraph.txt
+SequenceExecution_1_SubGraph (10 nodes) -> SequenceExecution_1_SubGraph_4.txt
+SequenceExecution_SubGraph (5 nodes) -> SequenceExecution_SubGraph_22.txt
+Spine Match IK onto FK (22 nodes) -> Spine_Match_IK_onto_FK.txt
+SequenceExecution_SubGraph (5 nodes) -> SequenceExecution_SubGraph_23.txt
+Interpolate Interacting Controls (53 nodes) -> Interpolate_Interacting_Controls.txt
+SequenceAggregate_3_SubGraph (4 nodes) -> SequenceAggregate_3_SubGraph.txt
+SequenceAggregate_SubGraph (4 nodes) -> SequenceAggregate_SubGraph_1.txt
+Compute Pole Vector Parent (7 nodes) -> Compute_Pole_Vector_Parent.txt
+Find Finger Controls (19 nodes) -> Find_Finger_Controls.txt
+MathBoolAnd_SubGraph (4 nodes) -> MathBoolAnd_SubGraph_1.txt
+Rig Graph (237 nodes) -> Rig_Graph.txt
+SequenceExecution_1_SubGraph (5 nodes) -> SequenceExecution_1_SubGraph_5.txt
+SequenceExecution_3_SubGraph (5 nodes) -> SequenceExecution_3_SubGraph.txt
+SequenceExecution_SubGraph (6 nodes) -> SequenceExecution_SubGraph_24.txt

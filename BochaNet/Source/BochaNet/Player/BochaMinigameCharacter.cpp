@@ -2,6 +2,8 @@
 
 #include "Actors/BochaBall.h"
 #include "Blueprint/UserWidget.h"
+#include "Animation/AnimInstance.h"
+#include "Animation/AnimMontage.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -28,12 +30,27 @@ ABochaMinigameCharacter::ABochaMinigameCharacter()
 	// Nobody possesses this character, but it still has to walk.
 	GetCharacterMovement()->bRunPhysicsWithNoController = true;
 
+	// First person, aligned with the character's view axis: the camera sits at eye height just in front
+	// of the face, looking slightly down, and turns with the aim (the actor's yaw; nobody possesses this
+	// character, so there is no control rotation). Zero-length arm: no collision probe needed, only
+	// rotation lag to smooth the aim. The head is hidden so the camera never sees its inside.
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(GetCapsuleComponent());
+	// 40 cm forward: the chest and shoulders lean forward in the throw and must stay behind the camera.
+	SpringArm->SetRelativeLocation(FVector(40.0, 0.0, 70.0));
+	SpringArm->SetRelativeRotation(FRotator(-10.0, 0.0, 0.0));
+	SpringArm->TargetArmLength = 0.f;
+	SpringArm->bUsePawnControlRotation = false;
+	SpringArm->bDoCollisionTest = false;
+	SpringArm->bEnableCameraLag = false;
+	SpringArm->bEnableCameraRotationLag = true;
+	SpringArm->CameraRotationLagSpeed = 12.f;
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-	Camera->SetupAttachment(SpringArm);
-	Camera->SetRelativeLocation(FVector(330.0, 0.0, -10.0));
+	Camera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
+
+	// Mannequin placement on the capsule (feet on the ground, facing +X), as in the template.
+	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0, 0.0, -89.0), FRotator(0.0, -90.0, 0.0));
 }
 
 void ABochaMinigameCharacter::BeginPlay()
@@ -106,15 +123,67 @@ void ABochaMinigameCharacter::DoStrength(float Delta)
 	}
 }
 
+void ABochaMinigameCharacter::SetTeam(int32 Team)
+{
+	if (Team == DressedTeam || Team == INDEX_NONE)
+	{
+		return;
+	}
+	DressedTeam = Team;
+
+	if (USkeletalMesh* TeamMesh = Team == 1 ? BlueMesh : RedMesh)
+	{
+		GetMesh()->SetSkeletalMesh(TeamMesh);
+		// First person: the camera is where the face is (hiding the neck hides the head too).
+		GetMesh()->HideBoneByName(TEXT("neck_01"), EPhysBodyOp::PBO_None);
+	}
+	if (AnimClass)
+	{
+		GetMesh()->SetAnimInstanceClass(AnimClass);
+	}
+	UE_LOG(LogTemp, Display, TEXT("Minigame player dressed for team %d: mesh %s, anim %s."), Team,
+		*GetNameSafe(GetMesh()->GetSkeletalMeshAsset()), *GetNameSafe(GetMesh()->GetAnimInstance()));
+}
+
 void ABochaMinigameCharacter::DoThrow()
 {
-	if (!GameMode || !IsValid(GameMode->GetCurrentBall()))
+	if (bThrowing || !GameMode || !IsValid(GameMode->GetCurrentBall()))
 	{
 		return;
 	}
 
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	const bool bPlaying = ThrowMontage && AnimInstance && PlayAnimMontage(ThrowMontage) > 0.f;
+	UE_LOG(LogTemp, Display, TEXT("Throw: montage %s %s."), *GetNameSafe(ThrowMontage), bPlaying ? TEXT("playing") : TEXT("not playing"));
+	if (bPlaying)
+	{
+		bThrowing = true;
+		FOnMontageEnded EndDelegate;
+		EndDelegate.BindUObject(this, &ABochaMinigameCharacter::OnThrowMontageEnded);
+		AnimInstance->Montage_SetEndDelegate(EndDelegate, ThrowMontage);
+		return;
+	}
+
+	// No animation to wait for.
+	bThrowing = true;
+	ReleaseBall();
+}
+
+void ABochaMinigameCharacter::ReleaseBall()
+{
+	if (!bThrowing || !GameMode || !IsValid(GameMode->GetCurrentBall()))
+	{
+		return;
+	}
+	bThrowing = false;
+
 	const FVector Velocity = GetActorForwardVector() * ThrowStrength;
 	SendThrow(Velocity);
+}
+
+void ABochaMinigameCharacter::OnThrowMontageEnded(UAnimMontage* Montage, bool bInterrupted)
+{
+	ReleaseBall();
 }
 
 void ABochaMinigameCharacter::SendThrow(const FVector& Velocity)

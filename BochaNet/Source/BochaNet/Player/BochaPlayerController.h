@@ -86,6 +86,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Input|Bocha")
 	TObjectPtr<UInputAction> BochaAimMouseAction;
 
+	/** Opens/closes the local pause screen. */
+	UPROPERTY(EditDefaultsOnly, Category = "Input|Bocha")
+	TObjectPtr<UInputAction> BochaPauseAction;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Bocha")
 	TSubclassOf<ABochaBolim> BolimClass;
 
@@ -101,6 +105,9 @@ private:
 	void BochaStrength(const FInputActionValue& Value);
 	void BochaThrow();
 	void BochaAimMouse(const FInputActionValue& Value);
+	void BochaPause();
+	/** The minigame character to drive, or null (none, or the local pause screen is open). */
+	ABochaMinigameCharacter* GetPlayableCharacter() const;
 
 	/** Portal whose interaction area the possessed pawn is standing in. */
 	UPROPERTY(Transient)

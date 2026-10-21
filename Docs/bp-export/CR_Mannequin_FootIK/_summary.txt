@@ -1,0 +1,24 @@
+Blueprint: /Game/Characters/Mannequins/Rigs/CR_Mannequin_FootIK.CR_Mannequin_FootIK
+Parent: /Script/ControlRig.ControlRig
+
+[Variables]
+ZOffset_L_Target : Float (double-precision) = '' [] Category=Default
+ZOffset_R_Target : Float (double-precision) = '' [] Category=Default
+ZOffset_L : Float (double-precision) = '' [] Category=Default
+ZOffset_R : Float (double-precision) = '' [] Category=Default
+ZOffset_Pelvis : Float (double-precision) = '' [] Category=Default
+ShouldDoIKTrace : Boolean = '' [InstanceEditable] Category=Default
+
+[Class Defaults overridden vs parent]
+    ZOffset_L_Target =  (own)
+    ZOffset_R_Target =  (own)
+    ZOffset_L =  (own)
+    ZOffset_R =  (own)
+    ZOffset_Pelvis =  (own)
+    ShouldDoIKTrace =  (own)
+    DynamicHierarchy = /Script/ControlRig.RigHierarchy'/Game/Characters/Mannequins/Rigs/CR_Mannequin_FootIK.Default__CR_Mannequin_FootIK_C:DynamicHierarchy'
+    ShapeLibraries = ("/ControlRig/Controls/DefaultGizmoLibraryNormalized.DefaultGizmoLibraryNormalized")
+
+[Graphs]
+FootTrace_SubGraph (8 nodes) -> FootTrace_SubGraph.txt
+Rig (41 nodes) -> Rig.txt

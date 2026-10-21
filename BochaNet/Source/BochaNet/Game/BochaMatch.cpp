@@ -7,6 +7,7 @@
 #include "DrawDebugHelpers.h"
 #include "EngineUtils.h"
 #include "Game/BochaMinigameManager.h"
+#include "Game/BochaReferee.h"
 #include "GameFramework/GameStateBase.h"
 #include "GameFramework/PlayerState.h"
 #include "Lobby/BochaPortal.h"
@@ -66,6 +67,10 @@ void ABochaMatch::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	GetWorldTimerManager().ClearAllTimersForObject(this);
 	if (HasAuthority())
 	{
+		if (IsValid(Referee))
+		{
+			Referee->Destroy();
+		}
 		for (ABochaBall* Ball : BallsInPlay)
 		{
 			if (IsValid(Ball))
@@ -165,6 +170,12 @@ void ABochaMatch::StartRound()
 
 void ABochaMatch::RegisterThrow(ABochaBall* Ball)
 {
+	// By the first throw the court is loaded on the server, so the referee has a floor to stand on.
+	if (!Referee)
+	{
+		SpawnReferee();
+	}
+
 	bWaitingForBolim = Phase == EBochaPhase::ThrowingBolim;
 	if (bWaitingForBolim)
 	{
@@ -247,6 +258,66 @@ void ABochaMatch::OnBallsStopped()
 		return;
 	}
 
+	if (IsValid(Referee))
+	{
+		StartMeasuring();
+		return;
+	}
+	ResolveThrow();
+}
+
+void ABochaMatch::SpawnReferee()
+{
+	if (!RefereeClass)
+	{
+		return;
+	}
+	FActorSpawnParameters Params;
+	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	const FVector Location = CourtOrigin + FVector(RefereeHome.X, RefereeHome.Y, Court.FloorZ + 100.0);
+	// Facing down the court, like the players.
+	Referee = GetWorld()->SpawnActor<ABochaReferee>(RefereeClass, Location, FRotator::ZeroRotator, Params);
+}
+
+void ABochaMatch::StartMeasuring()
+{
+	SetState(EBochaPhase::Measuring, CurrentThrower);
+
+	// Walk to just short of the jack, measure there (its "Medir" notify), then announce.
+	const FVector Target = Bolim->GetActorLocation() - FVector(RefereeMeasureDistance, 0.0, 0.0);
+	Referee->OnArrived.BindWeakLambda(this, [this]()
+	{
+		Referee->OnArrived.Unbind();
+		Referee->Measure();
+	});
+	Referee->OnMeasured.BindUObject(this, &ABochaMatch::FinishMeasuring);
+	Referee->WalkTo(Target);
+	GetWorldTimerManager().SetTimer(MeasureTimer, this, &ABochaMatch::FinishMeasuring, MeasureTimeout);
+}
+
+void ABochaMatch::FinishMeasuring()
+{
+	if (Phase != EBochaPhase::Measuring)
+	{
+		return;
+	}
+	if (!GetWorldTimerManager().IsTimerActive(MeasureTimer))
+	{
+		UE_LOG(LogBochaMatch, Warning, TEXT("The referee did not measure in %.0f s; going on."), MeasureTimeout);
+	}
+	GetWorldTimerManager().ClearTimer(MeasureTimer);
+
+	if (IsValid(Referee))
+	{
+		Referee->OnArrived.Unbind();
+		Referee->OnMeasured.Unbind();
+		Referee->WalkTo(CourtOrigin + FVector(RefereeHome.X, RefereeHome.Y, Court.FloorZ));
+	}
+	ResolveThrow();
+}
+
+void ABochaMatch::ResolveThrow()
+{
 	const FStanding Standing = GetStanding();
 	PointHolder = Standing.Holder;
 	UE_LOG(LogBochaMatch, Display, TEXT("Balls stopped. Best red %.1f, blue %.1f; holder %d%s; bochas left %d/%d."),

@@ -1,0 +1,60 @@
+Graph: Set IKFK Keys
+
+[N0] Entry (ControlRigGraphNode)
+    out Entry.ExecuteContext : Execute Context Structure -> N11.SequenceExecution_1.ExecuteContext
+    out Entry.IK Mode : Boolean -> N12.MathBoolNotEquals.A
+    out Entry.Previous IK Mode : Boolean -> N12.MathBoolNotEquals.B
+
+[N1] Return (ControlRigGraphNode)
+    in  Return.ExecuteContext : Execute Context Structure <- N11.SequenceExecution_1.D
+
+[N2]  (ControlRigGraphNode)
+
+[N3] Send Event (ControlRigGraphNode)
+    in  SendEvent_1.ExecuteContext : Execute Context Structure = ()
+    in  SendEvent_1.Event : ERigEvent Enum = RequestAutoKey
+    in  SendEvent_1.Item.Type : ERigElementType Enum = None
+    in  SendEvent_1.Item.Name : Name = None
+    in  SendEvent_1.bEnable : Boolean = True
+    in  SendEvent_1.bOnlyDuringInteraction : Boolean = True
+
+[N4]  (ControlRigGraphNode)
+
+[N5]  (ControlRigGraphNode)
+
+[N6] Send Event (ControlRigGraphNode)
+    in  SendEvent_1_1.ExecuteContext : Execute Context Structure = ()
+    in  SendEvent_1_1.Event : ERigEvent Enum = RequestAutoKey
+    in  SendEvent_1_1.Item.Type : ERigElementType Enum = None
+    in  SendEvent_1_1.Item.Name : Name = None
+    in  SendEvent_1_1.bEnable : Boolean = True
+    in  SendEvent_1_1.bOnlyDuringInteraction : Boolean = True
+
+[N7] Send Event (ControlRigGraphNode)
+    in  SendEvent_1_1_1.ExecuteContext : Execute Context Structure <- N13.SequenceExecution.C
+    in  SendEvent_1_1_1.Event : ERigEvent Enum = RequestAutoKey
+    in  SendEvent_1_1_1.Item : Rig Element Key Structure <- N10.VariableNode_2.Value
+    in  SendEvent_1_1_1.Item.Type : ERigElementType Enum = None
+    in  SendEvent_1_1_1.Item.Name : Name = None
+    in  SendEvent_1_1_1.bEnable : Boolean = True
+    in  SendEvent_1_1_1.bOnlyDuringInteraction : Boolean = True
+
+[N8] Get FK Controls (ControlRigGraphNode)
+
+[N9] Get IK Controls  (ControlRigGraphNode)
+
+[N10] Get Switch Control (ControlRigGraphNode)
+    out VariableNode_2.Value : Rig Element Key Structure -> N7.SendEvent_1_1_1.Item
+
+[N11] Sequence (ControlRigGraphNode)
+    out SequenceExecution_1.D : Execute Context Structure -> N1.Return.ExecuteContext
+    in  SequenceExecution_1.ExecuteContext : Execute Context Structure <- N0.Entry.ExecuteContext
+
+[N12] Not Equals (ControlRigGraphNode)
+    in  MathBoolNotEquals.A : Boolean <- N0.Entry.IK Mode
+    in  MathBoolNotEquals.B : Boolean <- N0.Entry.Previous IK Mode
+
+[N13] Sequence (ControlRigGraphNode)
+    out SequenceExecution.C : Execute Context Structure -> N7.SendEvent_1_1_1.ExecuteContext
+    in  SequenceExecution.ExecuteContext : Execute Context Structure = ()
+

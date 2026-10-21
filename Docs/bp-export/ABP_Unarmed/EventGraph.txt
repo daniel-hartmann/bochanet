@@ -1,0 +1,170 @@
+Graph: EventGraph
+
+[N0] Event BlueprintUpdateAnimation (K2Node_Event)
+    out then : Exec -> N2.execute
+
+[N1] Event BlueprintInitializeAnimation (K2Node_Event)
+    out then : Exec -> N4.execute
+
+[N2] Get (K2Node_VariableGet)
+    in  execute : Exec <- N0.then
+    out then : Exec -> N8.execute
+
+[N3] GetOwningActor (K2Node_CallFunction)
+    out ReturnValue : Actor Object Reference -> N4.Object
+
+[N4] Cast To Character (K2Node_DynamicCast)
+    in  execute : Exec <- N1.then
+    out then : Exec -> N6.execute
+    in  Object : Object Reference <- N3.ReturnValue
+    out AsCharacter : Character Object Reference -> N6.Character
+
+[N5] Get CharacterMovement (K2Node_VariableGet)
+    out CharacterMovement : Character Movement Component Object Reference -> N7.MovementComponent
+    in  self : Character Object Reference <- N6.Output_Get
+
+[N6] Set Character (K2Node_VariableSet)
+    in  execute : Exec <- N4.then
+    out then : Exec -> N7.execute
+    in  Character : Character Object Reference <- N4.AsCharacter
+    out Output_Get : Character Object Reference -> N5.self
+
+[N7] Set MovementComponent (K2Node_VariableSet)
+    in  execute : Exec <- N6.then
+    in  MovementComponent : Character Movement Component Object Reference <- N5.CharacterMovement
+
+[N8] Sequence (K2Node_ExecutionSequence)
+    in  execute : Exec <- N2.then
+    out then_0 : Exec -> N14.InputPin
+    out then_1 : Exec -> N16.InputPin
+    out then_2 : Exec -> N24.InputPin
+
+[N9] Set Velocity (K2Node_VariableSet)
+    in  execute : Exec <- N14.OutputPin
+    out then : Exec -> N13.execute
+    in  Velocity : Vector <- N11.Velocity
+    out Output_Get : Vector -> N12.A
+
+[N10] Get MovementComponent (K2Node_VariableGet)
+    out MovementComponent : Character Movement Component Object Reference -> N11.self
+
+[N11] Get Velocity (K2Node_VariableGet)
+    out Velocity : Vector -> N9.Velocity
+    in  self : Movement Component Object Reference <- N10.MovementComponent
+
+[N12] Vector Length XY (K2Node_CallFunction)
+    in  A : Vector <- N9.Output_Get
+    out ReturnValue : Float (double-precision) -> N13.GroundSpeed
+
+[N13] Set GroundSpeed (K2Node_VariableSet)
+    in  execute : Exec <- N9.then
+    out then : Exec -> N32.execute
+    in  GroundSpeed : Float (double-precision) <- N12.ReturnValue
+
+[N14] Reroute Node (K2Node_Knot)
+    in  InputPin : Exec <- N8.then_0
+    out OutputPin : Exec -> N9.execute
+
+[N15] Set ShouldMove (K2Node_VariableSet)
+    in  execute : Exec <- N16.OutputPin
+    in  ShouldMove : Boolean <- N19.ReturnValue
+
+[N16] Reroute Node (K2Node_Knot)
+    in  InputPin : Exec <- N8.then_1
+    out OutputPin : Exec -> N15.execute
+
+[N17] Get GroundSpeed (K2Node_VariableGet)
+    out GroundSpeed : Float (double-precision) -> N18.A
+
+[N18] float > float (K2Node_PromotableOperator)
+    in  A : Float (double-precision) <- N17.GroundSpeed
+    in  B : Float (double-precision) = 0.010000
+    out ReturnValue : Boolean -> N19.A
+
+[N19] AND Boolean (K2Node_CommutativeAssociativeBinaryOperator)
+    in  A : Boolean <- N18.ReturnValue
+    in  B : Boolean <- N22.ReturnValue
+    out ReturnValue : Boolean -> N15.ShouldMove
+
+[N20] Get MovementComponent (K2Node_VariableGet)
+    out MovementComponent : Character Movement Component Object Reference -> N21.self
+
+[N21] GetCurrentAcceleration (K2Node_CallFunction)
+    in  self : Character Movement Component Object Reference <- N20.MovementComponent
+    out ReturnValue : Vector -> N22.A
+
+[N22] Not Equal (Vector) (K2Node_PromotableOperator)
+    in  A : Vector <- N21.ReturnValue
+    out ReturnValue : Boolean -> N19.B
+
+[N23] Set IsFalling (K2Node_VariableSet)
+    in  execute : Exec <- N24.OutputPin
+    in  IsFalling : Boolean <- N26.ReturnValue
+
+[N24] Reroute Node (K2Node_Knot)
+    in  InputPin : Exec <- N8.then_2
+    out OutputPin : Exec -> N23.execute
+
+[N25] Get MovementComponent (K2Node_VariableGet)
+    out MovementComponent : Character Movement Component Object Reference -> N26.self
+
+[N26] IsFalling (K2Node_CallFunction)
+    in  self : Nav Movement Component Object Reference <- N25.MovementComponent
+    out ReturnValue : Boolean -> N23.IsFalling
+
+[N27] Comment (EdGraphNode_Comment)
+    // Set references to owning character when this blueprint initializes.
+
+[N28] Comment (EdGraphNode_Comment)
+    // Only update values if the character is valid (character exists in the world and the reference is set).
+
+[N29] Comment (EdGraphNode_Comment)
+    // Set velocity and ground speed from the movement components velocity. Ground speed is calculated from only the X and Y axis of the velocity, so moving up or down does not affect it.
+
+[N30] Comment (EdGraphNode_Comment)
+    // Set Should Move to true only if ground speed is above a small threshold (to prevent incredibly small velocities from triggering animations) and if there is currently acceleration (input) applied.
+
+[N31] Comment (EdGraphNode_Comment)
+    // Set Is Falling from the movement components falling state.
+
+[N32] Set Direction (K2Node_VariableSet)
+    in  execute : Exec <- N13.then
+    in  Direction : Float (double-precision) <- N41.ReturnValue
+
+[N33] CalculateDirection (K2Node_CallFunction)
+    in  Velocity : Vector (by ref) <- N34.Velocity
+    in  BaseRotation : Rotator (by ref) <- N36.ReturnValue
+    out ReturnValue : Float (single-precision) -> N37.Value, N41.Option 0
+
+[N34] Get Velocity (K2Node_VariableGet)
+    out Velocity : Vector -> N33.Velocity
+
+[N35] Get Character (K2Node_VariableGet)
+    out Character : Character Object Reference -> N36.self
+
+[N36] Get Actor Rotation (K2Node_CallFunction)
+    in  self : Actor Object Reference <- N35.Character
+    out ReturnValue : Rotator -> N33.BaseRotation
+
+[N37] Clamp (Float) (K2Node_CallFunction)
+    in  Value : Float (double-precision) <- N33.ReturnValue
+    in  Min : Float (double-precision) = -45.000000
+    in  Max : Float (double-precision) = 45.000000
+    out ReturnValue : Float (double-precision) -> N41.Option 1
+
+[N38] Comment (EdGraphNode_Comment)
+    // Calculate direction using the delta between the velocity and the actor rotation. When the character is not strafing, clamp the value between - and + 45 degrees so that backwards animations do not play when turning around, but running into wall looks better.
+
+[N39] Get MovementComponent (K2Node_VariableGet)
+    out MovementComponent : Character Movement Component Object Reference -> N40.self
+
+[N40] Get bOrientRotationToMovement (K2Node_VariableGet)
+    out bOrientRotationToMovement : Boolean -> N41.Index
+    in  self : Character Movement Component Object Reference <- N39.MovementComponent
+
+[N41] Select (K2Node_Select)
+    in  Option 0 : Float (double-precision) <- N33.ReturnValue
+    in  Option 1 : Float (double-precision) <- N37.ReturnValue
+    in  Index : Boolean <- N40.bOrientRotationToMovement
+    out ReturnValue : Float (double-precision) -> N32.Direction
+

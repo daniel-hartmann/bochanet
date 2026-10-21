@@ -1,0 +1,29 @@
+Graph: Is First or Last_SubGraph
+
+[N0] Entry (ControlRigGraphNode)
+    out Entry.Index : Integer -> N4.MathIntEquals.A, N5.MathIntEquals_1.A
+    out Entry.Count : Integer -> N3.MathIntSub.A
+
+[N1] Return (ControlRigGraphNode)
+    in  Return.Result : Boolean <- N2.MathBoolOr.Result
+
+[N2] Or (ControlRigGraphNode)
+    out MathBoolOr.Result : Boolean -> N1.Return.Result
+    in  MathBoolOr.A : Boolean <- N4.MathIntEquals.Result
+    in  MathBoolOr.B : Boolean <- N5.MathIntEquals_1.Result
+
+[N3] Subtract (ControlRigGraphNode)
+    out MathIntSub.Result : Integer -> N5.MathIntEquals_1.B
+    in  MathIntSub.A : Integer <- N0.Entry.Count
+    in  MathIntSub.B : Integer = 1
+
+[N4] Equals (ControlRigGraphNode)
+    out MathIntEquals.Result : Boolean -> N2.MathBoolOr.A
+    in  MathIntEquals.A : Integer <- N0.Entry.Index
+    in  MathIntEquals.B : Integer = 0
+
+[N5] Equals (ControlRigGraphNode)
+    out MathIntEquals_1.Result : Boolean -> N2.MathBoolOr.B
+    in  MathIntEquals_1.A : Integer <- N0.Entry.Index
+    in  MathIntEquals_1.B : Integer <- N3.MathIntSub.Result
+

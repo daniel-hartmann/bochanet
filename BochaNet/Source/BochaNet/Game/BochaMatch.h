@@ -6,6 +6,7 @@
 
 class ABochaBall;
 class ABochaBolim;
+class ABochaReferee;
 class APlayerState;
 class UPrimitiveComponent;
 struct FHitResult;
@@ -18,6 +19,8 @@ enum class EBochaPhase : uint8
 	ThrowingBochas,
 	/** A thrown ball is still rolling; nobody can throw. */
 	BallsMoving,
+	/** The referee walks to the jack and measures before the point is announced. */
+	Measuring,
 	/** All bochas of the round were thrown; the next round starts after a pause. */
 	RoundOver,
 	/** Someone won; the minigame ends after a pause. */
@@ -215,6 +218,25 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Bocha")
 	float RoundOverDelay = 3.f;
 
+	/** Referee NPC that measures after each bocha (none: the point is announced at once). */
+	UPROPERTY(EditDefaultsOnly, Category = "Bocha|Referee")
+	TSubclassOf<ABochaReferee> RefereeClass;
+
+	/**
+	 * Where the referee waits, in court coordinates: by the left board at the players' end, so it is
+	 * never in front of the camera that follows the ball down the court.
+	 */
+	UPROPERTY(EditDefaultsOnly, Category = "Bocha|Referee")
+	FVector2D RefereeHome = FVector2D(-2450.0, -360.0);
+
+	/** The referee stands this far short of the jack (towards the players) to measure (cm). */
+	UPROPERTY(EditDefaultsOnly, Category = "Bocha|Referee")
+	float RefereeMeasureDistance = 70.f;
+
+	/** The game goes on if the referee has not measured within this time (s). */
+	UPROPERTY(EditDefaultsOnly, Category = "Bocha|Referee")
+	float MeasureTimeout = 10.f;
+
 	/** Bochas closer than this to the same distance from the jack are tied (cm, Art. 13 c). */
 	UPROPERTY(EditDefaultsOnly, Category = "Bocha")
 	float TieTolerance = 1.f;
@@ -245,6 +267,11 @@ private:
 	static int32 GetBochaTeam(const ABochaBall* Ball);
 	void CheckBallsStopped();
 	void OnBallsStopped();
+	/** Point holder, next thrower or end of round, once the balls stopped (and were measured). */
+	void ResolveThrow();
+	void SpawnReferee();
+	void StartMeasuring();
+	void FinishMeasuring();
 	void OnBolimStopped();
 	void RemoveIrregularBolim();
 	/** Why the jack is irregular (Art. 9 h), or empty when it is valid. */
@@ -304,6 +331,9 @@ private:
 	UPROPERTY(Transient)
 	TObjectPtr<ABochaBall> Bolim;
 
+	UPROPERTY(Transient)
+	TObjectPtr<ABochaReferee> Referee;
+
 
 	/** The thrown ball touched another ball ("fez jogo"). */
 	bool bThrownBallMadePlay = false;
@@ -319,5 +349,6 @@ private:
 	FTimerHandle RoundOverTimer;
 	FTimerHandle IrregularBolimTimer;
 	FTimerHandle VictoryTimer;
+	FTimerHandle MeasureTimer;
 	FTimerHandle EndMinigameTimer;
 };

@@ -1,0 +1,299 @@
+Graph: Setup Arm
+
+[N0] Entry (ControlRigGraphNode)
+    out Entry.ExecuteContext : Execute Context Structure -> N62.SequenceExecution.ExecuteContext
+
+[N1] Return (ControlRigGraphNode)
+    in  Return.ExecuteContext : Execute Context Structure = ()
+
+[N2] Distance Between (ControlRigGraphNode)
+    out MathVectorDistance.Result : Float (single-precision) -> N4.MathFloatDiv.A
+    in  MathVectorDistance.A.X : Float (double-precision) = 0.000000
+    in  MathVectorDistance.A.Y : Float (double-precision) = 0.000000
+    in  MathVectorDistance.A.Z : Float (double-precision) = 0.000000
+    in  MathVectorDistance.B.X : Float (double-precision) = 0.000000
+    in  MathVectorDistance.B.Y : Float (double-precision) = 0.000000
+    in  MathVectorDistance.B.Z : Float (double-precision) = 0.000000
+
+[N3] Multiply (ControlRigGraphNode)
+    out MathTransformMul.Result.Translation : Vector -> N9.SetTransform_1.Value.Translation
+    in  MathTransformMul.A.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformMul.A.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformMul.A.Translation.Y : Float (double-precision) <- N6.MathFloatNegate.Result
+    in  MathTransformMul.A.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformMul.A.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformMul.A.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformMul.A.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformMul.B.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformMul.B.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformMul.B.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformMul.B.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformMul.B.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformMul.B.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformMul.B.Scale3D.Z : Float (double-precision) = 1.000000
+
+[N4] Divide (ControlRigGraphNode)
+    out MathFloatDiv.Result : Float (single-precision) -> N6.MathFloatNegate.Value
+    in  MathFloatDiv.A : Float (single-precision) <- N2.MathVectorDistance.Result
+    in  MathFloatDiv.B : Float (single-precision) = 2.000000
+
+[N5]  (ControlRigGraphNode)
+
+[N6] Negate (ControlRigGraphNode)
+    out MathFloatNegate.Result : Float (single-precision) -> N3.MathTransformMul.A.Translation.Y
+    in  MathFloatNegate.Value : Float (single-precision) <- N4.MathFloatDiv.Result
+
+[N7]  (ControlRigGraphNode)
+
+[N8] Get Pole Vector Control (ControlRigGraphNode)
+    out VariableNode_2.Value : Rig Element Key Structure -> N9.SetTransform_1.Item
+
+[N9] Set Transform - Bone Initial (ControlRigGraphNode)
+    in  SetTransform_1.ExecuteContext : Execute Context Structure <- N62.SequenceExecution.C
+    out SetTransform_1.ExecuteContext : Execute Context Structure -> N34.SetTransform_2_1.ExecuteContext
+    in  SetTransform_1.Item : Rig Element Key Structure <- N8.VariableNode_2.Value
+    in  SetTransform_1.Item.Type : ERigElementType Enum = Bone
+    in  SetTransform_1.Item.Name : Name = None
+    in  SetTransform_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTransform_1.bInitial : Boolean = true
+    in  SetTransform_1.Value.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetTransform_1.Value.Translation : Vector <- N3.MathTransformMul.Result.Translation
+    in  SetTransform_1.Value.Translation.X : Float (double-precision) = 0.000000
+    in  SetTransform_1.Value.Translation.Y : Float (double-precision) = 0.000000
+    in  SetTransform_1.Value.Translation.Z : Float (double-precision) = 0.000000
+    in  SetTransform_1.Value.Scale3D.X : Float (double-precision) = 1.000000
+    in  SetTransform_1.Value.Scale3D.Y : Float (double-precision) = 1.000000
+    in  SetTransform_1.Value.Scale3D.Z : Float (double-precision) = 1.000000
+    in  SetTransform_1.Weight : Float (single-precision) = 1.000000
+    in  SetTransform_1.bPropagateToChildren : Boolean = True
+
+[N10]  (ControlRigGraphNode)
+
+[N11] Comment (EdGraphNode_Comment)
+    // Initial UpVector
+
+[N12] Get FK Space (ControlRigGraphNode)
+    out VariableNode_6.Value : Rig Element Key Structure -> N13.SetTransform_3.Item
+
+[N13] Set Transform - Bone Initial (ControlRigGraphNode)
+    in  SetTransform_3.ExecuteContext : Execute Context Structure <- N62.SequenceExecution.B
+    out SetTransform_3.ExecuteContext : Execute Context Structure -> N31.SetTransformItemArray.ExecuteContext
+    in  SetTransform_3.Item : Rig Element Key Structure <- N12.VariableNode_6.Value
+    in  SetTransform_3.Item.Type : ERigElementType Enum = Bone
+    in  SetTransform_3.Item.Name : Name = None
+    in  SetTransform_3.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTransform_3.bInitial : Boolean = true
+    in  SetTransform_3.Value.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetTransform_3.Value.Translation.X : Float (double-precision) = 0.000000
+    in  SetTransform_3.Value.Translation.Y : Float (double-precision) = 0.000000
+    in  SetTransform_3.Value.Translation.Z : Float (double-precision) = 0.000000
+    in  SetTransform_3.Value.Scale3D.X : Float (double-precision) = 1.000000
+    in  SetTransform_3.Value.Scale3D.Y : Float (double-precision) = 1.000000
+    in  SetTransform_3.Value.Scale3D.Z : Float (double-precision) = 1.000000
+    in  SetTransform_3.Weight : Float (single-precision) = 1.000000
+    in  SetTransform_3.bPropagateToChildren : Boolean = True
+
+[N14] Comment (EdGraphNode_Comment)
+    // Initial FK Controls
+
+[N15] Get Transforms (ControlRigGraphNode)
+
+[N16] Get Bones (ControlRigGraphNode)
+    out VariableNode_1_2_1.Value : Array of Rig Element Key Structures -> N17.GetTransformItemArray_1.Items
+
+[N17] Get Transform Array (ControlRigGraphNode)
+    in  GetTransformItemArray_1.Items : Array of Rig Element Key Structures <- N16.VariableNode_1_2_1.Value
+    in  GetTransformItemArray_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N18]  (ControlRigGraphNode)
+
+[N19] Get Transforms (ControlRigGraphNode)
+
+[N20]  (ControlRigGraphNode)
+
+[N21]  (ControlRigGraphNode)
+
+[N22]  (ControlRigGraphNode)
+
+[N23] Comment (EdGraphNode_Comment)
+    // Hand has an 90 degree offset
+
+[N24]  (ControlRigGraphNode)
+
+[N25] To Rotator (ControlRigGraphNode)
+    out MathQuaternionToRotator_2.Result.Pitch : Float (double-precision) -> N64.MathQuaternionFromRotator_2.Value.Pitch
+    out MathQuaternionToRotator_2.Result.Yaw : Float (double-precision) -> N64.MathQuaternionFromRotator_2.Value.Yaw
+    out MathQuaternionToRotator_2.Result.Roll : Float (double-precision) -> N26.MathFloatAdd_2.A
+    in  MathQuaternionToRotator_2.Value : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+
+[N26] Add (ControlRigGraphNode)
+    out MathFloatAdd_2.Result : Float (single-precision) -> N64.MathQuaternionFromRotator_2.Value.Roll
+    in  MathFloatAdd_2.A : Float (single-precision) <- N25.MathQuaternionToRotator_2.Result.Roll
+    in  MathFloatAdd_2.B : Float (single-precision) = 90.000000
+
+[N27] Subtract (ControlRigGraphNode)
+    out MathIntSub_1.Result : Integer -> N63.MathIntEquals_1.B
+    in  MathIntSub_1.B : Integer = 1
+
+[N28] Get Transforms (ControlRigGraphNode)
+
+[N29]  (ControlRigGraphNode)
+
+[N30] Get Transforms (ControlRigGraphNode)
+    out VariableNode.Value : Array of Transforms -> N31.SetTransformItemArray.Transforms
+
+[N31] Set Transform Array (ControlRigGraphNode)
+    in  SetTransformItemArray.ExecuteContext : Execute Context Structure <- N13.SetTransform_3.ExecuteContext
+    out SetTransformItemArray.ExecuteContext : Execute Context Structure -> N46.SetTransform_2_1_1.ExecuteContext
+    in  SetTransformItemArray.Items : Array of Rig Element Key Structures <- N32.VariableNode_1.Value
+    in  SetTransformItemArray.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTransformItemArray.bInitial : Boolean = true
+    in  SetTransformItemArray.Transforms : Array of Transforms <- N30.VariableNode.Value
+    in  SetTransformItemArray.Weight : Float (single-precision) = 1.000000
+    in  SetTransformItemArray.bPropagateToChildren : Boolean = True
+
+[N32] Get FK Controls (ControlRigGraphNode)
+    out VariableNode_1.Value : Array of Rig Element Key Structures -> N31.SetTransformItemArray.Items
+
+[N33] Get IK Control (ControlRigGraphNode)
+    out VariableNode_4_1.Value : Rig Element Key Structure -> N34.SetTransform_2_1.Item
+
+[N34] Set Transform - Bone Initial (ControlRigGraphNode)
+    in  SetTransform_2_1.ExecuteContext : Execute Context Structure <- N9.SetTransform_1.ExecuteContext
+    in  SetTransform_2_1.Item : Rig Element Key Structure <- N33.VariableNode_4_1.Value
+    in  SetTransform_2_1.Item.Type : ERigElementType Enum = Bone
+    in  SetTransform_2_1.Item.Name : Name = None
+    in  SetTransform_2_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTransform_2_1.bInitial : Boolean = true
+    in  SetTransform_2_1.Value.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetTransform_2_1.Value.Translation.X : Float (double-precision) = 0.000000
+    in  SetTransform_2_1.Value.Translation.Y : Float (double-precision) = 0.000000
+    in  SetTransform_2_1.Value.Translation.Z : Float (double-precision) = 0.000000
+    in  SetTransform_2_1.Value.Scale3D.X : Float (double-precision) = 1.000000
+    in  SetTransform_2_1.Value.Scale3D.Y : Float (double-precision) = 1.000000
+    in  SetTransform_2_1.Value.Scale3D.Z : Float (double-precision) = 1.000000
+    in  SetTransform_2_1.Weight : Float (single-precision) = 1.000000
+    in  SetTransform_2_1.bPropagateToChildren : Boolean = True
+
+[N35] Get Transforms (ControlRigGraphNode)
+
+[N36]  (ControlRigGraphNode)
+
+[N37]  (ControlRigGraphNode)
+
+[N38] Subtract (ControlRigGraphNode)
+    in  MathIntSub.B : Integer = 1
+
+[N39] Get Transforms (ControlRigGraphNode)
+
+[N40] Comment (EdGraphNode_Comment)
+    // Initial IK
+
+[N41] Comment (EdGraphNode_Comment)
+    // Calculate Initial Transforms
+
+[N42] Get Negative Transform (ControlRigGraphNode)
+    in  Get Negative Transform.Input.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  Get Negative Transform.Input.Translation.X : Float (double-precision) = 0.000000
+    in  Get Negative Transform.Input.Translation.Y : Float (double-precision) = 0.000000
+    in  Get Negative Transform.Input.Translation.Z : Float (double-precision) = 0.000000
+    in  Get Negative Transform.Input.Scale3D.X : Float (double-precision) = 1.000000
+    in  Get Negative Transform.Input.Scale3D.Y : Float (double-precision) = 1.000000
+    in  Get Negative Transform.Input.Scale3D.Z : Float (double-precision) = 1.000000
+
+[N43]  (ControlRigGraphNode)
+
+[N44] Get Fingers Space (ControlRigGraphNode)
+    out VariableNode_3.Value : Rig Element Key Structure -> N46.SetTransform_2_1_1.Item
+
+[N45] Get Negative Side (ControlRigGraphNode)
+
+[N46] Set Transform - Bone Initial (ControlRigGraphNode)
+    in  SetTransform_2_1_1.ExecuteContext : Execute Context Structure <- N31.SetTransformItemArray.ExecuteContext
+    in  SetTransform_2_1_1.Item : Rig Element Key Structure <- N44.VariableNode_3.Value
+    in  SetTransform_2_1_1.Item.Type : ERigElementType Enum = Bone
+    in  SetTransform_2_1_1.Item.Name : Name = None
+    in  SetTransform_2_1_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTransform_2_1_1.bInitial : Boolean = true
+    in  SetTransform_2_1_1.Value.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetTransform_2_1_1.Value.Translation.X : Float (double-precision) = 0.000000
+    in  SetTransform_2_1_1.Value.Translation.Y : Float (double-precision) = 0.000000
+    in  SetTransform_2_1_1.Value.Translation.Z : Float (double-precision) = 0.000000
+    in  SetTransform_2_1_1.Value.Scale3D.X : Float (double-precision) = 1.000000
+    in  SetTransform_2_1_1.Value.Scale3D.Y : Float (double-precision) = 1.000000
+    in  SetTransform_2_1_1.Value.Scale3D.Z : Float (double-precision) = 1.000000
+    in  SetTransform_2_1_1.Weight : Float (single-precision) = 1.000000
+    in  SetTransform_2_1_1.bPropagateToChildren : Boolean = True
+
+[N47] Comment (EdGraphNode_Comment)
+    // Initial Finger Space
+
+[N48] Get Bones (ControlRigGraphNode)
+
+[N49]  (ControlRigGraphNode)
+
+[N50] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform.Transform : Transform -> N51.Get Negative Transform_0.Input
+    in  GetTransform.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform.Item.Name : Name = None
+    in  GetTransform.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N51] Get Negative Transform (ControlRigGraphNode)
+    in  Get Negative Transform_0.Input : Transform <- N50.GetTransform.Transform
+    in  Get Negative Transform_0.Input.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  Get Negative Transform_0.Input.Translation.X : Float (double-precision) = 0.000000
+    in  Get Negative Transform_0.Input.Translation.Y : Float (double-precision) = 0.000000
+    in  Get Negative Transform_0.Input.Translation.Z : Float (double-precision) = 0.000000
+    in  Get Negative Transform_0.Input.Scale3D.X : Float (double-precision) = 1.000000
+    in  Get Negative Transform_0.Input.Scale3D.Y : Float (double-precision) = 1.000000
+    in  Get Negative Transform_0.Input.Scale3D.Z : Float (double-precision) = 1.000000
+
+[N52]  (ControlRigGraphNode)
+
+[N53] Get Negative Side (ControlRigGraphNode)
+
+[N54]  (ControlRigGraphNode)
+
+[N55] Get Negative Side (ControlRigGraphNode)
+
+[N56] Get IK Parents (ControlRigGraphNode)
+
+[N57]  (ControlRigGraphNode)
+
+[N58] Create Parent Relationship (ControlRigGraphNode)
+    in  AddParent.ExecuteContext : Execute Context Structure = ()
+    out AddParent.ExecuteContext : Execute Context Structure -> N60.AddParent_1.ExecuteContext
+    in  AddParent.Child : Rig Element Key Structure <- N59.VariableNode_10.Value
+    in  AddParent.Child.Type : ERigElementType Enum = Control
+    in  AddParent.Child.Name : Name = None
+    in  AddParent.Parent.Type : ERigElementType Enum = Control
+    in  AddParent.Parent.Name : Name = None
+
+[N59] Get IK Control (ControlRigGraphNode)
+    out VariableNode_10.Value : Rig Element Key Structure -> N58.AddParent.Child
+
+[N60] Create Parent Relationship (ControlRigGraphNode)
+    in  AddParent_1.ExecuteContext : Execute Context Structure <- N58.AddParent.ExecuteContext
+    in  AddParent_1.Child : Rig Element Key Structure <- N61.VariableNode_11.Value
+    in  AddParent_1.Child.Type : ERigElementType Enum = Control
+    in  AddParent_1.Child.Name : Name = None
+    in  AddParent_1.Parent.Type : ERigElementType Enum = Control
+    in  AddParent_1.Parent.Name : Name = None
+
+[N61] Get Pole Vector Control (ControlRigGraphNode)
+    out VariableNode_11.Value : Rig Element Key Structure -> N60.AddParent_1.Child
+
+[N62] Sequence (ControlRigGraphNode)
+    out SequenceExecution.B : Execute Context Structure -> N13.SetTransform_3.ExecuteContext
+    out SequenceExecution.C : Execute Context Structure -> N9.SetTransform_1.ExecuteContext
+    in  SequenceExecution.ExecuteContext : Execute Context Structure <- N0.Entry.ExecuteContext
+
+[N63] Equals (ControlRigGraphNode)
+    in  MathIntEquals_1.A : Integer = 0
+    in  MathIntEquals_1.B : Integer <- N27.MathIntSub_1.Result
+
+[N64] From Rotator (ControlRigGraphNode)
+    in  MathQuaternionFromRotator_2.Value.Pitch : Float (double-precision) <- N25.MathQuaternionToRotator_2.Result.Pitch
+    in  MathQuaternionFromRotator_2.Value.Yaw : Float (double-precision) <- N25.MathQuaternionToRotator_2.Result.Yaw
+    in  MathQuaternionFromRotator_2.Value.Roll : Float (double-precision) <- N26.MathFloatAdd_2.Result
+

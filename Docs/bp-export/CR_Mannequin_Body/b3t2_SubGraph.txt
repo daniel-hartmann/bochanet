@@ -1,0 +1,13 @@
+Graph: b3t2_SubGraph
+
+[N0] Entry (ControlRigGraphNode)
+    out Entry.t : Float (double-precision) -> N2.MathFloatPow.A
+
+[N1] Return (ControlRigGraphNode)
+    in  Return.Result : Float (single-precision) <- N2.MathFloatPow.Result
+
+[N2] Power (ControlRigGraphNode)
+    out MathFloatPow.Result : Float (single-precision) -> N1.Return.Result
+    in  MathFloatPow.A : Float (single-precision) <- N0.Entry.t
+    in  MathFloatPow.B : Float (single-precision) = 3.000000
+

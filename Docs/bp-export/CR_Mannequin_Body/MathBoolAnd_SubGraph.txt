@@ -1,0 +1,20 @@
+Graph: MathBoolAnd_SubGraph
+
+[N0] Entry (ControlRigGraphNode)
+    out Entry.A : Boolean -> N1.MathBoolAnd.A
+    out Entry.B : Boolean -> N1.MathBoolAnd.B
+    out Entry.C : Boolean -> N3.MathBoolAnd_1.B
+
+[N1] And (ControlRigGraphNode)
+    out MathBoolAnd.Result : Boolean -> N3.MathBoolAnd_1.A
+    in  MathBoolAnd.A : Boolean <- N0.Entry.A
+    in  MathBoolAnd.B : Boolean <- N0.Entry.B
+
+[N2] Return (ControlRigGraphNode)
+    in  Return.Result : Boolean <- N3.MathBoolAnd_1.Result
+
+[N3] And (ControlRigGraphNode)
+    out MathBoolAnd_1.Result : Boolean -> N2.Return.Result
+    in  MathBoolAnd_1.A : Boolean <- N1.MathBoolAnd.Result
+    in  MathBoolAnd_1.B : Boolean <- N0.Entry.C
+

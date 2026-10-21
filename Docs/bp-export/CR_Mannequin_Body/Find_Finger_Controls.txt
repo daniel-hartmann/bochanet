@@ -1,0 +1,73 @@
+Graph: Find Finger Controls
+
+[N0] Entry (ControlRigGraphNode)
+    out Entry.ExecuteContext : Execute Context Structure -> N3.SequenceAggregate.ExecuteContext
+    out Entry.Value : Name -> N8.Chop_1_1.Name, N6.Chop_1.Name
+
+[N1] Return (ControlRigGraphNode)
+    in  Return.ExecuteContext : Execute Context Structure <- N3.SequenceAggregate.B
+    in  Return.Items : Array of Rig Element Key Structures <- N5.VariableNode_2.Value
+
+[N2] Get Matching Items (ControlRigGraphNode)
+
+[N3] Sequence (ControlRigGraphNode)
+    out SequenceAggregate.B : Execute Context Structure -> N1.Return.ExecuteContext
+    in  SequenceAggregate.ExecuteContext : Execute Context Structure <- N0.Entry.ExecuteContext
+
+[N4]  (ControlRigGraphNode)
+
+[N5] Get Matching Items (ControlRigGraphNode)
+    out VariableNode_2.Value : Array of Rig Element Key Structures -> N1.Return.Items
+
+[N6] Chop (ControlRigGraphNode)
+    out Chop_1.Chopped : Name -> N9.EndsWith_1.Ending
+    in  Chop_1.Name : Name <- N0.Entry.Value
+    in  Chop_1.Count : Integer = 6
+    in  Chop_1.FromEnd : Boolean = True
+
+[N7] Item Name Search (ControlRigGraphNode)
+    in  CollectionNameSearchArray_1_1.PartialName : Name <- N8.Chop_1_1.Chopped
+    in  CollectionNameSearchArray_1_1.TypeToSearch : ERigElementType Enum = Control
+
+[N8] Chop (ControlRigGraphNode)
+    out Chop_1_1.Chopped : Name -> N7.CollectionNameSearchArray_1_1.PartialName
+    in  Chop_1_1.Name : Name <- N0.Entry.Value
+    in  Chop_1_1.Count : Integer = 5
+    in  Chop_1_1.FromEnd : Boolean = false
+
+[N9] Ends With (ControlRigGraphNode)
+    out EndsWith_1.Result : Boolean -> N18.MathBoolAnd.C
+    in  EndsWith_1.Name : Name = None
+    in  EndsWith_1.Ending : Name <- N6.Chop_1.Chopped
+
+[N10]  (ControlRigGraphNode)
+
+[N11] Contains (ControlRigGraphNode)
+    out Contains.Result : Boolean -> N12.MathBoolNot.Value
+    in  Contains.Name : Name = None
+    in  Contains.Search : Name = meta
+
+[N12] Not (ControlRigGraphNode)
+    out MathBoolNot.Result : Boolean -> N18.MathBoolAnd.A
+    in  MathBoolNot.Value : Boolean <- N11.Contains.Result
+
+[N13] Get Matching Items (ControlRigGraphNode)
+
+[N14]  (ControlRigGraphNode)
+
+[N15]  (ControlRigGraphNode)
+
+[N16] Not (ControlRigGraphNode)
+    out MathBoolNot_1.Result : Boolean -> N18.MathBoolAnd.B
+    in  MathBoolNot_1.Value : Boolean <- N17.Contains_1.Result
+
+[N17] Contains (ControlRigGraphNode)
+    out Contains_1.Result : Boolean -> N16.MathBoolNot_1.Value
+    in  Contains_1.Name : Name = None
+    in  Contains_1.Search : Name = toe
+
+[N18] And (ControlRigGraphNode)
+    in  MathBoolAnd.A : Boolean <- N12.MathBoolNot.Result
+    in  MathBoolAnd.B : Boolean <- N16.MathBoolNot_1.Result
+    in  MathBoolAnd.C : Boolean <- N9.EndsWith_1.Result
+

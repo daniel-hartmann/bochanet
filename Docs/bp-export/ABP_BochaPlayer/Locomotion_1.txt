@@ -1,0 +1,8 @@
+Graph: Locomotion
+
+[N0] Output Animation Pose (AnimGraphNode_StateResult)
+    in  Result : Pose Link Structure <- N1.Pose
+
+[N1] Use cached pose 'Locomotion' (AnimGraphNode_UseCachedPose)
+    out Pose : Pose Link Structure -> N0.Result
+

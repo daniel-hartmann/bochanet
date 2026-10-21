@@ -1,0 +1,268 @@
+Graph: Rig
+
+[N0] Forwards Solve (ControlRigGraphNode)
+    out RigUnit_BeginExecution.ExecutePin : Execute Context Structure -> N1.SequenceExecution.ExecuteContext
+
+[N1] Sequence (OutDated) (ControlRigGraphNode)
+    out SequenceExecution.A : Execute Context Structure -> N18.RerouteNode_2.Value
+    out SequenceExecution.B : Execute Context Structure -> N25.RerouteNode_3.Value
+    out SequenceExecution.C : Execute Context Structure -> N31.RerouteNode.Value
+    out SequenceExecution.D : Execute Context Structure -> N33.RerouteNode_1.Value
+    in  SequenceExecution.ExecuteContext : Execute Context Structure <- N0.RigUnit_BeginExecution.ExecutePin
+
+[N2] Modify Transforms (ControlRigGraphNode)
+    in  ModifyTransforms.ExecutePin : Execute Context Structure <- N31.RerouteNode.Value
+    out ModifyTransforms.ExecutePin : Execute Context Structure -> N6.ModifyTransforms_1.ExecutePin
+    in  ModifyTransforms.ItemToModify.0.Item.Type : ERigElementType Enum = Bone
+    in  ModifyTransforms.ItemToModify.0.Item.Name : Name = IK_foot_L
+    in  ModifyTransforms.ItemToModify.0.Transform.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  ModifyTransforms.ItemToModify.0.Transform.Translation.X : Float (double-precision) = 0.000000
+    in  ModifyTransforms.ItemToModify.0.Transform.Translation.Y : Float (double-precision) = 0.000000
+    in  ModifyTransforms.ItemToModify.0.Transform.Translation.Z : Float (double-precision) <- N7.VariableNode_2.Value
+    in  ModifyTransforms.ItemToModify.0.Transform.Scale3D.X : Float (double-precision) = 1.000000
+    in  ModifyTransforms.ItemToModify.0.Transform.Scale3D.Y : Float (double-precision) = 1.000000
+    in  ModifyTransforms.ItemToModify.0.Transform.Scale3D.Z : Float (double-precision) = 1.000000
+    in  ModifyTransforms.Weight : Float (single-precision) = 1.000000
+    in  ModifyTransforms.WeightMaximum : Float (single-precision) = 1.000000
+    in  ModifyTransforms.Mode : EControlRigModifyBoneMode Enum = AdditiveGlobal
+
+[N3] Full Body IK (ControlRigGraphNode)
+    in  PBIK.ExecutePin : Execute Context Structure <- N33.RerouteNode_1.Value
+    in  PBIK.Root : Name = pelvis
+    in  PBIK.Effectors.0.Bone : Name = foot_l
+    in  PBIK.Effectors.0.Transform : Transform <- N4.GetTransform.Transform
+    in  PBIK.Effectors.0.Transform.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  PBIK.Effectors.0.Transform.Translation.X : Float (double-precision) = 0.000000
+    in  PBIK.Effectors.0.Transform.Translation.Y : Float (double-precision) = 0.000000
+    in  PBIK.Effectors.0.Transform.Translation.Z : Float (double-precision) = 0.000000
+    in  PBIK.Effectors.0.Transform.Scale3D.X : Float (double-precision) = 1.000000
+    in  PBIK.Effectors.0.Transform.Scale3D.Y : Float (double-precision) = 1.000000
+    in  PBIK.Effectors.0.Transform.Scale3D.Z : Float (double-precision) = 1.000000
+    in  PBIK.Effectors.0.PositionAlpha : Float (single-precision) = 1.000000
+    in  PBIK.Effectors.0.RotationAlpha : Float (single-precision) = 1.000000
+    in  PBIK.Effectors.0.StrengthAlpha : Float (single-precision) = 1.000000
+    in  PBIK.Effectors.0.PullChainAlpha : Float (single-precision) = 0.000000
+    in  PBIK.Effectors.0.PinRotation : Float (single-precision) = 1.000000
+    in  PBIK.Effectors.0.ChainDepth : Integer = 0
+    in  PBIK.Effectors.1.Bone : Name = foot_r
+    in  PBIK.Effectors.1.Transform : Transform <- N5.GetTransform_1.Transform
+    in  PBIK.Effectors.1.Transform.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  PBIK.Effectors.1.Transform.Translation.X : Float (double-precision) = 0.000000
+    in  PBIK.Effectors.1.Transform.Translation.Y : Float (double-precision) = 0.000000
+    in  PBIK.Effectors.1.Transform.Translation.Z : Float (double-precision) = 0.000000
+    in  PBIK.Effectors.1.Transform.Scale3D.X : Float (double-precision) = 1.000000
+    in  PBIK.Effectors.1.Transform.Scale3D.Y : Float (double-precision) = 1.000000
+    in  PBIK.Effectors.1.Transform.Scale3D.Z : Float (double-precision) = 1.000000
+    in  PBIK.Effectors.1.PositionAlpha : Float (single-precision) = 1.000000
+    in  PBIK.Effectors.1.RotationAlpha : Float (single-precision) = 1.000000
+    in  PBIK.Effectors.1.StrengthAlpha : Float (single-precision) = 1.000000
+    in  PBIK.Effectors.1.PullChainAlpha : Float (single-precision) = 0.000000
+    in  PBIK.Effectors.1.PinRotation : Float (single-precision) = 1.000000
+    in  PBIK.Effectors.1.ChainDepth : Integer = 0
+    in  PBIK.BoneSettings : Array of PBIKBone Setting Structures = ()
+    in  PBIK.ExcludedBones : Array of Names = ()
+    in  PBIK.Settings.Iterations : Integer = 20
+    in  PBIK.Settings.MassMultiplier : Float (single-precision) = 1.000000
+    in  PBIK.Settings.bAllowStretch : Boolean = false
+    in  PBIK.Settings.RootBehavior : EPBIKRootBehavior Enum = PinToInput
+    in  PBIK.Settings.SubIterations : Integer = 0
+    in  PBIK.Settings.PrePullRootSettings.RotationAlpha : Float (single-precision) = 0.000000
+    in  PBIK.Settings.PrePullRootSettings.RotationAlphaX : Float (single-precision) = 1.000000
+    in  PBIK.Settings.PrePullRootSettings.RotationAlphaY : Float (single-precision) = 1.000000
+    in  PBIK.Settings.PrePullRootSettings.RotationAlphaZ : Float (single-precision) = 1.000000
+    in  PBIK.Settings.PrePullRootSettings.PositionAlpha : Float (single-precision) = 1.000000
+    in  PBIK.Settings.PrePullRootSettings.PositionAlphaX : Float (single-precision) = 1.000000
+    in  PBIK.Settings.PrePullRootSettings.PositionAlphaY : Float (single-precision) = 1.000000
+    in  PBIK.Settings.PrePullRootSettings.PositionAlphaZ : Float (single-precision) = 1.000000
+    in  PBIK.Settings.GlobalPullChainAlpha : Float (single-precision) = 1.000000
+    in  PBIK.Settings.MaxAngle : Float (single-precision) = 30.000000
+    in  PBIK.Settings.OverRelaxation : Float (single-precision) = 1.300000
+    in  PBIK.Debug.DrawScale : Float (single-precision) = 1.000000
+
+[N4] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform.Transform : Transform -> N3.PBIK.Effectors.0.Transform
+    in  GetTransform.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform.Item.Name : Name = IK_foot_L
+    in  GetTransform.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N5] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_1.Transform : Transform -> N3.PBIK.Effectors.1.Transform
+    in  GetTransform_1.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_1.Item.Name : Name = IK_foot_R
+    in  GetTransform_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N6] Modify Transforms (ControlRigGraphNode)
+    in  ModifyTransforms_1.ExecutePin : Execute Context Structure <- N2.ModifyTransforms.ExecutePin
+    out ModifyTransforms_1.ExecutePin : Execute Context Structure -> N13.ModifyTransforms_1_1.ExecutePin
+    in  ModifyTransforms_1.ItemToModify.0.Item.Type : ERigElementType Enum = Bone
+    in  ModifyTransforms_1.ItemToModify.0.Item.Name : Name = IK_foot_R
+    in  ModifyTransforms_1.ItemToModify.0.Transform.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  ModifyTransforms_1.ItemToModify.0.Transform.Translation.X : Float (double-precision) = 0.000000
+    in  ModifyTransforms_1.ItemToModify.0.Transform.Translation.Y : Float (double-precision) = 0.000000
+    in  ModifyTransforms_1.ItemToModify.0.Transform.Translation.Z : Float (double-precision) <- N8.VariableNode_3.Value
+    in  ModifyTransforms_1.ItemToModify.0.Transform.Scale3D.X : Float (double-precision) = 1.000000
+    in  ModifyTransforms_1.ItemToModify.0.Transform.Scale3D.Y : Float (double-precision) = 1.000000
+    in  ModifyTransforms_1.ItemToModify.0.Transform.Scale3D.Z : Float (double-precision) = 1.000000
+    in  ModifyTransforms_1.Weight : Float (single-precision) = 1.000000
+    in  ModifyTransforms_1.WeightMaximum : Float (single-precision) = 1.000000
+    in  ModifyTransforms_1.Mode : EControlRigModifyBoneMode Enum = AdditiveGlobal
+
+[N7] Get ZOffset_L (ControlRigGraphNode)
+    out VariableNode_2.Value : Float (double-precision) -> N2.ModifyTransforms.ItemToModify.0.Transform.Translation.Z
+
+[N8] Get ZOffset_R (ControlRigGraphNode)
+    out VariableNode_3.Value : Float (double-precision) -> N6.ModifyTransforms_1.ItemToModify.0.Transform.Translation.Z
+
+[N9] Set ZOffset_Pelvis (ControlRigGraphNode)
+    in  VariableNode_4.ExecuteContext : Execute Context Structure <- N23.VariableNode_11.ExecuteContext
+    in  VariableNode_4.Value : Float (double-precision) <- N38.If_DISPATCH_RigVMDispatch_If.Result
+
+[N10] Get ZOffset_L (ControlRigGraphNode)
+    out VariableNode_5.Value : Float (double-precision) -> N12.MathFloatLess.A
+
+[N11] Get ZOffset_R (ControlRigGraphNode)
+    out VariableNode_6.Value : Float (double-precision) -> N12.MathFloatLess.B
+
+[N12] Less (ControlRigGraphNode)
+    out MathFloatLess.Result : Boolean -> N38.If_DISPATCH_RigVMDispatch_If.Condition
+    in  MathFloatLess.A : Float (single-precision) <- N10.VariableNode_5.Value
+    in  MathFloatLess.B : Float (single-precision) <- N11.VariableNode_6.Value
+
+[N13] Modify Transforms (ControlRigGraphNode)
+    in  ModifyTransforms_1_1.ExecutePin : Execute Context Structure <- N6.ModifyTransforms_1.ExecutePin
+    in  ModifyTransforms_1_1.ItemToModify.0.Item.Type : ERigElementType Enum = Bone
+    in  ModifyTransforms_1_1.ItemToModify.0.Item.Name : Name = pelvis
+    in  ModifyTransforms_1_1.ItemToModify.0.Transform.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  ModifyTransforms_1_1.ItemToModify.0.Transform.Translation.X : Float (double-precision) = 0.000000
+    in  ModifyTransforms_1_1.ItemToModify.0.Transform.Translation.Y : Float (double-precision) = 0.000000
+    in  ModifyTransforms_1_1.ItemToModify.0.Transform.Translation.Z : Float (double-precision) <- N14.VariableNode_7.Value
+    in  ModifyTransforms_1_1.ItemToModify.0.Transform.Scale3D.X : Float (double-precision) = 1.000000
+    in  ModifyTransforms_1_1.ItemToModify.0.Transform.Scale3D.Y : Float (double-precision) = 1.000000
+    in  ModifyTransforms_1_1.ItemToModify.0.Transform.Scale3D.Z : Float (double-precision) = 1.000000
+    in  ModifyTransforms_1_1.Weight : Float (single-precision) = 1.000000
+    in  ModifyTransforms_1_1.WeightMaximum : Float (single-precision) = 1.000000
+    in  ModifyTransforms_1_1.Mode : EControlRigModifyBoneMode Enum = AdditiveGlobal
+
+[N14] Get ZOffset_Pelvis (ControlRigGraphNode)
+    out VariableNode_7.Value : Float (double-precision) -> N13.ModifyTransforms_1_1.ItemToModify.0.Transform.Translation.Z
+
+[N15] Set ZOffset_L_Target (ControlRigGraphNode)
+    in  VariableNode.ExecuteContext : Execute Context Structure <- N39.FootTrace.ExecuteContext
+    out VariableNode.ExecuteContext : Execute Context Structure -> N40.FootTrace_1.ExecuteContext
+    in  VariableNode.Value : Float (double-precision) <- N39.FootTrace.Hit Location.Z
+
+[N16] Set ZOffset_R_Target (ControlRigGraphNode)
+    in  VariableNode_8.ExecuteContext : Execute Context Structure <- N40.FootTrace_1.ExecuteContext
+    in  VariableNode_8.Value : Float (double-precision) <- N40.FootTrace_1.Hit Location.Z
+
+[N17] Get ShouldDoIKTrace (ControlRigGraphNode)
+    out VariableNode_1.Value : Boolean -> N37.Branch_RigVMUnitNode.Condition
+
+[N18] Execute Context (ControlRigGraphNode)
+    in  RerouteNode_2.Value : Execute Context Structure <- N1.SequenceExecution.A
+    out RerouteNode_2.Value : Execute Context Structure -> N37.Branch_RigVMUnitNode.ExecuteContext
+
+[N19] Set ZOffset_L_Target (ControlRigGraphNode)
+    in  VariableNode_9.ExecuteContext : Execute Context Structure <- N37.Branch_RigVMUnitNode.False
+    out VariableNode_9.ExecuteContext : Execute Context Structure -> N20.VariableNode_8_1.ExecuteContext
+
+[N20] Set ZOffset_R_Target (ControlRigGraphNode)
+    in  VariableNode_8_1.ExecuteContext : Execute Context Structure <- N19.VariableNode_9.ExecuteContext
+
+[N21] Comment (EdGraphNode_Comment)
+    // Step 1: If Should Do IK Trace is true, do traces on both feet (using custom trace function) and set the Z offset targets from the trace result. If Should Do IK Trace is false, reset targets to 0.
+
+[N22] Set ZOffset_L (ControlRigGraphNode)
+    in  VariableNode_10.ExecuteContext : Execute Context Structure <- N25.RerouteNode_3.Value
+    out VariableNode_10.ExecuteContext : Execute Context Structure -> N23.VariableNode_11.ExecuteContext
+    in  VariableNode_10.Value : Float (double-precision) <- N24.AlphaInterp.Result
+
+[N23] Set ZOffset_R (ControlRigGraphNode)
+    in  VariableNode_11.ExecuteContext : Execute Context Structure <- N22.VariableNode_10.ExecuteContext
+    out VariableNode_11.ExecuteContext : Execute Context Structure -> N9.VariableNode_4.ExecuteContext
+    in  VariableNode_11.Value : Float (double-precision) <- N26.AlphaInterp_1.Result
+
+[N24] Alpha Interpolate (ControlRigGraphNode)
+    out AlphaInterp.Result : Float (single-precision) -> N22.VariableNode_10.Value
+    in  AlphaInterp.Value : Float (single-precision) <- N34.VariableNode_12.Value
+    in  AlphaInterp.Scale : Float (single-precision) = 1.000000
+    in  AlphaInterp.InRange.Max : Float (single-precision) = 1.000000
+    in  AlphaInterp.OutRange.Max : Float (single-precision) = 1.000000
+    in  AlphaInterp.ClampMax : Float (single-precision) = 1.000000
+    in  AlphaInterp.bInterpResult : Boolean = true
+    in  AlphaInterp.InterpSpeedIncreasing : Float (single-precision) = 15.000000
+    in  AlphaInterp.InterpSpeedDecreasing : Float (single-precision) = 15.000000
+
+[N25] Execute Context (ControlRigGraphNode)
+    in  RerouteNode_3.Value : Execute Context Structure <- N1.SequenceExecution.B
+    out RerouteNode_3.Value : Execute Context Structure -> N22.VariableNode_10.ExecuteContext
+
+[N26] Alpha Interpolate (ControlRigGraphNode)
+    out AlphaInterp_1.Result : Float (single-precision) -> N23.VariableNode_11.Value
+    in  AlphaInterp_1.Value : Float (single-precision) <- N35.VariableNode_13.Value
+    in  AlphaInterp_1.Scale : Float (single-precision) = 1.000000
+    in  AlphaInterp_1.InRange.Max : Float (single-precision) = 1.000000
+    in  AlphaInterp_1.OutRange.Max : Float (single-precision) = 1.000000
+    in  AlphaInterp_1.ClampMax : Float (single-precision) = 1.000000
+    in  AlphaInterp_1.bInterpResult : Boolean = true
+    in  AlphaInterp_1.InterpSpeedIncreasing : Float (single-precision) = 15.000000
+    in  AlphaInterp_1.InterpSpeedDecreasing : Float (single-precision) = 15.000000
+
+[N27] Get ZOffset_L (ControlRigGraphNode)
+    out VariableNode_5_1.Value : Float (double-precision) -> N38.If_DISPATCH_RigVMDispatch_If.True
+
+[N28] Get ZOffset_R (ControlRigGraphNode)
+    out VariableNode_6_1.Value : Float (double-precision) -> N38.If_DISPATCH_RigVMDispatch_If.False
+
+[N29] Comment (EdGraphNode_Comment)
+    // Step 2: Interpolate the Z offsets toward their target values.
+
+[N30] Comment (EdGraphNode_Comment)
+    // Step 4: Add the interpolated Z offsets to the IK foot bones and pelvis. This will move them up or down.
+
+[N31] Execute Context (ControlRigGraphNode)
+    in  RerouteNode.Value : Execute Context Structure <- N1.SequenceExecution.C
+    out RerouteNode.Value : Execute Context Structure -> N2.ModifyTransforms.ExecutePin
+
+[N32] Comment (EdGraphNode_Comment)
+    // Step 5: Use a Full Body IK node to solve the IK, and use the IK foot bones as the effector targets for each foot.
+
+[N33] Execute Context (ControlRigGraphNode)
+    in  RerouteNode_1.Value : Execute Context Structure <- N1.SequenceExecution.D
+    out RerouteNode_1.Value : Execute Context Structure -> N3.PBIK.ExecutePin
+
+[N34] Get ZOffset_L_Target (ControlRigGraphNode)
+    out VariableNode_12.Value : Float (double-precision) -> N24.AlphaInterp.Value
+
+[N35] Get ZOffset_R_Target (ControlRigGraphNode)
+    out VariableNode_13.Value : Float (double-precision) -> N26.AlphaInterp_1.Value
+
+[N36] Comment (EdGraphNode_Comment)
+    // Step 3: Use the lowest foot offset for the pelvis to prevent overextension.
+
+[N37] Branch (ControlRigGraphNode)
+    out Branch_RigVMUnitNode.True : Execute Context Structure -> N39.FootTrace.ExecuteContext
+    out Branch_RigVMUnitNode.False : Execute Context Structure -> N19.VariableNode_9.ExecuteContext
+    in  Branch_RigVMUnitNode.ExecuteContext : Execute Context Structure <- N18.RerouteNode_2.Value
+    in  Branch_RigVMUnitNode.Condition : Boolean <- N17.VariableNode_1.Value
+
+[N38] If (ControlRigGraphNode)
+    out If_DISPATCH_RigVMDispatch_If.Result : Float (double-precision) -> N9.VariableNode_4.Value
+    in  If_DISPATCH_RigVMDispatch_If.Condition : Boolean <- N12.MathFloatLess.Result
+    in  If_DISPATCH_RigVMDispatch_If.True : Float (double-precision) <- N27.VariableNode_5_1.Value
+    in  If_DISPATCH_RigVMDispatch_If.False : Float (double-precision) <- N28.VariableNode_6_1.Value
+
+[N39] FootTrace (ControlRigGraphNode)
+    in  FootTrace.ExecuteContext : Execute Context Structure <- N37.Branch_RigVMUnitNode.True
+    out FootTrace.ExecuteContext : Execute Context Structure -> N15.VariableNode.ExecuteContext
+    out FootTrace.Hit Location.Z : Float (double-precision) -> N15.VariableNode.Value
+    in  FootTrace.Item.Type : ERigElementType Enum = Bone
+    in  FootTrace.Item.Name : Name = ik_foot_l
+
+[N40] FootTrace (ControlRigGraphNode)
+    in  FootTrace_1.ExecuteContext : Execute Context Structure <- N15.VariableNode.ExecuteContext
+    out FootTrace_1.ExecuteContext : Execute Context Structure -> N16.VariableNode_8.ExecuteContext
+    out FootTrace_1.Hit Location.Z : Float (double-precision) -> N16.VariableNode_8.Value
+    in  FootTrace_1.Item.Type : ERigElementType Enum = Bone
+    in  FootTrace_1.Item.Name : Name = ik_foot_r
+

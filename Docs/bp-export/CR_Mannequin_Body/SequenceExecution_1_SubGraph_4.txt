@@ -1,0 +1,50 @@
+Graph: SequenceExecution_1_SubGraph
+
+[N1] Entry (ControlRigGraphNode)
+    out Entry.ExecuteContext : Execute Context Structure -> N3.SequenceExecution_1.ExecuteContext
+
+[N1] Entry (ControlRigGraphNode)
+    out Entry.ExecuteContext : Execute Context Structure -> N3.SequenceExecution_1.ExecuteContext
+
+[N3] Sequence (ControlRigGraphNode)
+    out SequenceExecution_1.A : Execute Context Structure -> N5.Return.A
+    out SequenceExecution_1.B : Execute Context Structure -> N7.SequenceExecution_1_1.ExecuteContext
+    in  SequenceExecution_1.ExecuteContext : Execute Context Structure <- N1.Entry.ExecuteContext
+
+[N3] Sequence (ControlRigGraphNode)
+    out SequenceExecution_1.A : Execute Context Structure -> N5.Return.A
+    out SequenceExecution_1.B : Execute Context Structure -> N7.SequenceExecution_1_1.ExecuteContext
+    in  SequenceExecution_1.ExecuteContext : Execute Context Structure <- N1.Entry.ExecuteContext
+
+[N5] Return (ControlRigGraphNode)
+    in  Return.A : Execute Context Structure <- N3.SequenceExecution_1.A
+    in  Return.B : Execute Context Structure <- N7.SequenceExecution_1_1.A
+    in  Return.C : Execute Context Structure <- N9.SequenceExecution_1_2.A
+    in  Return.D : Execute Context Structure <- N9.SequenceExecution_1_2.B
+
+[N5] Return (ControlRigGraphNode)
+    in  Return.A : Execute Context Structure <- N3.SequenceExecution_1.A
+    in  Return.B : Execute Context Structure <- N7.SequenceExecution_1_1.A
+    in  Return.C : Execute Context Structure <- N9.SequenceExecution_1_2.A
+    in  Return.D : Execute Context Structure <- N9.SequenceExecution_1_2.B
+
+[N7] Sequence (ControlRigGraphNode)
+    out SequenceExecution_1_1.A : Execute Context Structure -> N5.Return.B
+    out SequenceExecution_1_1.B : Execute Context Structure -> N9.SequenceExecution_1_2.ExecuteContext
+    in  SequenceExecution_1_1.ExecuteContext : Execute Context Structure <- N3.SequenceExecution_1.B
+
+[N7] Sequence (ControlRigGraphNode)
+    out SequenceExecution_1_1.A : Execute Context Structure -> N5.Return.B
+    out SequenceExecution_1_1.B : Execute Context Structure -> N9.SequenceExecution_1_2.ExecuteContext
+    in  SequenceExecution_1_1.ExecuteContext : Execute Context Structure <- N3.SequenceExecution_1.B
+
+[N9] Sequence (ControlRigGraphNode)
+    out SequenceExecution_1_2.A : Execute Context Structure -> N5.Return.C
+    out SequenceExecution_1_2.B : Execute Context Structure -> N5.Return.D
+    in  SequenceExecution_1_2.ExecuteContext : Execute Context Structure <- N7.SequenceExecution_1_1.B
+
+[N9] Sequence (ControlRigGraphNode)
+    out SequenceExecution_1_2.A : Execute Context Structure -> N5.Return.C
+    out SequenceExecution_1_2.B : Execute Context Structure -> N5.Return.D
+    in  SequenceExecution_1_2.ExecuteContext : Execute Context Structure <- N7.SequenceExecution_1_1.B
+

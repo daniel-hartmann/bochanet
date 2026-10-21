@@ -27,7 +27,7 @@
 
 namespace
 {
-	const TCHAR* PackagePathsToExport[] = { TEXT("/Game/Bocha"), TEXT("/Game/Lobby") };
+	const TCHAR* PackagePathsToExport[] = { TEXT("/Game/Bocha"), TEXT("/Game/Lobby"), TEXT("/Game/Characters") };
 
 	// Blueprints outside the folders above that the Bocha logic depends on.
 	const TCHAR* ExtraAssetsToExport[] = {
@@ -186,7 +186,7 @@ int32 UBochaExportBlueprintsCommandlet::Main(const FString& Params)
 	// registered in a commandlet, so world bounds are computed from mesh bounds and transforms).
 	TArray<FAssetData> Maps;
 	FARFilter MapFilter;
-	MapFilter.PackagePaths.Add(FName(TEXT("/Game/Bocha")));
+	MapFilter.PackagePaths = { FName(TEXT("/Game/Bocha")), FName(TEXT("/Game/ThirdPerson")), FName(TEXT("/Game/Lobby")) };
 	MapFilter.bRecursivePaths = true;
 	MapFilter.ClassPaths.Add(UWorld::StaticClass()->GetClassPathName());
 	AssetRegistry.GetAssets(MapFilter, Maps);
@@ -206,8 +206,8 @@ int32 UBochaExportBlueprintsCommandlet::Main(const FString& Params)
 			}
 			// The root's relative transform is the actor transform; ComponentToWorld is not computed here.
 			const FTransform ActorTransform = Actor->GetRootComponent() ? Actor->GetRootComponent()->GetRelativeTransform() : FTransform::Identity;
-			Out += FString::Printf(TEXT("%s (%s) label=%s loc=%s rot=%s scale=%s tags=[%s]\n"),
-				*Actor->GetName(), *Actor->GetClass()->GetName(), *Actor->GetActorLabel(),
+			Out += FString::Printf(TEXT("%s (%s) label=%s folder=%s loc=%s rot=%s scale=%s tags=[%s]\n"),
+				*Actor->GetName(), *Actor->GetClass()->GetName(), *Actor->GetActorLabel(), *Actor->GetFolderPath().ToString(),
 				*ActorTransform.GetLocation().ToCompactString(), *ActorTransform.Rotator().ToCompactString(),
 				*ActorTransform.GetScale3D().ToCompactString(),
 				*FString::JoinBy(Actor->Tags, TEXT(","), [](const FName& Tag) { return Tag.ToString(); }));

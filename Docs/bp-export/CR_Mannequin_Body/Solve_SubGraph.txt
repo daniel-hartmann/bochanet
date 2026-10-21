@@ -1,0 +1,137 @@
+Graph: Solve_SubGraph
+
+[N0] Entry (ControlRigGraphNode)
+
+[N1] Return (ControlRigGraphNode)
+    in  Return.i : Vector <- N14.MathVectorScale_3.Result
+    in  Return.i.X : Float (double-precision) = 0.000000
+    in  Return.i.Y : Float (double-precision) = 0.000000
+    in  Return.i.Z : Float (double-precision) = 0.000000
+    in  Return.j : Vector <- N10.MathVectorScale_1.Result
+    in  Return.j.X : Float (double-precision) = 0.000000
+    in  Return.j.Y : Float (double-precision) = 0.000000
+    in  Return.j.Z : Float (double-precision) = 0.000000
+
+[N2] Divide (ControlRigGraphNode)
+    out MathFloatDiv.Result : Float (single-precision) -> N8.MathVectorScale.Factor
+    in  MathFloatDiv.A : Float (single-precision) <- N16.VariableNode_1.Value
+    in  MathFloatDiv.B : Float (single-precision) <- N17.VariableNode_2.Value
+
+[N3] Multiply (ControlRigGraphNode)
+    out MathFloatMul_1.Result : Float (single-precision) -> N4.MathFloatDiv_1.A
+    in  MathFloatMul_1.A : Float (single-precision) <- N19.VariableNode_4.Value
+    in  MathFloatMul_1.B : Float (single-precision) <- N20.VariableNode_5.Value
+
+[N4] Divide (ControlRigGraphNode)
+    out MathFloatDiv_1.Result : Float (single-precision) -> N5.MathFloatSub_1.B
+    in  MathFloatDiv_1.A : Float (single-precision) <- N3.MathFloatMul_1.Result
+    in  MathFloatDiv_1.B : Float (single-precision) <- N21.VariableNode_6.Value
+
+[N5] Subtract (ControlRigGraphNode)
+    out MathFloatSub_1.Result : Float (single-precision) -> N11.MathFloatDiv_4.B
+    in  MathFloatSub_1.A : Float (single-precision) <- N22.VariableNode_7.Value
+    in  MathFloatSub_1.B : Float (single-precision) <- N4.MathFloatDiv_1.Result
+
+[N6] Comment (EdGraphNode_Comment)
+    // J
+
+[N7] Divide (ControlRigGraphNode)
+    out MathFloatDiv_3.Result : Float (single-precision) -> N14.MathVectorScale_3.Factor
+    in  MathFloatDiv_3.A : Float (single-precision) = 1.000000
+    in  MathFloatDiv_3.B : Float (single-precision) <- N25.VariableNode_10.Value
+
+[N8] Scale (ControlRigGraphNode)
+    out MathVectorScale.Result : Vector -> N9.MathVectorSub.B
+    in  MathVectorScale.Value : Vector <- N15.VariableNode.Value
+    in  MathVectorScale.Value.X : Float (double-precision) = 0.000000
+    in  MathVectorScale.Value.Y : Float (double-precision) = 0.000000
+    in  MathVectorScale.Value.Z : Float (double-precision) = 0.000000
+    in  MathVectorScale.Factor : Float (single-precision) <- N2.MathFloatDiv.Result
+
+[N9] Subtract (ControlRigGraphNode)
+    out MathVectorSub.Result : Vector -> N10.MathVectorScale_1.Value
+    in  MathVectorSub.A : Vector <- N18.VariableNode_3.Value
+    in  MathVectorSub.A.X : Float (double-precision) = 0.000000
+    in  MathVectorSub.A.Y : Float (double-precision) = 0.000000
+    in  MathVectorSub.A.Z : Float (double-precision) = 0.000000
+    in  MathVectorSub.B : Vector <- N8.MathVectorScale.Result
+    in  MathVectorSub.B.X : Float (double-precision) = 0.000000
+    in  MathVectorSub.B.Y : Float (double-precision) = 0.000000
+    in  MathVectorSub.B.Z : Float (double-precision) = 0.000000
+
+[N10] Scale (ControlRigGraphNode)
+    out MathVectorScale_1.Result : Vector -> N13.MathVectorScale_2.Value, N1.Return.j
+    in  MathVectorScale_1.Value : Vector <- N9.MathVectorSub.Result
+    in  MathVectorScale_1.Value.X : Float (double-precision) = 0.000000
+    in  MathVectorScale_1.Value.Y : Float (double-precision) = 0.000000
+    in  MathVectorScale_1.Value.Z : Float (double-precision) = 0.000000
+    in  MathVectorScale_1.Factor : Float (single-precision) <- N11.MathFloatDiv_4.Result
+
+[N11] Divide (ControlRigGraphNode)
+    out MathFloatDiv_4.Result : Float (single-precision) -> N10.MathVectorScale_1.Factor
+    in  MathFloatDiv_4.A : Float (single-precision) = 1.000000
+    in  MathFloatDiv_4.B : Float (single-precision) <- N5.MathFloatSub_1.Result
+
+[N12] Subtract (ControlRigGraphNode)
+    out MathVectorSub_1.Result : Vector -> N14.MathVectorScale_3.Value
+    in  MathVectorSub_1.A : Vector <- N24.VariableNode_9.Value
+    in  MathVectorSub_1.A.X : Float (double-precision) = 0.000000
+    in  MathVectorSub_1.A.Y : Float (double-precision) = 0.000000
+    in  MathVectorSub_1.A.Z : Float (double-precision) = 0.000000
+    in  MathVectorSub_1.B : Vector <- N13.MathVectorScale_2.Result
+    in  MathVectorSub_1.B.X : Float (double-precision) = 0.000000
+    in  MathVectorSub_1.B.Y : Float (double-precision) = 0.000000
+    in  MathVectorSub_1.B.Z : Float (double-precision) = 0.000000
+
+[N13] Scale (ControlRigGraphNode)
+    out MathVectorScale_2.Result : Vector -> N12.MathVectorSub_1.B
+    in  MathVectorScale_2.Value : Vector <- N10.MathVectorScale_1.Result
+    in  MathVectorScale_2.Value.X : Float (double-precision) = 0.000000
+    in  MathVectorScale_2.Value.Y : Float (double-precision) = 0.000000
+    in  MathVectorScale_2.Value.Z : Float (double-precision) = 0.000000
+    in  MathVectorScale_2.Factor : Float (single-precision) <- N23.VariableNode_8.Value
+
+[N14] Scale (ControlRigGraphNode)
+    out MathVectorScale_3.Result : Vector -> N1.Return.i
+    in  MathVectorScale_3.Value : Vector <- N12.MathVectorSub_1.Result
+    in  MathVectorScale_3.Value.X : Float (double-precision) = 0.000000
+    in  MathVectorScale_3.Value.Y : Float (double-precision) = 0.000000
+    in  MathVectorScale_3.Value.Z : Float (double-precision) = 0.000000
+    in  MathVectorScale_3.Factor : Float (single-precision) <- N7.MathFloatDiv_3.Result
+
+[N15] Get f (ControlRigGraphNode)
+    out VariableNode.Value : Vector -> N8.MathVectorScale.Value
+
+[N16] Get a (ControlRigGraphNode)
+    out VariableNode_1.Value : Float (double-precision) -> N2.MathFloatDiv.A
+
+[N17] Get d (ControlRigGraphNode)
+    out VariableNode_2.Value : Float (double-precision) -> N2.MathFloatDiv.B
+
+[N18] Get c (ControlRigGraphNode)
+    out VariableNode_3.Value : Vector -> N9.MathVectorSub.A
+
+[N19] Get a (ControlRigGraphNode)
+    out VariableNode_4.Value : Float (double-precision) -> N3.MathFloatMul_1.A
+
+[N20] Get e (ControlRigGraphNode)
+    out VariableNode_5.Value : Float (double-precision) -> N3.MathFloatMul_1.B
+
+[N21] Get d (ControlRigGraphNode)
+    out VariableNode_6.Value : Float (double-precision) -> N4.MathFloatDiv_1.B
+
+[N22] Get b (ControlRigGraphNode)
+    out VariableNode_7.Value : Float (double-precision) -> N5.MathFloatSub_1.A
+
+[N23] Get b (ControlRigGraphNode)
+    out VariableNode_8.Value : Float (double-precision) -> N13.MathVectorScale_2.Factor
+
+[N24] Get c (ControlRigGraphNode)
+    out VariableNode_9.Value : Vector -> N12.MathVectorSub_1.A
+
+[N25] Get a (ControlRigGraphNode)
+    out VariableNode_10.Value : Float (double-precision) -> N7.MathFloatDiv_3.B
+
+[N26] Comment (EdGraphNode_Comment)
+    // i
+

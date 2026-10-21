@@ -11,6 +11,7 @@ class ABochaBallCamera;
 class ABochaMatch;
 class ACharacter;
 class UBochaHUDWidget;
+class UBochaStateScreenWidget;
 
 /**
  * Local side of the bocha match on this machine: shows the HUD and puts a ball in the minigame
@@ -32,6 +33,10 @@ public:
 	void Refresh();
 
 	ABochaMatch* GetMatch() const { return Match; }
+
+	/** Local pause: opens or closes the pause screen; the match goes on for the other player. */
+	void TogglePause();
+	bool IsPaused() const { return bPaused; }
 	ABochaBall* GetCurrentBall() const { return CurrentBall; }
 	UBochaHUDWidget* GetHUD() const { return HUD; }
 
@@ -56,6 +61,14 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Bocha")
 	TSubclassOf<UBochaHUDWidget> HUDWidgetClass;
 
+	/** Start / pause / victory / defeat screens. */
+	UPROPERTY(EditDefaultsOnly, Category = "Bocha")
+	TSubclassOf<UBochaStateScreenWidget> StateScreenClass;
+
+	/** How long the start screen stays up (s). */
+	UPROPERTY(EditDefaultsOnly, Category = "Bocha")
+	float StartScreenDuration = 6.f;
+
 	/** Blend time when the view switches to the thrown ball and back (s). */
 	UPROPERTY(EditDefaultsOnly, Category = "Bocha")
 	float CameraBlendTime = 0.5f;
@@ -79,5 +92,10 @@ private:
 	UPROPERTY(Transient)
 	TObjectPtr<ABochaBall> FollowedBall;
 
+	UPROPERTY(Transient)
+	TObjectPtr<UBochaStateScreenWidget> StateScreen;
+
 	bool bClaimedVictory = false;
+	bool bShowedStart = false;
+	bool bPaused = false;
 };

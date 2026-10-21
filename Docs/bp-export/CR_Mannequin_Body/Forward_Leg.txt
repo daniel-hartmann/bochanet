@@ -1,0 +1,227 @@
+Graph: Forward Leg
+
+[N0] Entry (ControlRigGraphNode)
+    out Entry.Execute : Execute Context Structure -> N28.VariableNode_8.ExecuteContext
+
+[N1] Return (ControlRigGraphNode)
+    in  Return.Execute : Execute Context Structure <- N43.SequenceExecution.D
+
+[N2] Get IK Control (ControlRigGraphNode)
+    out VariableNode_2.Value : Rig Element Key Structure -> N30.Set IKFK Visibility.IK Controls.0
+
+[N3] Get Pole Vector Control (ControlRigGraphNode)
+    out VariableNode_3.Value : Rig Element Key Structure -> N30.Set IKFK Visibility.IK Controls.1
+
+[N4]  (ControlRigGraphNode)
+
+[N5] Get FK Controls (ControlRigGraphNode)
+    out VariableNode_4.Value : Array of Rig Element Key Structures -> N16.FK Point At.FK Controls
+
+[N6] Get Bones (ControlRigGraphNode)
+    out VariableNode_5.Value : Array of Rig Element Key Structures -> N16.FK Point At.Bones
+
+[N7] Comment (EdGraphNode_Comment)
+    // FK
+
+[N8] Get Pole Vector Control (ControlRigGraphNode)
+    out VariableNode_6.Value : Rig Element Key Structure -> N18.Match IK onto FK.Pole Vector Control
+
+[N9] Get IK Control (ControlRigGraphNode)
+    out VariableNode_7.Value : Rig Element Key Structure -> N18.Match IK onto FK.IK Control
+
+[N10] Get IKFK Switch Control (ControlRigGraphNode)
+    out VariableNode_15_1.Value : Rig Element Key Structure -> N12.GetTransform_1_1.Item
+
+[N11] Get Pole Vector Control (ControlRigGraphNode)
+    out VariableNode_18.Value : Rig Element Key Structure -> N26.IK 2 Bones.Pole Vector Control
+
+[N12] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_1_1.Transform.Translation.X : Float (double-precision) -> N13.MathFloatGreater_1.A
+    in  GetTransform_1_1.Item : Rig Element Key Structure <- N10.VariableNode_15_1.Value
+    in  GetTransform_1_1.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_1_1.Item.Name : Name = None
+    in  GetTransform_1_1.Space : ERigVMTransformSpace Enum = LocalSpace
+
+[N13] Greater (ControlRigGraphNode)
+    out MathFloatGreater_1.Result : Boolean -> N28.VariableNode_8.Value
+    in  MathFloatGreater_1.A : Float (single-precision) <- N12.GetTransform_1_1.Transform.Translation.X
+    in  MathFloatGreater_1.B : Float (single-precision) = 0.500000
+
+[N14] Get Previous IK Mode (ControlRigGraphNode)
+    out VariableNode_22.Value : Boolean -> N35.Set IKFK Keys.Previous IK Mode
+
+[N15] Comment (EdGraphNode_Comment)
+    // Set Keys
+
+[N16] FK Point At (ControlRigGraphNode)
+    in  FK Point At.ExecuteContext : Execute Context Structure = ()
+    out FK Point At.ExecuteContext : Execute Context Structure -> N18.Match IK onto FK.ExecuteContext
+    in  FK Point At.Bones : Array of Rig Element Key Structures <- N6.VariableNode_5.Value
+    in  FK Point At.FK Controls : Array of Rig Element Key Structures <- N5.VariableNode_4.Value
+    in  FK Point At.Negative Side : Boolean <- N17.VariableNode_1.Value
+    in  FK Point At.Point At Axis.X : Float (double-precision) = -1.000000
+    in  FK Point At.Point At Axis.Y : Float (double-precision) = 0.000000
+    in  FK Point At.Point At Axis.Z : Float (double-precision) = 0.000000
+    in  FK Point At.Up Vector Axis.X : Float (double-precision) = 0.000000
+    in  FK Point At.Up Vector Axis.Y : Float (double-precision) = 0.000000
+    in  FK Point At.Up Vector Axis.Z : Float (double-precision) = 1.000000
+    in  FK Point At.Up Vector Target.X : Float (double-precision) = 0.000000
+    in  FK Point At.Up Vector Target.Y : Float (double-precision) = 0.000000
+    in  FK Point At.Up Vector Target.Z : Float (double-precision) = 1.000000
+
+[N17] Get Negative Side (ControlRigGraphNode)
+    out VariableNode_1.Value : Boolean -> N16.FK Point At.Negative Side
+
+[N18] Match 2 Bones IK onto FK (ControlRigGraphNode)
+    in  Match IK onto FK.ExecuteContext : Execute Context Structure <- N16.FK Point At.ExecuteContext
+    in  Match IK onto FK.Bones : Array of Rig Element Key Structures <- N19.VariableNode_5_1.Value
+    in  Match IK onto FK.IK Control : Rig Element Key Structure <- N9.VariableNode_7.Value
+    in  Match IK onto FK.IK Control.Type : ERigElementType Enum = Control
+    in  Match IK onto FK.IK Control.Name : Name = hand_l_ik_ctrl
+    in  Match IK onto FK.Pole Vector Control : Rig Element Key Structure <- N8.VariableNode_6.Value
+    in  Match IK onto FK.Pole Vector Control.Type : ERigElementType Enum = Control
+    in  Match IK onto FK.Pole Vector Control.Name : Name = arm_l_pv_ik_ctrl
+
+[N19] Get Bones (ControlRigGraphNode)
+    out VariableNode_5_1.Value : Array of Rig Element Key Structures -> N18.Match IK onto FK.Bones
+
+[N20] Get Bones (ControlRigGraphNode)
+    out VariableNode_11_1.Value : Array of Rig Element Key Structures -> N26.IK 2 Bones.Bones
+
+[N21] Get Bones (ControlRigGraphNode)
+    out VariableNode_20_1.Value : Array of Rig Element Key Structures -> N41.Project to New Parents.Parents
+
+[N22] Get FK Controls (ControlRigGraphNode)
+    out VariableNode_21_1.Value : Array of Rig Element Key Structures -> N41.Project to New Parents.Children
+
+[N23] Comment (EdGraphNode_Comment)
+    // Match FK onto IK
+
+[N24] Get Negative Side (ControlRigGraphNode)
+    out VariableNode_25.Value : Boolean -> N26.IK 2 Bones.Negative Side
+
+[N25] Get Enable Stretch (ControlRigGraphNode)
+    out VariableNode_12_1.Value : Boolean -> N26.IK 2 Bones.Enable Stretch
+
+[N26] IK 2 Bones (ControlRigGraphNode)
+    in  IK 2 Bones.ExecuteContext : Execute Context Structure <- N48.Compute Pole Vector Parent.ExecuteContext
+    out IK 2 Bones.ExecuteContext : Execute Context Structure -> N41.Project to New Parents.ExecuteContext
+    in  IK 2 Bones.Bones : Array of Rig Element Key Structures <- N20.VariableNode_11_1.Value
+    in  IK 2 Bones.IK Control : Rig Element Key Structure <- N40.VariableNode_13.Value
+    in  IK 2 Bones.IK Control.Type : ERigElementType Enum = Control
+    in  IK 2 Bones.IK Control.Name : Name = hand_l_ik_ctrl
+    in  IK 2 Bones.Pole Vector Control : Rig Element Key Structure <- N11.VariableNode_18.Value
+    in  IK 2 Bones.Pole Vector Control.Type : ERigElementType Enum = Control
+    in  IK 2 Bones.Pole Vector Control.Name : Name = arm_l_pv_ik_ctrl
+    in  IK 2 Bones.Softness : Float (double-precision) <- N42.VariableNode_14.Value
+    in  IK 2 Bones.Negative Side : Boolean <- N24.VariableNode_25.Value
+    in  IK 2 Bones.Enable Stretch : Boolean <- N25.VariableNode_12_1.Value
+    in  IK 2 Bones.Primary Axis.X : Float (double-precision) = -1.000000
+    in  IK 2 Bones.Primary Axis.Y : Float (double-precision) = 0.000000
+    in  IK 2 Bones.Primary Axis.Z : Float (double-precision) = 0.000000
+    in  IK 2 Bones.Secondary Axis.X : Float (double-precision) = 0.000000
+    in  IK 2 Bones.Secondary Axis.Y : Float (double-precision) = 1.000000
+    in  IK 2 Bones.Secondary Axis.Z : Float (double-precision) = 0.000000
+
+[N27] Comment (EdGraphNode_Comment)
+    // IK
+
+[N28] Set IK Mode (ControlRigGraphNode)
+    in  VariableNode_8.ExecuteContext : Execute Context Structure <- N0.Entry.Execute
+    out VariableNode_8.ExecuteContext : Execute Context Structure -> N43.SequenceExecution.ExecuteContext
+    in  VariableNode_8.Value : Boolean <- N13.MathFloatGreater_1.Result
+
+[N29] Get IK Mode (ControlRigGraphNode)
+    out VariableNode_9.Value : Boolean -> N30.Set IKFK Visibility.IKFK Switch
+
+[N30] Set IKFK Visibility (ControlRigGraphNode)
+    in  Set IKFK Visibility.ExecuteContext : Execute Context Structure <- N43.SequenceExecution.A
+    in  Set IKFK Visibility.FK Controls : Array of Rig Element Key Structures <- N31.VariableNode_21_1_1.Value
+    in  Set IKFK Visibility.IK Controls.0 : Rig Element Key Structure <- N2.VariableNode_2.Value
+    in  Set IKFK Visibility.IK Controls.0.Type : ERigElementType Enum = None
+    in  Set IKFK Visibility.IK Controls.0.Name : Name = None
+    in  Set IKFK Visibility.IK Controls.1 : Rig Element Key Structure <- N3.VariableNode_3.Value
+    in  Set IKFK Visibility.IK Controls.1.Type : ERigElementType Enum = None
+    in  Set IKFK Visibility.IK Controls.1.Name : Name = None
+    in  Set IKFK Visibility.IKFK Switch : Boolean <- N29.VariableNode_9.Value
+    in  Set IKFK Visibility.Show Controls : Boolean = true
+
+[N31] Get FK Controls (ControlRigGraphNode)
+    out VariableNode_21_1_1.Value : Array of Rig Element Key Structures -> N30.Set IKFK Visibility.FK Controls
+
+[N32] Get IK Mode (ControlRigGraphNode)
+
+[N33] Get IK Mode (ControlRigGraphNode)
+    out VariableNode_9_1_1.Value : Boolean -> N35.Set IKFK Keys.IK Mode
+
+[N34] Comment (EdGraphNode_Comment)
+    // Visibility
+
+[N35] Set IKFK Keys (ControlRigGraphNode)
+    in  Set IKFK Keys.ExecuteContext : Execute Context Structure <- N43.SequenceExecution.C
+    in  Set IKFK Keys.IK Mode : Boolean <- N33.VariableNode_9_1_1.Value
+    in  Set IKFK Keys.Previous IK Mode : Boolean <- N14.VariableNode_22.Value
+    in  Set IKFK Keys.FK Controls : Array of Rig Element Key Structures <- N36.VariableNode.Value
+    in  Set IKFK Keys.IK Controls .0 : Rig Element Key Structure <- N38.VariableNode_11.Value
+    in  Set IKFK Keys.IK Controls .0.Type : ERigElementType Enum = None
+    in  Set IKFK Keys.IK Controls .0.Name : Name = None
+    in  Set IKFK Keys.IK Controls .1 : Rig Element Key Structure <- N39.VariableNode_12.Value
+    in  Set IKFK Keys.IK Controls .1.Type : ERigElementType Enum = None
+    in  Set IKFK Keys.IK Controls .1.Name : Name = None
+    in  Set IKFK Keys.Switch Control : Rig Element Key Structure <- N37.VariableNode_10.Value
+    in  Set IKFK Keys.Switch Control.Type : ERigElementType Enum = None
+    in  Set IKFK Keys.Switch Control.Name : Name = None
+
+[N36] Get FK Controls (ControlRigGraphNode)
+    out VariableNode.Value : Array of Rig Element Key Structures -> N35.Set IKFK Keys.FK Controls
+
+[N37] Get IKFK Switch Control (ControlRigGraphNode)
+    out VariableNode_10.Value : Rig Element Key Structure -> N35.Set IKFK Keys.Switch Control
+
+[N38] Get IK Control (ControlRigGraphNode)
+    out VariableNode_11.Value : Rig Element Key Structure -> N35.Set IKFK Keys.IK Controls .0
+
+[N39] Get Pole Vector Control (ControlRigGraphNode)
+    out VariableNode_12.Value : Rig Element Key Structure -> N35.Set IKFK Keys.IK Controls .1
+
+[N40] Get IK Effector (ControlRigGraphNode)
+    out VariableNode_13.Value : Rig Element Key Structure -> N26.IK 2 Bones.IK Control
+
+[N41] Project to New Parents (ControlRigGraphNode)
+    in  Project to New Parents.ExecuteContext : Execute Context Structure <- N26.IK 2 Bones.ExecuteContext
+    in  Project to New Parents.Children : Array of Rig Element Key Structures <- N22.VariableNode_21_1.Value
+    in  Project to New Parents.Parents : Array of Rig Element Key Structures <- N21.VariableNode_20_1.Value
+    in  Project to New Parents.Propagate to Children : Boolean = True
+
+[N42] Get Softness (ControlRigGraphNode)
+    out VariableNode_14.Value : Float (double-precision) -> N26.IK 2 Bones.Softness
+
+[N43] Sequence (ControlRigGraphNode)
+    out SequenceExecution.A : Execute Context Structure -> N30.Set IKFK Visibility.ExecuteContext
+    out SequenceExecution.C : Execute Context Structure -> N35.Set IKFK Keys.ExecuteContext
+    out SequenceExecution.D : Execute Context Structure -> N1.Return.Execute
+    in  SequenceExecution.ExecuteContext : Execute Context Structure <- N28.VariableNode_8.ExecuteContext
+
+[N44] Get IK Control (ControlRigGraphNode)
+    out VariableNode_10_1.Value : Rig Element Key Structure -> N48.Compute Pole Vector Parent.Foot Control
+
+[N45] Get Bones (ControlRigGraphNode)
+
+[N46]  (ControlRigGraphNode)
+
+[N47] Get Pole Vector Null (ControlRigGraphNode)
+    out VariableNode_15.Value : Rig Element Key Structure -> N48.Compute Pole Vector Parent.Pole Vector Null
+
+[N48] Compute Pole Vector Parent (ControlRigGraphNode)
+    in  Compute Pole Vector Parent.ExecuteContext : Execute Context Structure = ()
+    out Compute Pole Vector Parent.ExecuteContext : Execute Context Structure -> N26.IK 2 Bones.ExecuteContext
+    in  Compute Pole Vector Parent.Foot Control : Rig Element Key Structure <- N44.VariableNode_10_1.Value
+    in  Compute Pole Vector Parent.Foot Control.Type : ERigElementType Enum = Control
+    in  Compute Pole Vector Parent.Foot Control.Name : Name = foot_l_ik_ctrl
+    in  Compute Pole Vector Parent.Root Bone.Type : ERigElementType Enum = Bone
+    in  Compute Pole Vector Parent.Root Bone.Name : Name = thigh_l
+    in  Compute Pole Vector Parent.Pole Vector Null : Rig Element Key Structure <- N47.VariableNode_15.Value
+    in  Compute Pole Vector Parent.Pole Vector Null.Type : ERigElementType Enum = Control
+    in  Compute Pole Vector Parent.Pole Vector Null.Name : Name = FootParent
+    in  Compute Pole Vector Parent.Initial : Boolean = False
+

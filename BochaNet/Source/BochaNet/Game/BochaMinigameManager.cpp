@@ -11,11 +11,15 @@
 #include "Player/BochaPlayerController.h"
 #include "Player/BochaMinigameCharacter.h"
 #include "UI/BochaHUDWidget.h"
+#include "UI/BochaStateScreenWidget.h"
+
+#define LOCTEXT_NAMESPACE "BochaMinigame"
 
 namespace
 {
-	// Where a held ball sits relative to the character.
-	const FVector HeldBallOffset(100.0, 0.0, -30.0);
+	// Where a held ball sits relative to the character: in front of the chest, a bit to the right,
+	// inside the first-person view. (The throw rolls it from the floor below this spot.)
+	const FVector HeldBallOffset(90.0, 15.0, 35.0);
 }
 
 ABochaMinigameManager::ABochaMinigameManager()
@@ -29,6 +33,14 @@ void ABochaMinigameManager::BeginPlay()
 
 	HUD = CreateWidget<UBochaHUDWidget>(GetWorld(), HUDWidgetClass);
 	HUD->AddToViewport();
+
+	StateScreen = CreateWidget<UBochaStateScreenWidget>(UGameplayStatics::GetPlayerController(this, 0), StateScreenClass);
+	if (StateScreen)
+	{
+		// Above the HUD.
+		StateScreen->AddToViewport(10);
+		StateScreen->OnContinue.AddUObject(this, &ABochaMinigameManager::TogglePause);
+	}
 	if (const ABochaMinigameCharacter* Player = Cast<ABochaMinigameCharacter>(TargetCharacter))
 	{
 		HUD->SetThrowStrength(Player->GetThrowStrength());
@@ -39,9 +51,17 @@ void ABochaMinigameManager::BeginPlay()
 
 void ABochaMinigameManager::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+	if (bPaused)
+	{
+		TogglePause();
+	}
 	if (HUD)
 	{
 		HUD->RemoveFromParent();
+	}
+	if (StateScreen)
+	{
+		StateScreen->RemoveFromParent();
 	}
 	if (IsValid(CurrentBall))
 	{
@@ -90,6 +110,22 @@ void ABochaMinigameManager::Refresh()
 	const APlayerState* LocalPlayer = LocalController ? LocalController->PlayerState : nullptr;
 	RefreshHeldBall(Match->CanThrow(LocalPlayer));
 	RefreshCamera();
+
+	const int32 LocalTeam = Match->GetTeamOf(LocalPlayer);
+	if (ABochaMinigameCharacter* Player = Cast<ABochaMinigameCharacter>(TargetCharacter))
+	{
+		Player->SetTeam(LocalTeam);
+	}
+
+	// Start screen, once the local player's team and the draw are known.
+	if (!bShowedStart && StateScreen && LocalTeam != INDEX_NONE && Match->GetPhase() == EBochaPhase::ThrowingBolim)
+	{
+		bShowedStart = true;
+		StateScreen->Show(EBochaScreen::Start, FText::Format(
+			LOCTEXT("StartSubtitle", "Você joga com as bochas {0}. Sorteio: {1} começa."),
+			LocalTeam == 0 ? LOCTEXT("RedBalls", "vermelhas") : LOCTEXT("BlueBalls", "azuis"),
+			ABochaMatch::GetTeamName(Match->GetCurrentThrower())), StartScreenDuration);
+	}
 
 	// The winner's machine claims the victory with a Server RPC; the server confirms it.
 	if (!bClaimedVictory && Match->GetWinner() != INDEX_NONE && Match->IsOnTeam(LocalPlayer, Match->GetWinner()))
@@ -142,10 +178,47 @@ void ABochaMinigameManager::RefreshCamera()
 
 void ABochaMinigameManager::ShowGameOver(int32 WinnerTeam, int32 RedScore, int32 BlueScore)
 {
-	if (HUD)
+	if (bPaused)
 	{
-		HUD->ShowMessage(FText::Format(NSLOCTEXT("BochaMinigame", "GameOver", "Fim de jogo! {0} venceu por {1} x {2}."),
-			ABochaMatch::GetTeamName(WinnerTeam), FMath::Max(RedScore, BlueScore), FMath::Min(RedScore, BlueScore)), 0.f);
+		TogglePause();
+	}
+	const APlayerController* LocalController = UGameplayStatics::GetPlayerController(this, 0);
+	const int32 LocalTeam = Match ? Match->GetTeamOf(LocalController ? LocalController->PlayerState : nullptr) : INDEX_NONE;
+	const FText Result = FText::Format(LOCTEXT("GameOverScore", "{0} venceu: Vermelho {1} x {2} Azul."),
+		ABochaMatch::GetTeamName(WinnerTeam), RedScore, BlueScore);
+	if (StateScreen)
+	{
+		StateScreen->Show(LocalTeam == WinnerTeam ? EBochaScreen::Victory : EBochaScreen::Defeat, Result);
+	}
+	else if (HUD)
+	{
+		HUD->ShowMessage(Result, 0.f);
+	}
+}
+
+void ABochaMinigameManager::TogglePause()
+{
+	APlayerController* LocalController = UGameplayStatics::GetPlayerController(this, 0);
+	if (!StateScreen || !LocalController)
+	{
+		return;
+	}
+
+	bPaused = !bPaused;
+	if (bPaused)
+	{
+		StateScreen->Show(EBochaScreen::Pause, LOCTEXT("PauseSubtitle", "A partida continua para o outro jogador."));
+		FInputModeGameAndUI InputMode;
+		InputMode.SetWidgetToFocus(StateScreen->TakeWidget());
+		InputMode.SetHideCursorDuringCapture(false);
+		LocalController->SetInputMode(InputMode);
+		LocalController->SetShowMouseCursor(true);
+	}
+	else
+	{
+		StateScreen->Hide();
+		LocalController->SetInputMode(FInputModeGameOnly());
+		LocalController->SetShowMouseCursor(false);
 	}
 }
 
@@ -185,6 +258,8 @@ void ABochaMinigameManager::RefreshHeldBall(bool bMyTurn)
 		CurrentBall = Bocha;
 	}
 	CurrentBall->SetReplicates(false);
+	// Only shown in the hand: it must not touch the character, the court or the balls in play.
+	CurrentBall->GetSphere()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	HoldBall(CurrentBall);
 }
 
@@ -196,3 +271,5 @@ void ABochaMinigameManager::HoldBall(ABochaBall* Ball)
 	Ball->AttachToActor(Holder, FAttachmentTransformRules(EAttachmentRule::KeepRelative, true));
 	Ball->SetActorRelativeLocation(HeldBallOffset);
 }
+
+#undef LOCTEXT_NAMESPACE

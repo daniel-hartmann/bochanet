@@ -1,0 +1,152 @@
+Graph: Forward Fingers
+
+[N0] Entry (ControlRigGraphNode)
+    out Entry.Execute : Execute Context Structure -> N22.SendEvent.ExecuteContext
+
+[N1] Return (ControlRigGraphNode)
+    in  Return.Execute : Execute Context Structure <- N23.SendEvent_1.ExecuteContext
+
+[N2] Concat (ControlRigGraphNode)
+    out NameConcat_4_2.Result : Name -> N3.ProjectTransformToNewParent_19.OldParent.Name, N3.ProjectTransformToNewParent_19.NewParent.Name
+    in  NameConcat_4_2.A : Name = None
+    in  NameConcat_4_2.B : Name = _ctrl
+
+[N3] Project to new Parent (ControlRigGraphNode)
+    out ProjectTransformToNewParent_19.Transform : Transform -> N4.SetTransform_6.Value
+    in  ProjectTransformToNewParent_19.Child.Type : ERigElementType Enum = Bone
+    in  ProjectTransformToNewParent_19.Child.Name : Name = None
+    in  ProjectTransformToNewParent_19.bChildInitial : Boolean = True
+    in  ProjectTransformToNewParent_19.OldParent.Type : ERigElementType Enum = Control
+    in  ProjectTransformToNewParent_19.OldParent.Name : Name <- N2.NameConcat_4_2.Result
+    in  ProjectTransformToNewParent_19.bOldParentInitial : Boolean = True
+    in  ProjectTransformToNewParent_19.NewParent.Type : ERigElementType Enum = Control
+    in  ProjectTransformToNewParent_19.NewParent.Name : Name <- N2.NameConcat_4_2.Result
+
+[N4] Set Transform - Bone (ControlRigGraphNode)
+    in  SetTransform_6.ExecuteContext : Execute Context Structure = ()
+    in  SetTransform_6.Item.Type : ERigElementType Enum = Bone
+    in  SetTransform_6.Item.Name : Name = None
+    in  SetTransform_6.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTransform_6.Value : Transform <- N3.ProjectTransformToNewParent_19.Transform
+    in  SetTransform_6.Value.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetTransform_6.Value.Translation.X : Float (double-precision) = 0.000000
+    in  SetTransform_6.Value.Translation.Y : Float (double-precision) = 0.000000
+    in  SetTransform_6.Value.Translation.Z : Float (double-precision) = 0.000000
+    in  SetTransform_6.Value.Scale3D.X : Float (double-precision) = 1.000000
+    in  SetTransform_6.Value.Scale3D.Y : Float (double-precision) = 1.000000
+    in  SetTransform_6.Value.Scale3D.Z : Float (double-precision) = 1.000000
+    in  SetTransform_6.Weight : Float (single-precision) = 1.000000
+    in  SetTransform_6.bPropagateToChildren : Boolean = True
+
+[N5]  (ControlRigGraphNode)
+
+[N6] Get Fingers Bones (ControlRigGraphNode)
+
+[N7] Interpolate Interacting Controls (ControlRigGraphNode)
+    in  Interpolate Interacting Controls.ExecuteContext : Execute Context Structure <- N9.SequenceAggregate.A
+    out Interpolate Interacting Controls.ExecuteContext : Execute Context Structure -> N19.Interpolate Interacting Controls_1.ExecuteContext
+    in  Interpolate Interacting Controls.Controls : Array of Rig Element Key Structures <- N8.VariableNode_5.Value
+    in  Interpolate Interacting Controls.Active : Boolean <- N25.VariableNode_6.Value
+
+[N8] Get Metacarpals Controls (ControlRigGraphNode)
+    out VariableNode_5.Value : Array of Rig Element Key Structures -> N7.Interpolate Interacting Controls.Controls
+
+[N9] Sequence (ControlRigGraphNode)
+    out SequenceAggregate.A : Execute Context Structure -> N7.Interpolate Interacting Controls.ExecuteContext
+    out SequenceAggregate.D : Execute Context Structure -> N23.SendEvent_1.ExecuteContext
+    in  SequenceAggregate.ExecuteContext : Execute Context Structure <- N22.SendEvent.ExecuteContext
+
+[N10]  (ControlRigGraphNode)
+
+[N11] Get Interaction (ControlRigGraphNode)
+
+[N12]  (ControlRigGraphNode)
+
+[N13]  (ControlRigGraphNode)
+
+[N14] Get Transform - Control (ControlRigGraphNode)
+    out RigUnit_GetTransform_3.Transform : Transform -> N16.OffsetTransformForItem.OffsetTransform
+    in  RigUnit_GetTransform_3.Item.Type : ERigElementType Enum = Control
+    in  RigUnit_GetTransform_3.Item.Name : Name = pinky_curl_l_ctrl
+    in  RigUnit_GetTransform_3.Space : ERigVMTransformSpace Enum = LocalSpace
+
+[N15]  (ControlRigGraphNode)
+
+[N16] Offset Transform (ControlRigGraphNode)
+    in  OffsetTransformForItem.ExecuteContext : Execute Context Structure = ()
+    out OffsetTransformForItem.ExecuteContext : Execute Context Structure -> N26.SendEvent_2.ExecuteContext
+    in  OffsetTransformForItem.Item.Type : ERigElementType Enum = Bone
+    in  OffsetTransformForItem.Item.Name : Name = None
+    in  OffsetTransformForItem.OffsetTransform : Transform <- N14.RigUnit_GetTransform_3.Transform
+    in  OffsetTransformForItem.OffsetTransform.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  OffsetTransformForItem.OffsetTransform.Translation.X : Float (double-precision) = 0.000000
+    in  OffsetTransformForItem.OffsetTransform.Translation.Y : Float (double-precision) = 0.000000
+    in  OffsetTransformForItem.OffsetTransform.Translation.Z : Float (double-precision) = 0.000000
+    in  OffsetTransformForItem.OffsetTransform.Scale3D.X : Float (double-precision) = 1.000000
+    in  OffsetTransformForItem.OffsetTransform.Scale3D.Y : Float (double-precision) = 1.000000
+    in  OffsetTransformForItem.OffsetTransform.Scale3D.Z : Float (double-precision) = 1.000000
+    in  OffsetTransformForItem.Weight : Float (single-precision) = 1.000000
+    in  OffsetTransformForItem.bPropagateToChildren : Boolean = True
+
+[N17] Set Transform - Control (ControlRigGraphNode)
+    in  RigUnit_SetTransform_1.ExecuteContext : Execute Context Structure = ()
+    in  RigUnit_SetTransform_1.Item.Type : ERigElementType Enum = Control
+    in  RigUnit_SetTransform_1.Item.Name : Name = pinky_curl_l_ctrl
+    in  RigUnit_SetTransform_1.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  RigUnit_SetTransform_1.bInitial : Boolean = False
+    in  RigUnit_SetTransform_1.Value.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  RigUnit_SetTransform_1.Value.Translation.X : Float (double-precision) = 0.000000
+    in  RigUnit_SetTransform_1.Value.Translation.Y : Float (double-precision) = 0.000000
+    in  RigUnit_SetTransform_1.Value.Translation.Z : Float (double-precision) = 0.000000
+    in  RigUnit_SetTransform_1.Value.Scale3D.X : Float (double-precision) = 1.000000
+    in  RigUnit_SetTransform_1.Value.Scale3D.Y : Float (double-precision) = 1.000000
+    in  RigUnit_SetTransform_1.Value.Scale3D.Z : Float (double-precision) = 1.000000
+    in  RigUnit_SetTransform_1.Weight : Float (single-precision) = 1.000000
+    in  RigUnit_SetTransform_1.bPropagateToChildren : Boolean = True
+
+[N18] Find Finger Controls (ControlRigGraphNode)
+    in  Find Finger Controls.ExecuteContext : Execute Context Structure = ()
+    in  Find Finger Controls.Value : Name = None
+
+[N19] Interpolate Interacting Controls (ControlRigGraphNode)
+    in  Interpolate Interacting Controls_1.ExecuteContext : Execute Context Structure <- N7.Interpolate Interacting Controls.ExecuteContext
+    in  Interpolate Interacting Controls_1.Controls : Array of Rig Element Key Structures <- N20.VariableNode.Value
+    in  Interpolate Interacting Controls_1.Active : Boolean <- N21.VariableNode_1.Value
+
+[N20] Get Base Fingers Controls (ControlRigGraphNode)
+    out VariableNode.Value : Array of Rig Element Key Structures -> N19.Interpolate Interacting Controls_1.Controls
+
+[N21] Get Auto Base (ControlRigGraphNode)
+    out VariableNode_1.Value : Boolean -> N19.Interpolate Interacting Controls_1.Active
+
+[N22] Send Event (ControlRigGraphNode)
+    in  SendEvent.ExecuteContext : Execute Context Structure <- N0.Entry.Execute
+    out SendEvent.ExecuteContext : Execute Context Structure -> N9.SequenceAggregate.ExecuteContext
+    in  SendEvent.Event : ERigEvent Enum = OpenUndoBracket
+    in  SendEvent.Item.Type : ERigElementType Enum = None
+    in  SendEvent.Item.Name : Name = None
+    in  SendEvent.bEnable : Boolean = True
+    in  SendEvent.bOnlyDuringInteraction : Boolean = True
+
+[N23] Send Event (ControlRigGraphNode)
+    in  SendEvent_1.ExecuteContext : Execute Context Structure <- N9.SequenceAggregate.D
+    out SendEvent_1.ExecuteContext : Execute Context Structure -> N1.Return.Execute
+    in  SendEvent_1.Event : ERigEvent Enum = CloseUndoBracket
+    in  SendEvent_1.Item.Type : ERigElementType Enum = None
+    in  SendEvent_1.Item.Name : Name = None
+    in  SendEvent_1.bEnable : Boolean = True
+    in  SendEvent_1.bOnlyDuringInteraction : Boolean = True
+
+[N24] Get Proxy Controls (ControlRigGraphNode)
+
+[N25] Get Auto Meta (ControlRigGraphNode)
+    out VariableNode_6.Value : Boolean -> N7.Interpolate Interacting Controls.Active
+
+[N26] Send Event (ControlRigGraphNode)
+    in  SendEvent_2.ExecuteContext : Execute Context Structure <- N16.OffsetTransformForItem.ExecuteContext
+    in  SendEvent_2.Event : ERigEvent Enum = RequestAutoKey
+    in  SendEvent_2.Item.Type : ERigElementType Enum = None
+    in  SendEvent_2.Item.Name : Name = None
+    in  SendEvent_2.bEnable : Boolean = True
+    in  SendEvent_2.bOnlyDuringInteraction : Boolean = True
+

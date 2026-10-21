@@ -11,6 +11,7 @@ DefaultSceneRoot : SceneComponent (parent: None, socket: None)
     BolimClass = /Script/Engine.BlueprintGeneratedClass'/Game/Bocha/Actors/ABolim.ABolim_C'
     BochaClass = /Script/Engine.BlueprintGeneratedClass'/Game/Bocha/Actors/ABocha.ABocha_C'
     HUDWidgetClass = /Script/UMG.WidgetBlueprintGeneratedClass'/Game/Bocha/UI/WBP_HUD.WBP_HUD_C'
+    StateScreenClass = /Script/UMG.WidgetBlueprintGeneratedClass'/Game/Bocha/UI/WBP_GameStateScreen.WBP_GameStateScreen_C'
 
 [Component template DefaultSceneRoot : SceneComponent overridden vs class defaults]
     bVisualizeComponent = True

@@ -1,0 +1,77 @@
+Graph: Compute Pole Vector Parent
+
+[N0] Entry (ControlRigGraphNode)
+    out Entry.ExecuteContext : Execute Context Structure -> N3.RigUnit_SetTransform_2_1.ExecuteContext
+    out Entry.Root Bone : Rig Element Key Structure -> N2.RigUnit_GetTransform_4_1.Item
+    out Entry.Initial : Boolean -> N2.RigUnit_GetTransform_4_1.bInitial, N3.RigUnit_SetTransform_2_1.bInitial
+
+[N1] Return (ControlRigGraphNode)
+    in  Return.ExecuteContext : Execute Context Structure <- N3.RigUnit_SetTransform_2_1.ExecuteContext
+
+[N2] Get Transform - Bone (ControlRigGraphNode)
+    out RigUnit_GetTransform_4_1.Transform : Transform -> N4.AimBoneMath.InputTransform
+    in  RigUnit_GetTransform_4_1.Item : Rig Element Key Structure <- N0.Entry.Root Bone
+    in  RigUnit_GetTransform_4_1.Item.Type : ERigElementType Enum = Bone
+    in  RigUnit_GetTransform_4_1.Item.Name : Name = thigh_l
+    in  RigUnit_GetTransform_4_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  RigUnit_GetTransform_4_1.bInitial : Boolean <- N0.Entry.Initial
+
+[N3] Set Transform - Control (ControlRigGraphNode)
+    in  RigUnit_SetTransform_2_1.ExecuteContext : Execute Context Structure <- N0.Entry.ExecuteContext
+    out RigUnit_SetTransform_2_1.ExecuteContext : Execute Context Structure -> N1.Return.ExecuteContext
+    in  RigUnit_SetTransform_2_1.Item : Rig Element Key Structure <- N5.VariableNode.Value
+    in  RigUnit_SetTransform_2_1.Item.Type : ERigElementType Enum = Control
+    in  RigUnit_SetTransform_2_1.Item.Name : Name = FootParent
+    in  RigUnit_SetTransform_2_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  RigUnit_SetTransform_2_1.bInitial : Boolean <- N0.Entry.Initial
+    in  RigUnit_SetTransform_2_1.Value : Transform <- N4.AimBoneMath.Result
+    in  RigUnit_SetTransform_2_1.Value.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  RigUnit_SetTransform_2_1.Value.Translation.X : Float (double-precision) = 0.000000
+    in  RigUnit_SetTransform_2_1.Value.Translation.Y : Float (double-precision) = 0.000000
+    in  RigUnit_SetTransform_2_1.Value.Translation.Z : Float (double-precision) = 0.000000
+    in  RigUnit_SetTransform_2_1.Value.Scale3D.X : Float (double-precision) = 1.000000
+    in  RigUnit_SetTransform_2_1.Value.Scale3D.Y : Float (double-precision) = 1.000000
+    in  RigUnit_SetTransform_2_1.Value.Scale3D.Z : Float (double-precision) = 1.000000
+    in  RigUnit_SetTransform_2_1.Weight : Float (single-precision) = 1.000000
+    in  RigUnit_SetTransform_2_1.bPropagateToChildren : Boolean = True
+
+[N4] Aim Math (ControlRigGraphNode)
+    out AimBoneMath.Result : Transform -> N3.RigUnit_SetTransform_2_1.Value
+    in  AimBoneMath.InputTransform : Transform <- N2.RigUnit_GetTransform_4_1.Transform
+    in  AimBoneMath.InputTransform.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  AimBoneMath.InputTransform.Translation.X : Float (double-precision) = 0.000000
+    in  AimBoneMath.InputTransform.Translation.Y : Float (double-precision) = 0.000000
+    in  AimBoneMath.InputTransform.Translation.Z : Float (double-precision) = 0.000000
+    in  AimBoneMath.InputTransform.Scale3D.X : Float (double-precision) = 1.000000
+    in  AimBoneMath.InputTransform.Scale3D.Y : Float (double-precision) = 1.000000
+    in  AimBoneMath.InputTransform.Scale3D.Z : Float (double-precision) = 1.000000
+    in  AimBoneMath.Primary.Weight : Float (single-precision) = 1.000000
+    in  AimBoneMath.Primary.Axis.X : Float (double-precision) = 1.000000
+    in  AimBoneMath.Primary.Axis.Y : Float (double-precision) = 0.000000
+    in  AimBoneMath.Primary.Axis.Z : Float (double-precision) = 0.000000
+    in  AimBoneMath.Primary.Target.X : Float (double-precision) = 0.000000
+    in  AimBoneMath.Primary.Target.Y : Float (double-precision) = 0.000000
+    in  AimBoneMath.Primary.Target.Z : Float (double-precision) = 0.000000
+    in  AimBoneMath.Primary.Kind : EControlRigVectorKind Enum = Location
+    in  AimBoneMath.Primary.Space : Rig Element Key Structure <- N6.VariableNode_1.Value
+    in  AimBoneMath.Primary.Space.Type : ERigElementType Enum = Bone
+    in  AimBoneMath.Primary.Space.Name : Name = None
+    in  AimBoneMath.Secondary.Weight : Float (single-precision) = 1.000000
+    in  AimBoneMath.Secondary.Axis.X : Float (double-precision) = 0.000000
+    in  AimBoneMath.Secondary.Axis.Y : Float (double-precision) = 0.000000
+    in  AimBoneMath.Secondary.Axis.Z : Float (double-precision) = 1.000000
+    in  AimBoneMath.Secondary.Target.X : Float (double-precision) = 1.000000
+    in  AimBoneMath.Secondary.Target.Y : Float (double-precision) = 0.000000
+    in  AimBoneMath.Secondary.Target.Z : Float (double-precision) = 0.000000
+    in  AimBoneMath.Secondary.Kind : EControlRigVectorKind Enum = Direction
+    in  AimBoneMath.Secondary.Space : Rig Element Key Structure <- N6.VariableNode_1.Value
+    in  AimBoneMath.Secondary.Space.Type : ERigElementType Enum = Bone
+    in  AimBoneMath.Secondary.Space.Name : Name = None
+    in  AimBoneMath.Weight : Float (single-precision) = 1.000000
+
+[N5] Get Pole Vector Null (ControlRigGraphNode)
+    out VariableNode.Value : Rig Element Key Structure -> N3.RigUnit_SetTransform_2_1.Item
+
+[N6] Get Foot Control (ControlRigGraphNode)
+    out VariableNode_1.Value : Rig Element Key Structure -> N4.AimBoneMath.Primary.Space, N4.AimBoneMath.Secondary.Space
+

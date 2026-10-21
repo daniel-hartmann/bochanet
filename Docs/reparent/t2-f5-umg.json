@@ -1,0 +1,80 @@
+{
+	"createInputActions": [
+		{ "path": "/Game/Bocha/Input/IA_BochaPause", "valueType": "Boolean" }
+	],
+	"mapKeys": [
+		{ "context": "/Game/Bocha/Input/IMC_Bocha.IMC_Bocha", "action": "/Game/Bocha/Input/IA_BochaPause.IA_BochaPause", "key": "P" }
+	],
+	"createWidgets": [
+		{
+			"path": "/Game/Bocha/UI/WBP_GameStateScreen",
+			"parent": "/Script/BochaNet.BochaStateScreenWidget",
+			"root": {
+				"type": "CanvasPanel", "name": "ScreenRoot",
+				"children": [
+					{
+						"type": "Border", "name": "Backdrop",
+						"props": { "BrushColor": "(R=0.0,G=0.0,B=0.0,A=0.65)", "Padding": "(Left=40,Top=40,Right=40,Bottom=40)" },
+						"slot": { "LayoutData": "(Offsets=(Left=0,Top=0,Right=0,Bottom=0),Anchors=(Minimum=(X=0,Y=0),Maximum=(X=1,Y=1)),Alignment=(X=0,Y=0))" },
+						"children": [
+							{
+								"type": "VerticalBox", "name": "CardContent",
+								"slot": { "HorizontalAlignment": "HAlign_Center", "VerticalAlignment": "VAlign_Center" },
+								"children": [
+									{
+										"type": "TextBlock", "name": "TitleText", "variable": true,
+										"props": { "Text": "INVTEXT(\"Bocha\")", "Font": "(Size=72)", "Justification": "Center" },
+										"slot": { "HorizontalAlignment": "HAlign_Center" }
+									},
+									{
+										"type": "TextBlock", "name": "SubtitleText", "variable": true,
+										"props": { "Text": "INVTEXT(\"Subtítulo\")", "Font": "(Size=30)", "Justification": "Center" },
+										"slot": { "HorizontalAlignment": "HAlign_Center", "Padding": "(Left=0,Top=16,Right=0,Bottom=0)" }
+									},
+									{
+										"type": "TextBlock", "name": "ControlsText", "variable": true,
+										"props": { "Text": "INVTEXT(\"Controles\")", "Font": "(Size=20)", "Justification": "Center", "ColorAndOpacity": "(SpecifiedColor=(R=0.8,G=0.8,B=0.8,A=1.0),ColorUseRule=UseColor_Specified)" },
+										"slot": { "HorizontalAlignment": "HAlign_Center", "Padding": "(Left=0,Top=28,Right=0,Bottom=0)" }
+									},
+									{
+										"type": "Button", "name": "ContinueButton", "variable": true,
+										"slot": { "HorizontalAlignment": "HAlign_Center", "Padding": "(Left=0,Top=36,Right=0,Bottom=0)" },
+										"children": [
+											{
+												"type": "TextBlock", "name": "ContinueLabel",
+												"props": { "Text": "INVTEXT(\"Continuar\")", "Font": "(Size=26)", "ColorAndOpacity": "(SpecifiedColor=(R=0.05,G=0.05,B=0.05,A=1.0),ColorUseRule=UseColor_Specified)" },
+												"slot": { "Padding": "(Left=24,Top=8,Right=24,Bottom=8)" }
+											}
+										]
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		}
+	],
+	"blueprints": [
+		{
+			"path": "/Game/Bocha/UI/WBP_HUD.WBP_HUD",
+			"renameWidgets": {
+				"CanvasPanel_0": "HUDRoot",
+				"VerticalBox_0": "ScorePanel",
+				"HorizontalBox_44": "RedNameRow",
+				"HorizontalBox": "RedBochasRow",
+				"HorizontalBox_1": "BlueNameRow",
+				"HorizontalBox_2": "BlueBochasRow"
+			}
+		},
+		{
+			"path": "/Game/ThirdPerson/Blueprints/BP_ThirdPersonPlayerController.BP_ThirdPersonPlayerController",
+			"set": { "BochaPauseAction": "/Game/Bocha/Input/IA_BochaPause.IA_BochaPause" }
+		},
+		{
+			"path": "/Game/Bocha/BochaGameMode.BochaGameMode",
+			"set": { "StateScreenClass": "/Game/Bocha/UI/WBP_GameStateScreen.WBP_GameStateScreen_C" }
+		}
+	],
+	"compilePaths": ["/Game/Bocha", "/Game/Lobby", "/Game/ThirdPerson"]
+}

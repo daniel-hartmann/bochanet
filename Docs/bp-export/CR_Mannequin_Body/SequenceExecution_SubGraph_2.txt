@@ -1,0 +1,26 @@
+Graph: SequenceExecution_SubGraph
+
+[N0] Entry (ControlRigGraphNode)
+    out Entry.ExecuteContext : Execute Context Structure -> N1.SequenceExecution.ExecuteContext
+
+[N1] Sequence (ControlRigGraphNode)
+    out SequenceExecution.A : Execute Context Structure -> N2.Return.A
+    out SequenceExecution.B : Execute Context Structure -> N3.SequenceExecution_1.ExecuteContext
+    in  SequenceExecution.ExecuteContext : Execute Context Structure <- N0.Entry.ExecuteContext
+
+[N2] Return (ControlRigGraphNode)
+    in  Return.A : Execute Context Structure <- N1.SequenceExecution.A
+    in  Return.B : Execute Context Structure <- N3.SequenceExecution_1.A
+    in  Return.C : Execute Context Structure <- N4.SequenceExecution_2.A
+    in  Return.D : Execute Context Structure <- N4.SequenceExecution_2.B
+
+[N3] Sequence (ControlRigGraphNode)
+    out SequenceExecution_1.A : Execute Context Structure -> N2.Return.B
+    out SequenceExecution_1.B : Execute Context Structure -> N4.SequenceExecution_2.ExecuteContext
+    in  SequenceExecution_1.ExecuteContext : Execute Context Structure <- N1.SequenceExecution.B
+
+[N4] Sequence (ControlRigGraphNode)
+    out SequenceExecution_2.A : Execute Context Structure -> N2.Return.C
+    out SequenceExecution_2.B : Execute Context Structure -> N2.Return.D
+    in  SequenceExecution_2.ExecuteContext : Execute Context Structure <- N3.SequenceExecution_1.B
+

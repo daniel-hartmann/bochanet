@@ -1,5 +1,6 @@
 #include "Actors/BochaBall.h"
 
+#include "BochaCollision.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/StaticMesh.h"
 #include "Materials/MaterialInterface.h"
@@ -20,6 +21,9 @@ ABochaBall::ABochaBall()
 
 	Sphere = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Sphere"));
 	RootComponent = Sphere;
+	Sphere->SetCollisionProfileName(BochaCollision::BallProfile);
+	// Balls roll around; the referee's NavMesh must not be cut by them.
+	Sphere->SetCanEverAffectNavigation(false);
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMesh(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface> BasicMaterial(TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
@@ -32,6 +36,21 @@ ABochaBall::ABochaBall()
 	// The project cap (3600 deg/s) lets a 4 cm jack roll at only ~1.25 m/s; faster, it slides.
 	Sphere->BodyInstance.bOverrideMaxAngularVelocity = true;
 	Sphere->BodyInstance.MaxAngularVelocity = 100000.f;
+}
+
+TMulticastDelegate<void(ABochaBall*)> ABochaBall::OnBallBeginPlay;
+TMulticastDelegate<void(ABochaBall*)> ABochaBall::OnBallEndPlay;
+
+void ABochaBall::BeginPlay()
+{
+	Super::BeginPlay();
+	OnBallBeginPlay.Broadcast(this);
+}
+
+void ABochaBall::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	OnBallEndPlay.Broadcast(this);
+	Super::EndPlay(EndPlayReason);
 }
 
 void ABochaBall::Tick(float DeltaSeconds)
@@ -102,7 +121,7 @@ bool ABochaBall::IsOnGround() const
 	FCollisionQueryParams Params(SCENE_QUERY_STAT(BochaBallGround), false, this);
 	FHitResult Hit;
 	return GetWorld()->LineTraceSingleByChannel(Hit, Center, Center - FVector(0.0, 0.0, GetRadius() + GroundTolerance),
-		ECC_Visibility, Params);
+		BochaCollision::GroundTrace, Params);
 }
 
 float ABochaBall::GetRadius() const

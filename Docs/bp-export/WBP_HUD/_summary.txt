@@ -18,82 +18,82 @@ Parent: /Script/BochaNet.BochaHUDWidget
     bHasScriptImplementedPaint = False
 
 [Widgets]
-CanvasPanel_0 : CanvasPanel (parent: root)
-    Slots = ("/Script/UMG.CanvasPanelSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.CanvasPanel_0.CanvasPanelSlot_1'","/Script/UMG.CanvasPanelSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.CanvasPanel_0.CanvasPanelSlot_0'")
+HUDRoot : CanvasPanel (parent: root)
+    Slots = ("/Script/UMG.CanvasPanelSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HUDRoot.CanvasPanelSlot_1'","/Script/UMG.CanvasPanelSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HUDRoot.CanvasPanelSlot_0'")
     bExpandedInDesigner = True
-Slider_Strength : Slider (parent: CanvasPanel_0) [IsVariable]
+Slider_Strength : Slider (parent: HUDRoot) [IsVariable]
     Value = 200.000000
     MinValue = 100.000000
     MaxValue = 1000.000000
     WidgetStyle = (BarThickness=5.000000)
     Orientation = Orient_Vertical
-    Slot = /Script/UMG.CanvasPanelSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.CanvasPanel_0.CanvasPanelSlot_1'
+    Slot = /Script/UMG.CanvasPanelSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HUDRoot.CanvasPanelSlot_1'
     DisplayLabel = Slider_Strength
-VerticalBox_0 : VerticalBox (parent: CanvasPanel_0)
-    Slots = ("/Script/UMG.VerticalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.VerticalBox_0.VerticalBoxSlot_0'","/Script/UMG.VerticalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.VerticalBox_0.VerticalBoxSlot_1'","/Script/UMG.VerticalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.VerticalBox_0.VerticalBoxSlot_2'","/Script/UMG.VerticalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.VerticalBox_0
-    Slot = /Script/UMG.CanvasPanelSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.CanvasPanel_0.CanvasPanelSlot_0'
+ScorePanel : VerticalBox (parent: HUDRoot)
+    Slots = ("/Script/UMG.VerticalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.ScorePanel.VerticalBoxSlot_0'","/Script/UMG.VerticalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.ScorePanel.VerticalBoxSlot_1'","/Script/UMG.VerticalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.ScorePanel.VerticalBoxSlot_2'","/Script/UMG.VerticalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.ScorePanel.VerticalBox
+    Slot = /Script/UMG.CanvasPanelSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HUDRoot.CanvasPanelSlot_0'
     bExpandedInDesigner = True
-HorizontalBox_44 : HorizontalBox (parent: VerticalBox_0)
-    Slots = ("/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox_44.HorizontalBoxSlot_4'","/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox_44.HorizontalBoxSlot_1'")
-    Slot = /Script/UMG.VerticalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.VerticalBox_0.VerticalBoxSlot_0'
+RedNameRow : HorizontalBox (parent: ScorePanel)
+    Slots = ("/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.RedNameRow.HorizontalBoxSlot_4'","/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.RedNameRow.HorizontalBoxSlot_1'")
+    Slot = /Script/UMG.VerticalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.ScorePanel.VerticalBoxSlot_0'
     bExpandedInDesigner = True
-P1_Bolim : Image (parent: HorizontalBox_44) [IsVariable]
-    Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox_44.HorizontalBoxSlot_4'
+P1_Bolim : Image (parent: RedNameRow) [IsVariable]
+    Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.RedNameRow.HorizontalBoxSlot_4'
     DisplayLabel = P1_Bolim
-P1_Name : TextBlock (parent: HorizontalBox_44) [IsVariable]
+P1_Name : TextBlock (parent: RedNameRow) [IsVariable]
     Text = NSLOCTEXT("[DC225C049533598F0ACA9AE5B9146D64]", "3F0C20D5417714066D324C9E923E45BE", "Player 1")
-    Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox_44.HorizontalBoxSlot_1'
+    Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.RedNameRow.HorizontalBoxSlot_1'
     bIsVariable = True
     DisplayLabel = P1_Name
-HorizontalBox : HorizontalBox (parent: VerticalBox_0)
-    Slots = ("/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox.HorizontalBoxSlot_0'","/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox.HorizontalBoxSlot_1'","/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox.HorizontalBoxSlot_2'","/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree
-    Slot = /Script/UMG.VerticalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.VerticalBox_0.VerticalBoxSlot_1'
+RedBochasRow : HorizontalBox (parent: ScorePanel)
+    Slots = ("/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.RedBochasRow.HorizontalBoxSlot_0'","/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.RedBochasRow.HorizontalBoxSlot_1'","/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.RedBochasRow.HorizontalBoxSlot_2'","/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.Re
+    Slot = /Script/UMG.VerticalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.ScorePanel.VerticalBoxSlot_1'
     bExpandedInDesigner = True
-P1_B1 : Image (parent: HorizontalBox) [IsVariable]
-    Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox.HorizontalBoxSlot_0'
+P1_B1 : Image (parent: RedBochasRow) [IsVariable]
+    Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.RedBochasRow.HorizontalBoxSlot_0'
     DisplayLabel = P1_B1
-P1_B2 : Image (parent: HorizontalBox) [IsVariable]
-    Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox.HorizontalBoxSlot_1'
+P1_B2 : Image (parent: RedBochasRow) [IsVariable]
+    Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.RedBochasRow.HorizontalBoxSlot_1'
     DisplayLabel = P1_B2
-P1_B3 : Image (parent: HorizontalBox) [IsVariable]
-    Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox.HorizontalBoxSlot_2'
+P1_B3 : Image (parent: RedBochasRow) [IsVariable]
+    Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.RedBochasRow.HorizontalBoxSlot_2'
     DisplayLabel = P1_B3
-P1_B4 : Image (parent: HorizontalBox) [IsVariable]
-    Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox.HorizontalBoxSlot_3'
+P1_B4 : Image (parent: RedBochasRow) [IsVariable]
+    Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.RedBochasRow.HorizontalBoxSlot_3'
     DisplayLabel = P1_B4
-P1_B5 : Image (parent: HorizontalBox) [IsVariable]
-    Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox.HorizontalBoxSlot_4'
+P1_B5 : Image (parent: RedBochasRow) [IsVariable]
+    Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.RedBochasRow.HorizontalBoxSlot_4'
     DisplayLabel = P1_B5
-HorizontalBox_1 : HorizontalBox (parent: VerticalBox_0)
-    Slots = ("/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox_1.HorizontalBoxSlot_4'","/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox_1.HorizontalBoxSlot_1'")
-    Slot = /Script/UMG.VerticalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.VerticalBox_0.VerticalBoxSlot_2'
+BlueNameRow : HorizontalBox (parent: ScorePanel)
+    Slots = ("/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.BlueNameRow.HorizontalBoxSlot_4'","/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.BlueNameRow.HorizontalBoxSlot_1'")
+    Slot = /Script/UMG.VerticalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.ScorePanel.VerticalBoxSlot_2'
     bExpandedInDesigner = True
-P2_Bolim : Image (parent: HorizontalBox_1) [IsVariable]
-    Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox_1.HorizontalBoxSlot_4'
+P2_Bolim : Image (parent: BlueNameRow) [IsVariable]
+    Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.BlueNameRow.HorizontalBoxSlot_4'
     DisplayLabel = P2_Bolim
-P2_Name : TextBlock (parent: HorizontalBox_1) [IsVariable]
+P2_Name : TextBlock (parent: BlueNameRow) [IsVariable]
     Text = NSLOCTEXT("[DC225C049533598F0ACA9AE5B9146D64]", "7429EFE5432AFBD18D7571B145911B1F", "Player 2")
-    Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox_1.HorizontalBoxSlot_1'
+    Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.BlueNameRow.HorizontalBoxSlot_1'
     bIsVariable = True
     DisplayLabel = P2_Name
-HorizontalBox_2 : HorizontalBox (parent: VerticalBox_0)
-    Slots = ("/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox_2.HorizontalBoxSlot_0'","/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox_2.HorizontalBoxSlot_1'","/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox_2.HorizontalBoxSlot_2'","/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:Widg
-    Slot = /Script/UMG.VerticalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.VerticalBox_0.VerticalBoxSlot_3'
+BlueBochasRow : HorizontalBox (parent: ScorePanel)
+    Slots = ("/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.BlueBochasRow.HorizontalBoxSlot_0'","/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.BlueBochasRow.HorizontalBoxSlot_1'","/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.BlueBochasRow.HorizontalBoxSlot_2'","/Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree
+    Slot = /Script/UMG.VerticalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.ScorePanel.VerticalBoxSlot_3'
     bExpandedInDesigner = True
-P2_B1 : Image (parent: HorizontalBox_2) [IsVariable]
-    Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox_2.HorizontalBoxSlot_0'
+P2_B1 : Image (parent: BlueBochasRow) [IsVariable]
+    Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.BlueBochasRow.HorizontalBoxSlot_0'
     DisplayLabel = P2_B1
-P2_B2 : Image (parent: HorizontalBox_2) [IsVariable]
-    Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox_2.HorizontalBoxSlot_1'
+P2_B2 : Image (parent: BlueBochasRow) [IsVariable]
+    Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.BlueBochasRow.HorizontalBoxSlot_1'
     DisplayLabel = P2_B2
-P2_B3 : Image (parent: HorizontalBox_2) [IsVariable]
-    Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox_2.HorizontalBoxSlot_2'
+P2_B3 : Image (parent: BlueBochasRow) [IsVariable]
+    Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.BlueBochasRow.HorizontalBoxSlot_2'
     DisplayLabel = P2_B3
-P2_B4 : Image (parent: HorizontalBox_2) [IsVariable]
-    Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox_2.HorizontalBoxSlot_3'
+P2_B4 : Image (parent: BlueBochasRow) [IsVariable]
+    Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.BlueBochasRow.HorizontalBoxSlot_3'
     DisplayLabel = P2_B4
-P2_B5 : Image (parent: HorizontalBox_2) [IsVariable]
-    Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.HorizontalBox_2.HorizontalBoxSlot_4'
+P2_B5 : Image (parent: BlueBochasRow) [IsVariable]
+    Slot = /Script/UMG.HorizontalBoxSlot'/Game/Bocha/UI/WBP_HUD.WBP_HUD:WidgetTree.BlueBochasRow.HorizontalBoxSlot_4'
     DisplayLabel = P2_B5
 
 [Graphs]

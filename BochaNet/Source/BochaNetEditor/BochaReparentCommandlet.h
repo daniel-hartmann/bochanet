@@ -5,6 +5,9 @@
 #include "BochaReparentCommandlet.generated.h"
 
 class UBlueprint;
+class UPanelWidget;
+class UWidget;
+class UWidgetBlueprint;
 class FJsonObject;
 
 /**
@@ -26,6 +29,13 @@ public:
 
 private:
 	bool ApplyBlueprintSpec(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const;
+	bool EditMap(const TSharedPtr<FJsonObject>& Spec, bool bSave, TSet<UPackage*>& ChangedPackages) const;
+	bool DeleteAndRenameAssets(const TArray<FString>& ToDelete, const TArray<TSharedPtr<FJsonValue>>& Renames,
+		bool bSave, TSet<UPackage*>& ChangedPackages) const;
+	UWidget* BuildWidget(UWidgetBlueprint* WidgetBlueprint, UPanelWidget* Parent, const TSharedPtr<FJsonObject>& Node) const;
+	bool CreateWidgetBlueprint(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const;
+	bool DuplicateAsset(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const;
+	bool CreateMontage(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const;
 	bool CreateBlueprintAsset(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const;
 	bool CreateInputAction(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const;
 	bool UnmapKey(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const;
@@ -39,6 +49,7 @@ private:
 	int32 RetargetFunctionCalls(UBlueprint* Blueprint, UClass* FromClass, UClass* ToClass, const TSharedPtr<FJsonObject>& PinRenames) const;
 	void RestoreNativeComponents(UBlueprint* Blueprint, const TArray<FString>& ComponentsToReset) const;
 	bool ResetDefaults(UBlueprint* Blueprint, const TArray<FString>& PropertyNames) const;
+	bool SetComponentDefaults(UBlueprint* Blueprint, const TSharedPtr<FJsonObject>& Components) const;
 	bool SetDefaults(UBlueprint* Blueprint, const TSharedPtr<FJsonObject>& Values) const;
 	bool Compile(UBlueprint* Blueprint) const;
 };

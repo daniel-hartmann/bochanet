@@ -1,0 +1,40 @@
+Graph: Set IKFK Visibility
+
+[N0] Entry (ControlRigGraphNode)
+    out Entry.ExecuteContext : Execute Context Structure -> N11.SequenceExecution.ExecuteContext
+    out Entry.IKFK Switch : Boolean -> N6.MathBoolNot_1.Value
+
+[N1] Return (ControlRigGraphNode)
+    in  Return.ExecuteContext : Execute Context Structure <- N11.SequenceExecution.D
+
+[N2]  (ControlRigGraphNode)
+
+[N3] Set Control Visibility (ControlRigGraphNode)
+    in  SetControlVisibility_2.ExecuteContext : Execute Context Structure = ()
+    in  SetControlVisibility_2.Item.Type : ERigElementType Enum = Control
+    in  SetControlVisibility_2.Item.Name : Name = None
+    in  SetControlVisibility_2.bVisible : Boolean = True
+
+[N4]  (ControlRigGraphNode)
+
+[N5] Set Control Visibility (ControlRigGraphNode)
+    in  SetControlVisibility_2_1.ExecuteContext : Execute Context Structure = ()
+    in  SetControlVisibility_2_1.Item.Type : ERigElementType Enum = Control
+    in  SetControlVisibility_2_1.Item.Name : Name = None
+    in  SetControlVisibility_2_1.bVisible : Boolean = True
+
+[N6] Not (ControlRigGraphNode)
+    in  MathBoolNot_1.Value : Boolean <- N0.Entry.IKFK Switch
+
+[N7] Get FK Controls (ControlRigGraphNode)
+
+[N8] Get IK Controls (ControlRigGraphNode)
+
+[N9]  (ControlRigGraphNode)
+
+[N10]  (ControlRigGraphNode)
+
+[N11] Sequence (ControlRigGraphNode)
+    out SequenceExecution.D : Execute Context Structure -> N1.Return.ExecuteContext
+    in  SequenceExecution.ExecuteContext : Execute Context Structure <- N0.Entry.ExecuteContext
+

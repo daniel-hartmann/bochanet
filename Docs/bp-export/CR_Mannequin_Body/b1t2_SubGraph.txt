@@ -1,0 +1,28 @@
+Graph: b1t2_SubGraph
+
+[N0] Entry (ControlRigGraphNode)
+    out Entry.t : Float (double-precision) -> N2.MathFloatSub.B, N3.MathFloatMul.A
+
+[N1] Return (ControlRigGraphNode)
+    in  Return.Result : Float (single-precision) <- N4.MathFloatMul_1.Result
+
+[N2] Subtract (ControlRigGraphNode)
+    out MathFloatSub.Result : Float (single-precision) -> N5.MathFloatMul_2.B, N5.MathFloatMul_2.A
+    in  MathFloatSub.A : Float (single-precision) = 1.000000
+    in  MathFloatSub.B : Float (single-precision) <- N0.Entry.t
+
+[N3] Multiply (ControlRigGraphNode)
+    out MathFloatMul.Result : Float (single-precision) -> N4.MathFloatMul_1.A
+    in  MathFloatMul.A : Float (single-precision) <- N0.Entry.t
+    in  MathFloatMul.B : Float (single-precision) <- N5.MathFloatMul_2.Result
+
+[N4] Multiply (ControlRigGraphNode)
+    out MathFloatMul_1.Result : Float (single-precision) -> N1.Return.Result
+    in  MathFloatMul_1.A : Float (single-precision) <- N3.MathFloatMul.Result
+    in  MathFloatMul_1.B : Float (single-precision) = 3.000000
+
+[N5] Multiply (ControlRigGraphNode)
+    out MathFloatMul_2.Result : Float (single-precision) -> N3.MathFloatMul.B
+    in  MathFloatMul_2.A : Float (single-precision) <- N2.MathFloatSub.Result
+    in  MathFloatMul_2.B : Float (single-precision) <- N2.MathFloatSub.Result
+

@@ -48,3 +48,40 @@ um evento de validação para o servidor (Server RPC).
 
 
 # Checklist: Trabalho 2
+
+Refinamento de cenário 3D: animação, navegação e interface. Enunciado: `Docs/EnunciadoT2.pdf`.
+Entrega: **27/10/2026** até 23h59 (Moodle) e apresentação em aula. Plano: `Docs/PLANO_T2.md`.
+
+### Controle de Animação (25%)
+
+- [x] **Pipeline de Animação:** malha esquelética (*Skeletal Mesh*) controlada por um *Animation Blueprint* (`UAnimInstance`). *(Jogador do minijogo com Manny/Quinn por cor e `ABP_BochaPlayer`, filho do `UBochaAnimInstance` em C++.)*
+- [x] **Máquina de Estados:** estados de locomoção com interpolação contínua (*Blend Space 1D/2D* por velocidade/direção). *(`Locomotion`: Idle ↔ Walk/Run com `BS_Idle_Walk_Run` 2D — X = `Direction`, Y = `GroundSpeed`.)*
+- [x] **Máquina de Estados:** estados de transição para salto, queda, ataque ou ação contextual da mecânica do jogo. *(`Main States`: Jump / Fall Loop / Land por `IsFalling`; arremesso como montage `AM_BochaThrow` no `DefaultSlot`.)*
+- [x] **Anim Notifies:** ao menos um *Anim Notify* disparando eventos precisos em tempo de execução (som, partículas, *hitbox* ou liberação de controle). *(`UBochaAnimNotify_Release` "Soltar Bola" no `AM_BochaThrow`: a bola só sai nesse quadro.)*
+
+### Navegação, Cenário e Câmera (25%)
+
+- [x] **Malha de Navegação:** volume de navegação ativo (`NavMeshBoundsVolume`) no nível. *(No `CanchaMap`, cobrindo a cancha; NavMesh gerada em tempo de execução porque a cancha é level instance.)*
+- [x] **Comportamento Navegável:** funcionalidade que dependa de resolução de caminhos (`NavigationSystem`): agente autônomo (NPC) indo a alvos/pontos de patrulha, ou *Click-to-Move* via `AIController`/`SimpleMoveToLocation`. *(Árbitro `ABochaReferee`: `AIController::MoveToLocation` até o bolim depois de cada bocha, mede (notify "Medir") e volta.)*
+- [x] **Arquitetura de Câmera:** `CameraComponent` + `SpringArmComponent` com distância (`TargetArmLength`), *Camera Lag* e tratamento de oclusão (*Probe Size* / colisão de câmera). *(Minijogo em primeira pessoa: câmera alinhada ao eixo de visão, 30 cm à frente do peito, girando com a mira, lag de rotação; câmera que segue a bola com SpringArm (braço 300, lag, probe 12 no canal `Camera`); lobby em terceira pessoa com `CameraBoom` (braço 400, lag, probe).)*
+
+### Interface do Usuário — UMG (25%)
+
+- [x] **Widget Principal (HUD):** interface via *Unreal Motion Graphics* (`UserWidget`). *(`WBP_HUD` / `UBochaHUDWidget`.)*
+- [x] **Exibição de Parâmetros de Estado:** informações vitais em tempo real (placar, bochas restantes, vez, quem tem o ponto, força).
+- [x] **Desacoplamento de Dados:** atualização orientada a eventos (*Event Dispatchers*/Delegates ou chamadas sob demanda); **sem** *Tick/Property Binding* para consultas pesadas. *(HUD e telas por delegates do `ABochaMatch` (`OnStateChanged`, `OnAnnounce`, `OnGameOver`); força por chamada direta; minimapa com lista de bolas mantida pelos eventos `OnBallBeginPlay`/`OnBallEndPlay`.)*
+- [x] **Feedback de Estado de Jogo:** telas ou elementos indicando transições claras (início, pausa, vitória ou derrota). *(`WBP_GameStateScreen`: Início (cor do jogador, sorteio, controles), Pausa local na tecla P, Vitória e Derrota por jogador.)*
+- [x] **Organização do *Widget Tree*** (critério de avaliação). *(`WBP_HUD`: `HUDRoot`, `ScorePanel`, `RedNameRow`, `RedBochasRow`, `BlueNameRow`, `BlueBochasRow`; `WBP_GameStateScreen`: `ScreenRoot` › `Backdrop` › `CardContent` › `TitleText`/`SubtitleText`/`ControlsText`/`ContinueButton`.)*
+
+### Física e Colisão
+
+- [x] **Perfis de colisão explícitos:** *Collision Presets* e canais de traçado/objeto definidos entre os atores do cenário. *(Canais `BochaBall`, `BochaReferee` e `BochaGround`; presets `BochaBall` e `BochaReferee` em `Config/DefaultEngine.ini`.)*
+- [x] **Física de corpos rígidos:** *Simulate Physics* nas bolas, essencial para a mecânica.
+
+### Memorial Descritivo Técnico e Organização (25%)
+
+- [ ] **Memorial:** responder às 10 perguntas (A. Animação e Cinemática 1–2; B. Cenário, Navegação e Câmera 3–5; C. Interface e Arquitetura de Dados 6–8; D. Física e Escopo do MVP 9–10). *(Rascunho em `Docs/MEMORIAL.md`: falta revisar, completar a 7 (inspirações) e passar para o documento do Moodle.)*
+- [x] **Nota para atores sem malha:** justificar no memorial a cinemática procedural das bolas (rolamento e freio controlado em C++). *(Memorial, pergunta 1.)*
+- [ ] **Nomenclatura na engine:** prefixos padrão (`BP_`, `WBP_`, `M_`, `T_`, `IA_`, `IMC_`, `ABP_`, `BS_`…). *(Parcial: há assets como `ABall`, `BochaGameMode`, `BallBlueMaterial`, `clay-01`.)*
+- [ ] **Organização do *Content Browser*:** pastas por tipo/sistema e sem assets sem uso (`WBP_Minimap`, `RT_Minimap`, `BP_MinimapCapture`).
+- [ ] Entrega de acordo com o documento *Instruções para Entrega dos Trabalhos* (Moodle), até 27/10/2026.

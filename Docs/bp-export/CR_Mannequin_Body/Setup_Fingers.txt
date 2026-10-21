@@ -1,0 +1,65 @@
+Graph: Setup Fingers
+
+[N0] Entry (ControlRigGraphNode)
+
+[N1] Return (ControlRigGraphNode)
+    in  Return.Execute : Execute Context Structure = ()
+
+[N2]  (ControlRigGraphNode)
+
+[N3] Concat (ControlRigGraphNode)
+    out NameConcat_4_1.Result : Name -> N5.SetTransform_2.Item.Name
+    in  NameConcat_4_1.A : Name = None
+    in  NameConcat_4_1.B : Name = _ctrl
+
+[N4] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_6.Transform.Rotation : Quat Structure -> N6.MathQuaternionToRotator_1_1.Value
+    out GetTransform_6.Transform.Translation : Vector -> N5.SetTransform_2.Value.Translation
+    in  GetTransform_6.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_6.Item.Name : Name = None
+    in  GetTransform_6.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N5] Set Transform - Control Initial (ControlRigGraphNode)
+    in  SetTransform_2.ExecuteContext : Execute Context Structure = ()
+    in  SetTransform_2.Item.Type : ERigElementType Enum = Control
+    in  SetTransform_2.Item.Name : Name <- N3.NameConcat_4_1.Result
+    in  SetTransform_2.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTransform_2.bInitial : Boolean = true
+    in  SetTransform_2.Value.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetTransform_2.Value.Translation : Vector <- N4.GetTransform_6.Transform.Translation
+    in  SetTransform_2.Value.Translation.X : Float (double-precision) = 0.000000
+    in  SetTransform_2.Value.Translation.Y : Float (double-precision) = 0.000000
+    in  SetTransform_2.Value.Translation.Z : Float (double-precision) = 0.000000
+    in  SetTransform_2.Value.Scale3D.X : Float (double-precision) = 1.000000
+    in  SetTransform_2.Value.Scale3D.Y : Float (double-precision) = 1.000000
+    in  SetTransform_2.Value.Scale3D.Z : Float (double-precision) = 1.000000
+    in  SetTransform_2.Weight : Float (single-precision) = 1.000000
+    in  SetTransform_2.bPropagateToChildren : Boolean = True
+
+[N6] To Rotator (ControlRigGraphNode)
+    out MathQuaternionToRotator_1_1.Result.Pitch : Float (double-precision) -> N12.MathQuaternionFromRotator_1_1.Value.Pitch
+    out MathQuaternionToRotator_1_1.Result.Yaw : Float (double-precision) -> N12.MathQuaternionFromRotator_1_1.Value.Yaw
+    out MathQuaternionToRotator_1_1.Result.Roll : Float (double-precision) -> N7.MathFloatAdd_1_1.A
+    in  MathQuaternionToRotator_1_1.Value : Quat Structure <- N4.GetTransform_6.Transform.Rotation
+
+[N7] Add (ControlRigGraphNode)
+    out MathFloatAdd_1_1.Result : Float (single-precision) -> N12.MathQuaternionFromRotator_1_1.Value.Roll
+    in  MathFloatAdd_1_1.A : Float (single-precision) <- N6.MathQuaternionToRotator_1_1.Result.Roll
+    in  MathFloatAdd_1_1.B : Float (single-precision) = 180.000000
+
+[N8]  (ControlRigGraphNode)
+
+[N9]  (ControlRigGraphNode)
+
+[N10] Get Negative Side (ControlRigGraphNode)
+
+[N11] Comment (EdGraphNode_Comment)
+    // Negative Side
+
+[N12] From Rotator (ControlRigGraphNode)
+    in  MathQuaternionFromRotator_1_1.Value.Pitch : Float (double-precision) <- N6.MathQuaternionToRotator_1_1.Result.Pitch
+    in  MathQuaternionFromRotator_1_1.Value.Yaw : Float (double-precision) <- N6.MathQuaternionToRotator_1_1.Result.Yaw
+    in  MathQuaternionFromRotator_1_1.Value.Roll : Float (double-precision) <- N7.MathFloatAdd_1_1.Result
+
+[N13] Get Fingers Bones (ControlRigGraphNode)
+

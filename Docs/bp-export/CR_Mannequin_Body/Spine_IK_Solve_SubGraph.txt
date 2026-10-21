@@ -1,0 +1,207 @@
+Graph: Spine IK Solve_SubGraph
+
+[N0] Entry (ControlRigGraphNode)
+    out Entry.Completed : Execute Context Structure -> N39.SequenceExecution.ExecuteContext
+
+[N1] Return (ControlRigGraphNode)
+    in  Return.Completed : Execute Context Structure <- N39.SequenceExecution.D
+
+[N2] Transform From Spline (with UpVector) (ControlRigGraphNode)
+    out TransformFromControlRigSpline.Transform : Transform -> N14.MathTransformMakeAbsolute.Parent
+    in  TransformFromControlRigSpline.Spline : Control Rig Spline Structure <- N5.Spline From Element.Spline
+    in  TransformFromControlRigSpline.UpVector : Vector <- N6.UpVector.Up Vector
+    in  TransformFromControlRigSpline.UpVector.X : Float (double-precision) = 0.000000
+    in  TransformFromControlRigSpline.UpVector.Y : Float (double-precision) = 0.000000
+    in  TransformFromControlRigSpline.UpVector.Z : Float (double-precision) = 1.000000
+    in  TransformFromControlRigSpline.Roll : Float (single-precision) = 0.000000
+    in  TransformFromControlRigSpline.U : Float (single-precision) <- N34.MathFloatMul.Result
+
+[N3]  (ControlRigGraphNode)
+
+[N4] Set Transform - Bone (ControlRigGraphNode)
+    in  SetTransform_1.ExecuteContext : Execute Context Structure = ()
+    in  SetTransform_1.Item.Type : ERigElementType Enum = Bone
+    in  SetTransform_1.Item.Name : Name = None
+    in  SetTransform_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTransform_1.Value.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetTransform_1.Value.Translation.X : Float (double-precision) = 0.000000
+    in  SetTransform_1.Value.Translation.Y : Float (double-precision) = 0.000000
+    in  SetTransform_1.Value.Translation.Z : Float (double-precision) = 0.000000
+    in  SetTransform_1.Value.Scale3D.X : Float (double-precision) = 1.000000
+    in  SetTransform_1.Value.Scale3D.Y : Float (double-precision) = 1.000000
+    in  SetTransform_1.Value.Scale3D.Z : Float (double-precision) = 1.000000
+    in  SetTransform_1.Weight : Float (single-precision) = 1.000000
+    in  SetTransform_1.bPropagateToChildren : Boolean = True
+
+[N5] Spline From Element (ControlRigGraphNode)
+    out Spline From Element.Spline : Control Rig Spline Structure -> N2.TransformFromControlRigSpline.Spline, N32.GetLengthControlRigSpline.Spline
+    in  Spline From Element.Items : Array of Rig Element Key Structures <- N16.VariableNode_1.Value
+
+[N6] UpVector (ControlRigGraphNode)
+    out UpVector.Up Vector : Vector -> N2.TransformFromControlRigSpline.UpVector
+    in  UpVector.Start.Type : ERigElementType Enum = Bone
+    in  UpVector.Start.Name : Name = None
+    in  UpVector.End.Type : ERigElementType Enum = Bone
+    in  UpVector.End.Name : Name = None
+
+[N7]  (ControlRigGraphNode)
+
+[N8]  (ControlRigGraphNode)
+
+[N9] Project to new Parent (ControlRigGraphNode)
+    in  ProjectTransformToNewParent_1_2_1_4_2.Child.Type : ERigElementType Enum = Bone
+    in  ProjectTransformToNewParent_1_2_1_4_2.Child.Name : Name = spine_01
+    in  ProjectTransformToNewParent_1_2_1_4_2.bChildInitial : Boolean = True
+    in  ProjectTransformToNewParent_1_2_1_4_2.OldParent.Type : ERigElementType Enum = Control
+    in  ProjectTransformToNewParent_1_2_1_4_2.OldParent.Name : Name = hips_ctrl
+    in  ProjectTransformToNewParent_1_2_1_4_2.bOldParentInitial : Boolean = True
+    in  ProjectTransformToNewParent_1_2_1_4_2.NewParent.Type : ERigElementType Enum = Control
+    in  ProjectTransformToNewParent_1_2_1_4_2.NewParent.Name : Name = hips_ctrl
+
+[N10]  (ControlRigGraphNode)
+
+[N11]  (ControlRigGraphNode)
+
+[N12] Is First or Last (ControlRigGraphNode)
+
+[N13]  (ControlRigGraphNode)
+
+[N14] Make Absolute (ControlRigGraphNode)
+    in  MathTransformMakeAbsolute.Local.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformMakeAbsolute.Local.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformMakeAbsolute.Local.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformMakeAbsolute.Local.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformMakeAbsolute.Local.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformMakeAbsolute.Local.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformMakeAbsolute.Local.Scale3D.Z : Float (double-precision) = 1.000000
+    in  MathTransformMakeAbsolute.Parent : Transform <- N2.TransformFromControlRigSpline.Transform
+    in  MathTransformMakeAbsolute.Parent.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  MathTransformMakeAbsolute.Parent.Translation.X : Float (double-precision) = 0.000000
+    in  MathTransformMakeAbsolute.Parent.Translation.Y : Float (double-precision) = 0.000000
+    in  MathTransformMakeAbsolute.Parent.Translation.Z : Float (double-precision) = 0.000000
+    in  MathTransformMakeAbsolute.Parent.Scale3D.X : Float (double-precision) = 1.000000
+    in  MathTransformMakeAbsolute.Parent.Scale3D.Y : Float (double-precision) = 1.000000
+    in  MathTransformMakeAbsolute.Parent.Scale3D.Z : Float (double-precision) = 1.000000
+
+[N15] Get Bones (ControlRigGraphNode)
+
+[N16] Get IK Controls (ControlRigGraphNode)
+    out VariableNode_1.Value : Array of Rig Element Key Structures -> N5.Spline From Element.Items
+
+[N17] Get IK Controls (ControlRigGraphNode)
+
+[N18] Get Spine Offsets (ControlRigGraphNode)
+
+[N19]  (ControlRigGraphNode)
+
+[N20] Get Bones (ControlRigGraphNode)
+
+[N21] Add (ControlRigGraphNode)
+    in  MathIntAdd.B : Integer = 1
+
+[N22] Get Bones (ControlRigGraphNode)
+
+[N23]  (ControlRigGraphNode)
+
+[N24] Subtract (ControlRigGraphNode)
+    out MathIntSub.Result : Integer -> N40.MathIntEquals.B
+    in  MathIntSub.B : Integer = 1
+
+[N25]  (ControlRigGraphNode)
+
+[N26] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform.Transform : Transform -> N28.AimBoneMath.InputTransform
+    in  GetTransform.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform.Item.Name : Name = None
+    in  GetTransform.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N27] Set Transform - Bone (ControlRigGraphNode)
+    in  SetTransform.ExecuteContext : Execute Context Structure = ()
+    in  SetTransform.Item.Type : ERigElementType Enum = Bone
+    in  SetTransform.Item.Name : Name = None
+    in  SetTransform.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTransform.Value : Transform <- N28.AimBoneMath.Result
+    in  SetTransform.Value.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetTransform.Value.Translation.X : Float (double-precision) = 0.000000
+    in  SetTransform.Value.Translation.Y : Float (double-precision) = 0.000000
+    in  SetTransform.Value.Translation.Z : Float (double-precision) = 0.000000
+    in  SetTransform.Value.Scale3D.X : Float (double-precision) = 1.000000
+    in  SetTransform.Value.Scale3D.Y : Float (double-precision) = 1.000000
+    in  SetTransform.Value.Scale3D.Z : Float (double-precision) = 1.000000
+    in  SetTransform.Weight : Float (single-precision) = 1.000000
+    in  SetTransform.bPropagateToChildren : Boolean = false
+
+[N28] Aim Math (ControlRigGraphNode)
+    out AimBoneMath.Result : Transform -> N27.SetTransform.Value
+    in  AimBoneMath.InputTransform : Transform <- N26.GetTransform.Transform
+    in  AimBoneMath.InputTransform.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  AimBoneMath.InputTransform.Translation.X : Float (double-precision) = 0.000000
+    in  AimBoneMath.InputTransform.Translation.Y : Float (double-precision) = 0.000000
+    in  AimBoneMath.InputTransform.Translation.Z : Float (double-precision) = 0.000000
+    in  AimBoneMath.InputTransform.Scale3D.X : Float (double-precision) = 1.000000
+    in  AimBoneMath.InputTransform.Scale3D.Y : Float (double-precision) = 1.000000
+    in  AimBoneMath.InputTransform.Scale3D.Z : Float (double-precision) = 1.000000
+    in  AimBoneMath.Primary.Weight : Float (single-precision) = 1.000000
+    in  AimBoneMath.Primary.Axis.X : Float (double-precision) = 1.000000
+    in  AimBoneMath.Primary.Axis.Y : Float (double-precision) = 0.000000
+    in  AimBoneMath.Primary.Axis.Z : Float (double-precision) = 0.000000
+    in  AimBoneMath.Primary.Target.X : Float (double-precision) = 0.000000
+    in  AimBoneMath.Primary.Target.Y : Float (double-precision) = 0.000000
+    in  AimBoneMath.Primary.Target.Z : Float (double-precision) = 0.000000
+    in  AimBoneMath.Primary.Kind : EControlRigVectorKind Enum = Location
+    in  AimBoneMath.Primary.Space.Type : ERigElementType Enum = Bone
+    in  AimBoneMath.Primary.Space.Name : Name = None
+    in  AimBoneMath.Secondary.Weight : Float (single-precision) = 1.000000
+    in  AimBoneMath.Secondary.Axis.X : Float (double-precision) = 0.000000
+    in  AimBoneMath.Secondary.Axis.Y : Float (double-precision) = 0.000000
+    in  AimBoneMath.Secondary.Axis.Z : Float (double-precision) = 1.000000
+    in  AimBoneMath.Secondary.Target.X : Float (double-precision) = 0.000000
+    in  AimBoneMath.Secondary.Target.Y : Float (double-precision) = 0.000000
+    in  AimBoneMath.Secondary.Target.Z : Float (double-precision) = 1.000000
+    in  AimBoneMath.Secondary.Kind : EControlRigVectorKind Enum = Direction
+    in  AimBoneMath.Secondary.Space.Type : ERigElementType Enum = Bone
+    in  AimBoneMath.Secondary.Space.Name : Name = None
+    in  AimBoneMath.Weight : Float (single-precision) = 1.000000
+
+[N29] Comment (EdGraphNode_Comment)
+    // Spline
+
+[N30] Comment (EdGraphNode_Comment)
+    // Transforms Point At Next
+
+[N31] Get Default Length (ControlRigGraphNode)
+    out VariableNode_5.Value : Float (double-precision) -> N33.MathFloatDiv.A
+
+[N32] Get Length Of Spline (ControlRigGraphNode)
+    out GetLengthControlRigSpline.Length : Float (single-precision) -> N33.MathFloatDiv.B
+    in  GetLengthControlRigSpline.Spline : Control Rig Spline Structure <- N5.Spline From Element.Spline
+
+[N33] Divide (ControlRigGraphNode)
+    out MathFloatDiv.Result : Float (single-precision) -> N35.MathFloatMin.A
+    in  MathFloatDiv.A : Float (single-precision) <- N31.VariableNode_5.Value
+    in  MathFloatDiv.B : Float (single-precision) <- N32.GetLengthControlRigSpline.Length
+
+[N34] Multiply (ControlRigGraphNode)
+    out MathFloatMul.Result : Float (single-precision) -> N2.TransformFromControlRigSpline.U
+    in  MathFloatMul.A : Float (single-precision) = 1.000000
+    in  MathFloatMul.B : Float (single-precision) = 1.000000
+
+[N35] Minimum (ControlRigGraphNode)
+    in  MathFloatMin.A : Float (single-precision) <- N33.MathFloatDiv.Result
+    in  MathFloatMin.B : Float (single-precision) = 1.000000
+
+[N36]  (ControlRigGraphNode)
+
+[N37] Get Enable Stretch (ControlRigGraphNode)
+
+[N38] Comment (EdGraphNode_Comment)
+    // Stretch
+
+[N39] Sequence (ControlRigGraphNode)
+    out SequenceExecution.D : Execute Context Structure -> N1.Return.Completed
+    in  SequenceExecution.ExecuteContext : Execute Context Structure <- N0.Entry.Completed
+
+[N40] Equals (ControlRigGraphNode)
+    in  MathIntEquals.A : Integer = 0
+    in  MathIntEquals.B : Integer <- N24.MathIntSub.Result
+

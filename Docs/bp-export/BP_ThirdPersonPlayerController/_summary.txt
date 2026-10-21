@@ -14,6 +14,7 @@ Parent: /Script/BochaNet.BochaPlayerController
     BochaStrengthAction = /Script/EnhancedInput.InputAction'/Game/Bocha/Input/IA_BochaStrength.IA_BochaStrength'
     BochaThrowAction = /Script/EnhancedInput.InputAction'/Game/Bocha/Input/IA_BochaThrow.IA_BochaThrow'
     BochaAimMouseAction = /Script/EnhancedInput.InputAction'/Game/Bocha/Input/IA_BochaAimMouse.IA_BochaAimMouse'
+    BochaPauseAction = /Script/EnhancedInput.InputAction'/Game/Bocha/Input/IA_BochaPause.IA_BochaPause'
     BolimClass = /Script/Engine.BlueprintGeneratedClass'/Game/Bocha/Actors/ABolim.ABolim_C'
     BochaClass = /Script/Engine.BlueprintGeneratedClass'/Game/Bocha/Actors/ABocha.ABocha_C'
     TransformComponent = /Script/Engine.SceneComponent'/Game/ThirdPerson/Blueprints/BP_ThirdPersonPlayerController.Default__BP_ThirdPersonPlayerController_C:TransformComponent0'

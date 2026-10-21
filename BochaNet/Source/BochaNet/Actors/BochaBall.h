@@ -15,7 +15,13 @@ class BOCHANET_API ABochaBall : public AActor
 public:
 	ABochaBall();
 
+	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void Tick(float DeltaSeconds) override;
+
+	/** Every ball, on every machine, as it enters and leaves play (filter by world). */
+	static TMulticastDelegate<void(ABochaBall*)> OnBallBeginPlay;
+	static TMulticastDelegate<void(ABochaBall*)> OnBallEndPlay;
 
 	UStaticMeshComponent* GetSphere() const { return Sphere; }
 

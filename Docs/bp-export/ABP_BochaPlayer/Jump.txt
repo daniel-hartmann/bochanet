@@ -1,0 +1,8 @@
+Graph: Jump
+
+[N0] Output Animation Pose (AnimGraphNode_StateResult)
+    in  Result : Pose Link Structure <- N1.Pose
+
+[N1] Sequence Player 'MM_Jump' (AnimGraphNode_SequencePlayer)
+    out Pose : Pose Link Structure -> N0.Result
+

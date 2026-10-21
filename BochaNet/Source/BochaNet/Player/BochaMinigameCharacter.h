@@ -5,6 +5,9 @@
 #include "BochaMinigameCharacter.generated.h"
 
 class ABochaMinigameManager;
+class UAnimInstance;
+class UAnimMontage;
+class USkeletalMesh;
 class UCameraComponent;
 class UInputMappingContext;
 class USpringArmComponent;
@@ -38,9 +41,19 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Bocha")
 	void DoStrength(float Delta);
 
-	/** Throws the held ball, if the match gave one (only on the local player's turn). */
+	/**
+	 * Starts the throw of the held ball, if the match gave one (only on the local player's turn):
+	 * plays ThrowMontage, whose "Soltar Bola" notify calls ReleaseBall.
+	 */
 	UFUNCTION(BlueprintCallable, Category = "Bocha")
 	void DoThrow();
+
+	/** Lets go of the held ball, in the direction and with the strength of this moment. */
+	UFUNCTION(BlueprintCallable, Category = "Bocha")
+	void ReleaseBall();
+
+	/** Dresses the character for its team: Manny for red (0), Quinn for blue (1). */
+	void SetTeam(int32 Team);
 
 	float GetThrowStrength() const { return ThrowStrength; }
 
@@ -64,6 +77,19 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UUserWidget> MinimapWidgetClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	TObjectPtr<USkeletalMesh> RedMesh;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	TObjectPtr<USkeletalMesh> BlueMesh;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	TSubclassOf<UAnimInstance> AnimClass;
+
+	/** Throw gesture; without it (or without a mesh) the ball leaves right away. */
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	TObjectPtr<UAnimMontage> ThrowMontage;
+
 	/** Launch speed (cm/s), within the HUD's strength range. 750 rolls a ball ~13 m. */
 	UPROPERTY(EditDefaultsOnly, Category = "Bocha")
 	float ThrowStrength = 750.f;
@@ -85,6 +111,13 @@ private:
 	void SendThrow(const FVector& Velocity);
 
 	void TurnAim(float DeltaYaw);
+
+	/** Safety net: if the montage ends before its notify (interrupted), the ball still leaves. */
+	UFUNCTION()
+	void OnThrowMontageEnded(UAnimMontage* Montage, bool bInterrupted);
+
+	bool bThrowing = false;
+	int32 DressedTeam = INDEX_NONE;
 
 	UPROPERTY(Transient)
 	TObjectPtr<UUserWidget> Minimap;

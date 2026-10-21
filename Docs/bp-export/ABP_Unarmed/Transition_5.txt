@@ -1,0 +1,12 @@
+Graph: Transition
+
+[N0] Result (AnimGraphNode_TransitionResult)
+    in  bCanEnterTransition : Boolean <- N2.ReturnValue
+
+[N1] Get IsFalling (K2Node_VariableGet)
+    out IsFalling : Boolean -> N2.A
+
+[N2] NOT Boolean (K2Node_CallFunction)
+    in  A : Boolean <- N1.IsFalling
+    out ReturnValue : Boolean -> N0.bCanEnterTransition
+

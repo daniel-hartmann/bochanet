@@ -1,0 +1,491 @@
+Graph: Forward Foot
+
+[N0] Entry (ControlRigGraphNode)
+    out Entry.ExecuteContext : Execute Context Structure -> N60.VariableNode_10.ExecuteContext
+
+[N1] Return (ControlRigGraphNode)
+    in  Return.ExecuteContext : Execute Context Structure <- N48.SetTransform_1.ExecuteContext
+
+[N2] Set Rotation - Bone (ControlRigGraphNode)
+    in  SetTransform_13.ExecuteContext : Execute Context Structure = ()
+    out SetTransform_13.ExecuteContext : Execute Context Structure -> N66.OffsetTransformForItem.ExecuteContext
+    in  SetTransform_13.Item : Rig Element Key Structure <- N8.VariableNode.Value
+    in  SetTransform_13.Item.Type : ERigElementType Enum = Bone
+    in  SetTransform_13.Item.Name : Name = ball_l
+    in  SetTransform_13.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTransform_13.bInitial : Boolean = False
+    in  SetTransform_13.Value : Quat Structure <- N3.ProjectTransformToNewParent_3_1.Transform.Rotation
+    in  SetTransform_13.Weight : Float (single-precision) = 1.000000
+    in  SetTransform_13.bPropagateToChildren : Boolean = True
+
+[N3] Project to new Parent (ControlRigGraphNode)
+    out ProjectTransformToNewParent_3_1.Transform.Rotation : Quat Structure -> N2.SetTransform_13.Value
+    in  ProjectTransformToNewParent_3_1.Child : Rig Element Key Structure <- N8.VariableNode.Value
+    in  ProjectTransformToNewParent_3_1.Child.Type : ERigElementType Enum = Bone
+    in  ProjectTransformToNewParent_3_1.Child.Name : Name = ball_l
+    in  ProjectTransformToNewParent_3_1.bChildInitial : Boolean = True
+    in  ProjectTransformToNewParent_3_1.OldParent : Rig Element Key Structure <- N9.VariableNode_1.Value
+    in  ProjectTransformToNewParent_3_1.OldParent.Type : ERigElementType Enum = Control
+    in  ProjectTransformToNewParent_3_1.OldParent.Name : Name = ball_l_ik_ctrl
+    in  ProjectTransformToNewParent_3_1.bOldParentInitial : Boolean = True
+    in  ProjectTransformToNewParent_3_1.NewParent : Rig Element Key Structure <- N9.VariableNode_1.Value
+    in  ProjectTransformToNewParent_3_1.NewParent.Type : ERigElementType Enum = Control
+    in  ProjectTransformToNewParent_3_1.NewParent.Name : Name = ball_l_ik_ctrl
+
+[N4] Get IKFK Switch Control (ControlRigGraphNode)
+    out VariableNode_15_1.Value : Rig Element Key Structure -> N5.GetTransform_1_1.Item
+
+[N5] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_1_1.Transform.Translation.X : Float (double-precision) -> N6.MathFloatGreater_1.A
+    in  GetTransform_1_1.Item : Rig Element Key Structure <- N4.VariableNode_15_1.Value
+    in  GetTransform_1_1.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_1_1.Item.Name : Name = None
+    in  GetTransform_1_1.Space : ERigVMTransformSpace Enum = LocalSpace
+
+[N6] Greater (ControlRigGraphNode)
+    out MathFloatGreater_1.Result : Boolean -> N60.VariableNode_10.Value
+    in  MathFloatGreater_1.A : Float (single-precision) <- N5.GetTransform_1_1.Transform.Translation.X
+    in  MathFloatGreater_1.B : Float (single-precision) = 0.500000
+
+[N7]  (ControlRigGraphNode)
+
+[N8] Get Bone (ControlRigGraphNode)
+    out VariableNode.Value : Rig Element Key Structure -> N3.ProjectTransformToNewParent_3_1.Child, N66.OffsetTransformForItem.Item, N2.SetTransform_13.Item, N67.GetTransform.Item
+
+[N9] Get IK Control (ControlRigGraphNode)
+    out VariableNode_1.Value : Rig Element Key Structure -> N3.ProjectTransformToNewParent_3_1.OldParent, N3.ProjectTransformToNewParent_3_1.NewParent, N70.GetTransform_1.Item, N72.GetTransform_1_3.Item
+
+[N10] Comment (EdGraphNode_Comment)
+    // IK
+
+[N11] Get Bone (ControlRigGraphNode)
+    out VariableNode_2.Value : Rig Element Key Structure -> N12.ProjectTransformToNewParent_3_1_1.Child, N14.SetTransform_13_1.Item
+
+[N12] Project to new Parent (ControlRigGraphNode)
+    out ProjectTransformToNewParent_3_1_1.Transform : Transform -> N14.SetTransform_13_1.Value
+    in  ProjectTransformToNewParent_3_1_1.Child : Rig Element Key Structure <- N11.VariableNode_2.Value
+    in  ProjectTransformToNewParent_3_1_1.Child.Type : ERigElementType Enum = Bone
+    in  ProjectTransformToNewParent_3_1_1.Child.Name : Name = ball_l
+    in  ProjectTransformToNewParent_3_1_1.bChildInitial : Boolean = True
+    in  ProjectTransformToNewParent_3_1_1.OldParent : Rig Element Key Structure <- N13.VariableNode_4.Value
+    in  ProjectTransformToNewParent_3_1_1.OldParent.Type : ERigElementType Enum = Control
+    in  ProjectTransformToNewParent_3_1_1.OldParent.Name : Name = ball_l_ik_ctrl
+    in  ProjectTransformToNewParent_3_1_1.bOldParentInitial : Boolean = True
+    in  ProjectTransformToNewParent_3_1_1.NewParent : Rig Element Key Structure <- N13.VariableNode_4.Value
+    in  ProjectTransformToNewParent_3_1_1.NewParent.Type : ERigElementType Enum = Control
+    in  ProjectTransformToNewParent_3_1_1.NewParent.Name : Name = ball_l_ik_ctrl
+
+[N13] Get FK Control (ControlRigGraphNode)
+    out VariableNode_4.Value : Rig Element Key Structure -> N12.ProjectTransformToNewParent_3_1_1.OldParent, N12.ProjectTransformToNewParent_3_1_1.NewParent
+
+[N14] Set Transform - Bone (ControlRigGraphNode)
+    in  SetTransform_13_1.ExecuteContext : Execute Context Structure = ()
+    out SetTransform_13_1.ExecuteContext : Execute Context Structure -> N19.SetTransform_13_1_1.ExecuteContext
+    in  SetTransform_13_1.Item : Rig Element Key Structure <- N11.VariableNode_2.Value
+    in  SetTransform_13_1.Item.Type : ERigElementType Enum = Bone
+    in  SetTransform_13_1.Item.Name : Name = ball_l
+    in  SetTransform_13_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTransform_13_1.Value : Transform <- N12.ProjectTransformToNewParent_3_1_1.Transform
+    in  SetTransform_13_1.Value.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetTransform_13_1.Value.Translation.X : Float (double-precision) = 0.000000
+    in  SetTransform_13_1.Value.Translation.Y : Float (double-precision) = 0.000000
+    in  SetTransform_13_1.Value.Translation.Z : Float (double-precision) = 0.000000
+    in  SetTransform_13_1.Value.Scale3D.X : Float (double-precision) = 1.000000
+    in  SetTransform_13_1.Value.Scale3D.Y : Float (double-precision) = 1.000000
+    in  SetTransform_13_1.Value.Scale3D.Z : Float (double-precision) = 1.000000
+    in  SetTransform_13_1.Weight : Float (single-precision) = 1.000000
+    in  SetTransform_13_1.bPropagateToChildren : Boolean = True
+
+[N15] Comment (EdGraphNode_Comment)
+    // FK
+
+[N16] Project to new Parent (ControlRigGraphNode)
+    out ProjectTransformToNewParent_3_1_1_1.Transform : Transform -> N19.SetTransform_13_1_1.Value
+    in  ProjectTransformToNewParent_3_1_1_1.Child : Rig Element Key Structure <- N17.VariableNode_1_1.Value
+    in  ProjectTransformToNewParent_3_1_1_1.Child.Type : ERigElementType Enum = Bone
+    in  ProjectTransformToNewParent_3_1_1_1.Child.Name : Name = ball_l
+    in  ProjectTransformToNewParent_3_1_1_1.bChildInitial : Boolean = True
+    in  ProjectTransformToNewParent_3_1_1_1.OldParent : Rig Element Key Structure <- N18.VariableNode_2_1.Value
+    in  ProjectTransformToNewParent_3_1_1_1.OldParent.Type : ERigElementType Enum = Control
+    in  ProjectTransformToNewParent_3_1_1_1.OldParent.Name : Name = ball_l_ik_ctrl
+    in  ProjectTransformToNewParent_3_1_1_1.bOldParentInitial : Boolean = True
+    in  ProjectTransformToNewParent_3_1_1_1.NewParent : Rig Element Key Structure <- N18.VariableNode_2_1.Value
+    in  ProjectTransformToNewParent_3_1_1_1.NewParent.Type : ERigElementType Enum = Control
+    in  ProjectTransformToNewParent_3_1_1_1.NewParent.Name : Name = ball_l_ik_ctrl
+
+[N17] Get IK Control (ControlRigGraphNode)
+    out VariableNode_1_1.Value : Rig Element Key Structure -> N16.ProjectTransformToNewParent_3_1_1_1.Child, N19.SetTransform_13_1_1.Item
+
+[N18] Get Bone (ControlRigGraphNode)
+    out VariableNode_2_1.Value : Rig Element Key Structure -> N16.ProjectTransformToNewParent_3_1_1_1.OldParent, N16.ProjectTransformToNewParent_3_1_1_1.NewParent
+
+[N19] Set Transform - Bone (ControlRigGraphNode)
+    in  SetTransform_13_1_1.ExecuteContext : Execute Context Structure <- N14.SetTransform_13_1.ExecuteContext
+    in  SetTransform_13_1_1.Item : Rig Element Key Structure <- N17.VariableNode_1_1.Value
+    in  SetTransform_13_1_1.Item.Type : ERigElementType Enum = Bone
+    in  SetTransform_13_1_1.Item.Name : Name = ball_l
+    in  SetTransform_13_1_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTransform_13_1_1.Value : Transform <- N16.ProjectTransformToNewParent_3_1_1_1.Transform
+    in  SetTransform_13_1_1.Value.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetTransform_13_1_1.Value.Translation.X : Float (double-precision) = 0.000000
+    in  SetTransform_13_1_1.Value.Translation.Y : Float (double-precision) = 0.000000
+    in  SetTransform_13_1_1.Value.Translation.Z : Float (double-precision) = 0.000000
+    in  SetTransform_13_1_1.Value.Scale3D.X : Float (double-precision) = 1.000000
+    in  SetTransform_13_1_1.Value.Scale3D.Y : Float (double-precision) = 1.000000
+    in  SetTransform_13_1_1.Value.Scale3D.Z : Float (double-precision) = 1.000000
+    in  SetTransform_13_1_1.Weight : Float (single-precision) = 1.000000
+    in  SetTransform_13_1_1.bPropagateToChildren : Boolean = True
+
+[N20] Comment (EdGraphNode_Comment)
+    // Match Ik onto FK
+
+[N21] Comment (EdGraphNode_Comment)
+    // Set Keys
+
+[N22]  (ControlRigGraphNode)
+
+[N23] Get IK Mode (ControlRigGraphNode)
+
+[N24] Set IK Mode (ControlRigGraphNode)
+    in  VariableNode_13_1_1.ExecuteContext : Execute Context Structure <- N27.SendEvent_2_1_1.ExecuteContext
+    in  VariableNode_13_1_1.Value : Boolean = True
+
+[N25] Send Event (ControlRigGraphNode)
+    in  SendEvent_2_1.ExecuteContext : Execute Context Structure = ()
+    out SendEvent_2_1.ExecuteContext : Execute Context Structure -> N27.SendEvent_2_1_1.ExecuteContext
+    in  SendEvent_2_1.Event : ERigEvent Enum = RequestAutoKey
+    in  SendEvent_2_1.Item : Rig Element Key Structure <- N26.VariableNode_3_1.Value
+    in  SendEvent_2_1.Item.Type : ERigElementType Enum = None
+    in  SendEvent_2_1.Item.Name : Name = None
+    in  SendEvent_2_1.bEnable : Boolean = True
+    in  SendEvent_2_1.bOnlyDuringInteraction : Boolean = True
+
+[N26] Get IK Control (ControlRigGraphNode)
+    out VariableNode_3_1.Value : Rig Element Key Structure -> N25.SendEvent_2_1.Item
+
+[N27] Send Event (ControlRigGraphNode)
+    in  SendEvent_2_1_1.ExecuteContext : Execute Context Structure <- N25.SendEvent_2_1.ExecuteContext
+    out SendEvent_2_1_1.ExecuteContext : Execute Context Structure -> N24.VariableNode_13_1_1.ExecuteContext
+    in  SendEvent_2_1_1.Event : ERigEvent Enum = RequestAutoKey
+    in  SendEvent_2_1_1.Item : Rig Element Key Structure <- N28.VariableNode_5.Value
+    in  SendEvent_2_1_1.Item.Type : ERigElementType Enum = None
+    in  SendEvent_2_1_1.Item.Name : Name = None
+    in  SendEvent_2_1_1.bEnable : Boolean = True
+    in  SendEvent_2_1_1.bOnlyDuringInteraction : Boolean = True
+
+[N28] Get FK Control (ControlRigGraphNode)
+    out VariableNode_5.Value : Rig Element Key Structure -> N27.SendEvent_2_1_1.Item
+
+[N29]  (ControlRigGraphNode)
+
+[N30] Get IK Mode (ControlRigGraphNode)
+
+[N31] Send Event (ControlRigGraphNode)
+    in  SendEvent_2_1_2.ExecuteContext : Execute Context Structure = ()
+    out SendEvent_2_1_2.ExecuteContext : Execute Context Structure -> N33.SendEvent_2_1_1_1.ExecuteContext
+    in  SendEvent_2_1_2.Event : ERigEvent Enum = RequestAutoKey
+    in  SendEvent_2_1_2.Item : Rig Element Key Structure <- N32.VariableNode_3_1_1.Value
+    in  SendEvent_2_1_2.Item.Type : ERigElementType Enum = None
+    in  SendEvent_2_1_2.Item.Name : Name = None
+    in  SendEvent_2_1_2.bEnable : Boolean = True
+    in  SendEvent_2_1_2.bOnlyDuringInteraction : Boolean = True
+
+[N32] Get IK Control (ControlRigGraphNode)
+    out VariableNode_3_1_1.Value : Rig Element Key Structure -> N31.SendEvent_2_1_2.Item
+
+[N33] Send Event (ControlRigGraphNode)
+    in  SendEvent_2_1_1_1.ExecuteContext : Execute Context Structure <- N31.SendEvent_2_1_2.ExecuteContext
+    out SendEvent_2_1_1_1.ExecuteContext : Execute Context Structure -> N36.VariableNode_13_1_1_1.ExecuteContext
+    in  SendEvent_2_1_1_1.Event : ERigEvent Enum = RequestAutoKey
+    in  SendEvent_2_1_1_1.Item : Rig Element Key Structure <- N34.VariableNode_5_1.Value
+    in  SendEvent_2_1_1_1.Item.Type : ERigElementType Enum = None
+    in  SendEvent_2_1_1_1.Item.Name : Name = None
+    in  SendEvent_2_1_1_1.bEnable : Boolean = True
+    in  SendEvent_2_1_1_1.bOnlyDuringInteraction : Boolean = True
+
+[N34] Get FK Control (ControlRigGraphNode)
+    out VariableNode_5_1.Value : Rig Element Key Structure -> N33.SendEvent_2_1_1_1.Item
+
+[N35] Comment (EdGraphNode_Comment)
+    // Set Keys
+
+[N36] Set IK Mode (ControlRigGraphNode)
+    in  VariableNode_13_1_1_1.ExecuteContext : Execute Context Structure <- N33.SendEvent_2_1_1_1.ExecuteContext
+    in  VariableNode_13_1_1_1.Value : Boolean = True
+
+[N37] Comment (EdGraphNode_Comment)
+    // Match Ik onto FK
+
+[N38] Project to new Parent (ControlRigGraphNode)
+    out ProjectTransformToNewParent_3_1_1_1_1.Transform : Transform -> N40.SetTransform_13_1_1_1.Value
+    in  ProjectTransformToNewParent_3_1_1_1_1.Child : Rig Element Key Structure <- N41.VariableNode_3.Value
+    in  ProjectTransformToNewParent_3_1_1_1_1.Child.Type : ERigElementType Enum = Bone
+    in  ProjectTransformToNewParent_3_1_1_1_1.Child.Name : Name = ball_l
+    in  ProjectTransformToNewParent_3_1_1_1_1.bChildInitial : Boolean = True
+    in  ProjectTransformToNewParent_3_1_1_1_1.OldParent : Rig Element Key Structure <- N39.VariableNode_2_1_1.Value
+    in  ProjectTransformToNewParent_3_1_1_1_1.OldParent.Type : ERigElementType Enum = Control
+    in  ProjectTransformToNewParent_3_1_1_1_1.OldParent.Name : Name = ball_l_ik_ctrl
+    in  ProjectTransformToNewParent_3_1_1_1_1.bOldParentInitial : Boolean = True
+    in  ProjectTransformToNewParent_3_1_1_1_1.NewParent : Rig Element Key Structure <- N39.VariableNode_2_1_1.Value
+    in  ProjectTransformToNewParent_3_1_1_1_1.NewParent.Type : ERigElementType Enum = Control
+    in  ProjectTransformToNewParent_3_1_1_1_1.NewParent.Name : Name = ball_l_ik_ctrl
+
+[N39] Get Bone (ControlRigGraphNode)
+    out VariableNode_2_1_1.Value : Rig Element Key Structure -> N38.ProjectTransformToNewParent_3_1_1_1_1.OldParent, N38.ProjectTransformToNewParent_3_1_1_1_1.NewParent
+
+[N40] Set Transform - Bone (ControlRigGraphNode)
+    in  SetTransform_13_1_1_1.ExecuteContext : Execute Context Structure <- N66.OffsetTransformForItem.ExecuteContext
+    in  SetTransform_13_1_1_1.Item : Rig Element Key Structure <- N41.VariableNode_3.Value
+    in  SetTransform_13_1_1_1.Item.Type : ERigElementType Enum = Bone
+    in  SetTransform_13_1_1_1.Item.Name : Name = ball_l
+    in  SetTransform_13_1_1_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTransform_13_1_1_1.Value : Transform <- N38.ProjectTransformToNewParent_3_1_1_1_1.Transform
+    in  SetTransform_13_1_1_1.Value.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetTransform_13_1_1_1.Value.Translation.X : Float (double-precision) = 0.000000
+    in  SetTransform_13_1_1_1.Value.Translation.Y : Float (double-precision) = 0.000000
+    in  SetTransform_13_1_1_1.Value.Translation.Z : Float (double-precision) = 0.000000
+    in  SetTransform_13_1_1_1.Value.Scale3D.X : Float (double-precision) = 1.000000
+    in  SetTransform_13_1_1_1.Value.Scale3D.Y : Float (double-precision) = 1.000000
+    in  SetTransform_13_1_1_1.Value.Scale3D.Z : Float (double-precision) = 1.000000
+    in  SetTransform_13_1_1_1.Weight : Float (single-precision) = 1.000000
+    in  SetTransform_13_1_1_1.bPropagateToChildren : Boolean = True
+
+[N41] Get FK Control (ControlRigGraphNode)
+    out VariableNode_3.Value : Rig Element Key Structure -> N38.ProjectTransformToNewParent_3_1_1_1_1.Child, N40.SetTransform_13_1_1_1.Item
+
+[N42] Set Control Visibility (ControlRigGraphNode)
+    in  SetControlVisibility_4.ExecuteContext : Execute Context Structure <- N47.SetControlVisibility_4_1.ExecuteContext
+    in  SetControlVisibility_4.Item : Rig Element Key Structure <- N46.VariableNode_6.Value
+    in  SetControlVisibility_4.Item.Type : ERigElementType Enum = Control
+    in  SetControlVisibility_4.Item.Name : Name = upperarm_l_fk_ctrl
+    in  SetControlVisibility_4.bVisible : Boolean <- N43.MathBoolNot_3.Result
+
+[N43] Not (ControlRigGraphNode)
+    out MathBoolNot_3.Result : Boolean -> N42.SetControlVisibility_4.bVisible
+    in  MathBoolNot_3.Value : Boolean <- N63.VariableNode_13.Value
+
+[N44] Get IK Control (ControlRigGraphNode)
+    out VariableNode_2_2.Value : Rig Element Key Structure -> N47.SetControlVisibility_4_1.Item
+
+[N45] Comment (EdGraphNode_Comment)
+    // Visibility
+
+[N46] Get FK Control (ControlRigGraphNode)
+    out VariableNode_6.Value : Rig Element Key Structure -> N42.SetControlVisibility_4.Item
+
+[N47] Set Control Visibility (ControlRigGraphNode)
+    in  SetControlVisibility_4_1.ExecuteContext : Execute Context Structure <- N64.SequenceExecution.A
+    out SetControlVisibility_4_1.ExecuteContext : Execute Context Structure -> N42.SetControlVisibility_4.ExecuteContext
+    in  SetControlVisibility_4_1.Item : Rig Element Key Structure <- N44.VariableNode_2_2.Value
+    in  SetControlVisibility_4_1.Item.Type : ERigElementType Enum = Control
+    in  SetControlVisibility_4_1.Item.Name : Name = upperarm_l_fk_ctrl
+    in  SetControlVisibility_4_1.bVisible : Boolean <- N63.VariableNode_13.Value
+
+[N48] Set Transform - Bone (ControlRigGraphNode)
+    in  SetTransform_1.ExecuteContext : Execute Context Structure <- N64.SequenceExecution.D
+    out SetTransform_1.ExecuteContext : Execute Context Structure -> N1.Return.ExecuteContext
+    in  SetTransform_1.Item : Rig Element Key Structure <- N50.VariableNode_7.Value
+    in  SetTransform_1.Item.Type : ERigElementType Enum = Bone
+    in  SetTransform_1.Item.Name : Name = None
+    in  SetTransform_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  SetTransform_1.Value : Transform <- N51.ProjectTransformToNewParent.Transform
+    in  SetTransform_1.Value.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  SetTransform_1.Value.Translation.X : Float (double-precision) = 0.000000
+    in  SetTransform_1.Value.Translation.Y : Float (double-precision) = 0.000000
+    in  SetTransform_1.Value.Translation.Z : Float (double-precision) = 0.000000
+    in  SetTransform_1.Value.Scale3D.X : Float (double-precision) = 1.000000
+    in  SetTransform_1.Value.Scale3D.Y : Float (double-precision) = 1.000000
+    in  SetTransform_1.Value.Scale3D.Z : Float (double-precision) = 1.000000
+    in  SetTransform_1.Weight : Float (single-precision) = 1.000000
+    in  SetTransform_1.bPropagateToChildren : Boolean = True
+
+[N49] Comment (EdGraphNode_Comment)
+    // Toes Space
+
+[N50] Get Toes Space (ControlRigGraphNode)
+    out VariableNode_7.Value : Rig Element Key Structure -> N48.SetTransform_1.Item, N51.ProjectTransformToNewParent.Child
+
+[N51] Project to new Parent (ControlRigGraphNode)
+    out ProjectTransformToNewParent.Transform : Transform -> N48.SetTransform_1.Value
+    in  ProjectTransformToNewParent.Child : Rig Element Key Structure <- N50.VariableNode_7.Value
+    in  ProjectTransformToNewParent.Child.Type : ERigElementType Enum = Bone
+    in  ProjectTransformToNewParent.Child.Name : Name = None
+    in  ProjectTransformToNewParent.bChildInitial : Boolean = True
+    in  ProjectTransformToNewParent.OldParent : Rig Element Key Structure <- N52.VariableNode_8.Value
+    in  ProjectTransformToNewParent.OldParent.Type : ERigElementType Enum = Bone
+    in  ProjectTransformToNewParent.OldParent.Name : Name = None
+    in  ProjectTransformToNewParent.bOldParentInitial : Boolean = True
+    in  ProjectTransformToNewParent.NewParent : Rig Element Key Structure <- N52.VariableNode_8.Value
+    in  ProjectTransformToNewParent.NewParent.Type : ERigElementType Enum = Bone
+    in  ProjectTransformToNewParent.NewParent.Name : Name = None
+
+[N52] Get Bone (ControlRigGraphNode)
+    out VariableNode_8.Value : Rig Element Key Structure -> N51.ProjectTransformToNewParent.OldParent, N51.ProjectTransformToNewParent.NewParent
+
+[N53]  (ControlRigGraphNode)
+
+[N54] Comment (EdGraphNode_Comment)
+    // Set Keys
+
+[N55] Send Event (ControlRigGraphNode)
+    in  SendEvent_2_1_4.ExecuteContext : Execute Context Structure = ()
+    out SendEvent_2_1_4.ExecuteContext : Execute Context Structure -> N57.SendEvent_2_1_1_3.ExecuteContext
+    in  SendEvent_2_1_4.Event : ERigEvent Enum = RequestAutoKey
+    in  SendEvent_2_1_4.Item : Rig Element Key Structure <- N56.VariableNode_3_1_2.Value
+    in  SendEvent_2_1_4.Item.Type : ERigElementType Enum = None
+    in  SendEvent_2_1_4.Item.Name : Name = None
+    in  SendEvent_2_1_4.bEnable : Boolean = True
+    in  SendEvent_2_1_4.bOnlyDuringInteraction : Boolean = True
+
+[N56] Get IK Control (ControlRigGraphNode)
+    out VariableNode_3_1_2.Value : Rig Element Key Structure -> N55.SendEvent_2_1_4.Item
+
+[N57] Send Event (ControlRigGraphNode)
+    in  SendEvent_2_1_1_3.ExecuteContext : Execute Context Structure <- N55.SendEvent_2_1_4.ExecuteContext
+    in  SendEvent_2_1_1_3.Event : ERigEvent Enum = RequestAutoKey
+    in  SendEvent_2_1_1_3.Item : Rig Element Key Structure <- N58.VariableNode_5_2.Value
+    in  SendEvent_2_1_1_3.Item.Type : ERigElementType Enum = None
+    in  SendEvent_2_1_1_3.Item.Name : Name = None
+    in  SendEvent_2_1_1_3.bEnable : Boolean = True
+    in  SendEvent_2_1_1_3.bOnlyDuringInteraction : Boolean = True
+
+[N58] Get FK Control (ControlRigGraphNode)
+    out VariableNode_5_2.Value : Rig Element Key Structure -> N57.SendEvent_2_1_1_3.Item
+
+[N59] Get Previous IK Mode (ControlRigGraphNode)
+    out VariableNode_9.Value : Boolean -> N65.MathBoolNotEquals_2_1.A
+
+[N60] Set IK Mode (ControlRigGraphNode)
+    in  VariableNode_10.ExecuteContext : Execute Context Structure <- N0.Entry.ExecuteContext
+    out VariableNode_10.ExecuteContext : Execute Context Structure -> N64.SequenceExecution.ExecuteContext
+    in  VariableNode_10.Value : Boolean <- N6.MathFloatGreater_1.Result
+
+[N61] Get IK Mode (ControlRigGraphNode)
+
+[N62] Get IK Mode (ControlRigGraphNode)
+    out VariableNode_12.Value : Boolean -> N65.MathBoolNotEquals_2_1.B
+
+[N63] Get IK Mode (ControlRigGraphNode)
+    out VariableNode_13.Value : Boolean -> N47.SetControlVisibility_4_1.bVisible, N43.MathBoolNot_3.Value
+
+[N64] Sequence (ControlRigGraphNode)
+    out SequenceExecution.A : Execute Context Structure -> N47.SetControlVisibility_4_1.ExecuteContext
+    out SequenceExecution.D : Execute Context Structure -> N48.SetTransform_1.ExecuteContext
+    in  SequenceExecution.ExecuteContext : Execute Context Structure <- N60.VariableNode_10.ExecuteContext
+
+[N65] Not Equals (ControlRigGraphNode)
+    in  MathBoolNotEquals_2_1.A : Boolean <- N59.VariableNode_9.Value
+    in  MathBoolNotEquals_2_1.B : Boolean <- N62.VariableNode_12.Value
+
+[N66] Offset Transform (ControlRigGraphNode)
+    in  OffsetTransformForItem.ExecuteContext : Execute Context Structure <- N2.SetTransform_13.ExecuteContext
+    out OffsetTransformForItem.ExecuteContext : Execute Context Structure -> N40.SetTransform_13_1_1_1.ExecuteContext
+    in  OffsetTransformForItem.Item : Rig Element Key Structure <- N8.VariableNode.Value
+    in  OffsetTransformForItem.Item.Type : ERigElementType Enum = Bone
+    in  OffsetTransformForItem.Item.Name : Name = None
+    in  OffsetTransformForItem.OffsetTransform.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  OffsetTransformForItem.OffsetTransform.Translation : Vector <- N73.Make Relative_1.Local.Translation
+    in  OffsetTransformForItem.OffsetTransform.Translation.X : Float (double-precision) = 0.000000
+    in  OffsetTransformForItem.OffsetTransform.Translation.Y : Float (double-precision) = 0.000000
+    in  OffsetTransformForItem.OffsetTransform.Translation.Z : Float (double-precision) = 0.000000
+    in  OffsetTransformForItem.OffsetTransform.Scale3D.X : Float (double-precision) = 1.000000
+    in  OffsetTransformForItem.OffsetTransform.Scale3D.Y : Float (double-precision) = 1.000000
+    in  OffsetTransformForItem.OffsetTransform.Scale3D.Z : Float (double-precision) = 1.000000
+    in  OffsetTransformForItem.Weight : Float (single-precision) = 1.000000
+    in  OffsetTransformForItem.bPropagateToChildren : Boolean = True
+
+[N67] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform.Transform : Transform -> N69.Make Relative.Global, N73.Make Relative_1.Parent
+    in  GetTransform.Item : Rig Element Key Structure <- N8.VariableNode.Value
+    in  GetTransform.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform.Item.Name : Name = None
+    in  GetTransform.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N68] Get Transform - Bone (ControlRigGraphNode)
+    in  GetTransform_1_2.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_1_2.Item.Name : Name = None
+    in  GetTransform_1_2.Space : ERigVMTransformSpace Enum = GlobalSpace
+    in  GetTransform_1_2.bInitial : Boolean = false
+
+[N69] Make Relative (ControlRigGraphNode)
+    out Make Relative.Local.Translation : Vector -> N71.Add.A
+    in  Make Relative.Global : Transform <- N67.GetTransform.Transform
+    in  Make Relative.Global.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  Make Relative.Global.Translation.X : Float (double-precision) = 0.000000
+    in  Make Relative.Global.Translation.Y : Float (double-precision) = 0.000000
+    in  Make Relative.Global.Translation.Z : Float (double-precision) = 0.000000
+    in  Make Relative.Global.Scale3D.X : Float (double-precision) = 1.000000
+    in  Make Relative.Global.Scale3D.Y : Float (double-precision) = 1.000000
+    in  Make Relative.Global.Scale3D.Z : Float (double-precision) = 1.000000
+    in  Make Relative.Parent : Transform <- N70.GetTransform_1.Transform
+    in  Make Relative.Parent.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  Make Relative.Parent.Translation.X : Float (double-precision) = 0.000000
+    in  Make Relative.Parent.Translation.Y : Float (double-precision) = 0.000000
+    in  Make Relative.Parent.Translation.Z : Float (double-precision) = 0.000000
+    in  Make Relative.Parent.Scale3D.X : Float (double-precision) = 1.000000
+    in  Make Relative.Parent.Scale3D.Y : Float (double-precision) = 1.000000
+    in  Make Relative.Parent.Scale3D.Z : Float (double-precision) = 1.000000
+
+[N70] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_1.Transform : Transform -> N69.Make Relative.Parent, N74.Make Absolute.Parent
+    in  GetTransform_1.Item : Rig Element Key Structure <- N9.VariableNode_1.Value
+    in  GetTransform_1.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_1.Item.Name : Name = None
+    in  GetTransform_1.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N71] Add (ControlRigGraphNode)
+    out Add.Result : Vector -> N74.Make Absolute.Local.Translation
+    in  Add.A : Vector <- N69.Make Relative.Local.Translation
+    in  Add.A.X : Float (double-precision) = 0.000000
+    in  Add.A.Y : Float (double-precision) = 0.000000
+    in  Add.A.Z : Float (double-precision) = 0.000000
+    in  Add.B : Vector <- N72.GetTransform_1_3.Transform.Translation
+    in  Add.B.X : Float (double-precision) = 0.000000
+    in  Add.B.Y : Float (double-precision) = 0.000000
+    in  Add.B.Z : Float (double-precision) = 0.000000
+
+[N72] Get Transform - Bone (ControlRigGraphNode)
+    out GetTransform_1_3.Transform.Translation : Vector -> N71.Add.B
+    in  GetTransform_1_3.Item : Rig Element Key Structure <- N9.VariableNode_1.Value
+    in  GetTransform_1_3.Item.Type : ERigElementType Enum = Bone
+    in  GetTransform_1_3.Item.Name : Name = None
+    in  GetTransform_1_3.Space : ERigVMTransformSpace Enum = LocalSpace
+
+[N73] Make Relative (ControlRigGraphNode)
+    out Make Relative_1.Local.Translation : Vector -> N66.OffsetTransformForItem.OffsetTransform.Translation
+    in  Make Relative_1.Global : Transform <- N74.Make Absolute.Global
+    in  Make Relative_1.Global.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  Make Relative_1.Global.Translation.X : Float (double-precision) = 0.000000
+    in  Make Relative_1.Global.Translation.Y : Float (double-precision) = 0.000000
+    in  Make Relative_1.Global.Translation.Z : Float (double-precision) = 0.000000
+    in  Make Relative_1.Global.Scale3D.X : Float (double-precision) = 1.000000
+    in  Make Relative_1.Global.Scale3D.Y : Float (double-precision) = 1.000000
+    in  Make Relative_1.Global.Scale3D.Z : Float (double-precision) = 1.000000
+    in  Make Relative_1.Parent : Transform <- N67.GetTransform.Transform
+    in  Make Relative_1.Parent.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  Make Relative_1.Parent.Translation.X : Float (double-precision) = 0.000000
+    in  Make Relative_1.Parent.Translation.Y : Float (double-precision) = 0.000000
+    in  Make Relative_1.Parent.Translation.Z : Float (double-precision) = 0.000000
+    in  Make Relative_1.Parent.Scale3D.X : Float (double-precision) = 1.000000
+    in  Make Relative_1.Parent.Scale3D.Y : Float (double-precision) = 1.000000
+    in  Make Relative_1.Parent.Scale3D.Z : Float (double-precision) = 1.000000
+
+[N74] Make Absolute (ControlRigGraphNode)
+    out Make Absolute.Global : Transform -> N73.Make Relative_1.Global
+    in  Make Absolute.Local.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  Make Absolute.Local.Translation : Vector <- N71.Add.Result
+    in  Make Absolute.Local.Translation.X : Float (double-precision) = 0.000000
+    in  Make Absolute.Local.Translation.Y : Float (double-precision) = 0.000000
+    in  Make Absolute.Local.Translation.Z : Float (double-precision) = 0.000000
+    in  Make Absolute.Local.Scale3D.X : Float (double-precision) = 1.000000
+    in  Make Absolute.Local.Scale3D.Y : Float (double-precision) = 1.000000
+    in  Make Absolute.Local.Scale3D.Z : Float (double-precision) = 1.000000
+    in  Make Absolute.Parent : Transform <- N70.GetTransform_1.Transform
+    in  Make Absolute.Parent.Rotation : Quat Structure = (X=0.000000,Y=0.000000,Z=0.000000,W=1.000000)
+    in  Make Absolute.Parent.Translation.X : Float (double-precision) = 0.000000
+    in  Make Absolute.Parent.Translation.Y : Float (double-precision) = 0.000000
+    in  Make Absolute.Parent.Translation.Z : Float (double-precision) = 0.000000
+    in  Make Absolute.Parent.Scale3D.X : Float (double-precision) = 1.000000
+    in  Make Absolute.Parent.Scale3D.Y : Float (double-precision) = 1.000000
+    in  Make Absolute.Parent.Scale3D.Z : Float (double-precision) = 1.000000
+

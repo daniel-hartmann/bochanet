@@ -80,6 +80,16 @@ void ABochaThrowCalibrator::LaunchNext()
 	Ball->Launch(Release, FloorZ, FVector(Speed, 0.0, 0.0));
 	BallTime = 0.f;
 	StillTime = 0.f;
+
+	if (Run == 0)
+	{
+		const UPrimitiveComponent* Sphere = Ball->GetSphere();
+		Report += FString::Printf(TEXT("# collision: profile %s, object type %s, vs referee %d, vs camera %d, affects nav %d\n"),
+			*Sphere->GetCollisionProfileName().ToString(),
+			*UCollisionProfile::Get()->ReturnChannelNameFromContainerIndex(Sphere->GetCollisionObjectType()).ToString(),
+			int32(Sphere->GetCollisionResponseToChannel(ECC_GameTraceChannel2)), int32(Sphere->GetCollisionResponseToChannel(ECC_Camera)),
+			Sphere->CanEverAffectNavigation());
+	}
 }
 
 void ABochaThrowCalibrator::Tick(float DeltaSeconds)

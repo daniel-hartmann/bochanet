@@ -1,0 +1,133 @@
+Graph: Softness_SubGraph
+
+[N0] Entry (ControlRigGraphNode)
+    out Entry.Effector : Rig Element Key Structure -> N2.RigUnit_GetTransform_2.Item
+
+[N1] Return (ControlRigGraphNode)
+    in  Return.Length A : Float (double-precision) <- N16.MathFloatMul.Result
+    in  Return.Length B : Float (double-precision) <- N17.MathFloatMul_1.Result
+
+[N2] Get Transform - Control (ControlRigGraphNode)
+    out RigUnit_GetTransform_2.Transform.Translation : Vector -> N22.MathVectorDistance.B
+    in  RigUnit_GetTransform_2.Item : Rig Element Key Structure <- N0.Entry.Effector
+    in  RigUnit_GetTransform_2.Item.Type : ERigElementType Enum = Control
+    in  RigUnit_GetTransform_2.Item.Name : Name = IK
+    in  RigUnit_GetTransform_2.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N3] Get Transform - Bone (ControlRigGraphNode)
+    out RigUnit_GetTransform_3.Transform.Translation : Vector -> N22.MathVectorDistance.A
+    in  RigUnit_GetTransform_3.Item.Type : ERigElementType Enum = Bone
+    in  RigUnit_GetTransform_3.Item.Name : Name = NewBone
+    in  RigUnit_GetTransform_3.Space : ERigVMTransformSpace Enum = GlobalSpace
+
+[N4] Get Transform - Bone Initial (ControlRigGraphNode)
+    out RigUnit_GetTransform_4.Transform.Translation.X : Float (double-precision) -> N27.MathFloatAbs.Value
+    in  RigUnit_GetTransform_4.Item.Type : ERigElementType Enum = Bone
+    in  RigUnit_GetTransform_4.Item.Name : Name = NewBone_2
+    in  RigUnit_GetTransform_4.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  RigUnit_GetTransform_4.bInitial : Boolean = true
+
+[N5] Get Transform - Bone Initial (ControlRigGraphNode)
+    out RigUnit_GetTransform_5.Transform.Translation.X : Float (double-precision) -> N28.MathFloatAbs_1.Value
+    in  RigUnit_GetTransform_5.Item.Type : ERigElementType Enum = Bone
+    in  RigUnit_GetTransform_5.Item.Name : Name = NewBone_3
+    in  RigUnit_GetTransform_5.Space : ERigVMTransformSpace Enum = LocalSpace
+    in  RigUnit_GetTransform_5.bInitial : Boolean = true
+
+[N6] Add (ControlRigGraphNode)
+    out MathFloatAdd.Result : Float (single-precision) -> N8.MathFloatMul_4.A, N7.MathFloatSub.A
+    in  MathFloatAdd.A : Float (single-precision) <- N27.MathFloatAbs.Result
+    in  MathFloatAdd.B : Float (single-precision) <- N28.MathFloatAbs_1.Result
+
+[N7] Subtract (ControlRigGraphNode)
+    out MathFloatSub.Result : Float (single-precision) -> N11.Exponential Softness.DA, N14.MathFloatGreater_1.B
+    in  MathFloatSub.A : Float (single-precision) <- N6.MathFloatAdd.Result
+    in  MathFloatSub.B : Float (single-precision) <- N9.MathFloatMul_5.Result
+
+[N8] Multiply (ControlRigGraphNode)
+    out MathFloatMul_4.Result : Float (single-precision) -> N9.MathFloatMul_5.A
+    in  MathFloatMul_4.A : Float (single-precision) <- N6.MathFloatAdd.Result
+    in  MathFloatMul_4.B : Float (single-precision) <- N25.VariableNode.Value
+
+[N9] Multiply (ControlRigGraphNode)
+    out MathFloatMul_5.Result : Float (single-precision) -> N7.MathFloatSub.B, N11.Exponential Softness.Softness
+    in  MathFloatMul_5.A : Float (single-precision) <- N8.MathFloatMul_4.Result
+    in  MathFloatMul_5.B : Float (single-precision) = 0.020000
+
+[N10] Comment (EdGraphNode_Comment)
+    // Softness
+
+[N11] Exponential Softness (ControlRigGraphNode)
+    out Exponential Softness.Result : Float (single-precision) -> N12.MathFloatMax.A
+    in  Exponential Softness.Distance : Float (single-precision) <- N22.MathVectorDistance.Result
+    in  Exponential Softness.Stretch Distance : Float (single-precision) <- N22.MathVectorDistance.Result
+    in  Exponential Softness.DA : Float (single-precision) <- N7.MathFloatSub.Result
+    in  Exponential Softness.Softness : Float (single-precision) <- N9.MathFloatMul_5.Result
+
+[N12] Maximum (ControlRigGraphNode)
+    in  MathFloatMax.A : Float (single-precision) <- N11.Exponential Softness.Result
+    in  MathFloatMax.B : Float (single-precision) = 1.000000
+
+[N13] Greater (ControlRigGraphNode)
+    out MathFloatGreater.Result : Boolean -> N15.MathBoolAnd.A
+    in  MathFloatGreater.A : Float (single-precision) <- N26.VariableNode_1.Value
+    in  MathFloatGreater.B : Float (single-precision) = 0.000001
+
+[N14] Greater (ControlRigGraphNode)
+    out MathFloatGreater_1.Result : Boolean -> N15.MathBoolAnd.B
+    in  MathFloatGreater_1.A : Float (single-precision) <- N22.MathVectorDistance.Result
+    in  MathFloatGreater_1.B : Float (single-precision) <- N7.MathFloatSub.Result
+
+[N15] And (ControlRigGraphNode)
+    in  MathBoolAnd.A : Boolean <- N13.MathFloatGreater.Result
+    in  MathBoolAnd.B : Boolean <- N14.MathFloatGreater_1.Result
+
+[N16] Multiply (ControlRigGraphNode)
+    out MathFloatMul.Result : Float (single-precision) -> N1.Return.Length A
+    in  MathFloatMul.A : Float (single-precision) <- N27.MathFloatAbs.Result
+    in  MathFloatMul.B : Float (single-precision) = 1.000000
+
+[N17] Multiply (ControlRigGraphNode)
+    out MathFloatMul_1.Result : Float (single-precision) -> N1.Return.Length B
+    in  MathFloatMul_1.A : Float (single-precision) <- N28.MathFloatAbs_1.Result
+    in  MathFloatMul_1.B : Float (single-precision) = 1.000000
+
+[N18]  (ControlRigGraphNode)
+
+[N19]  (ControlRigGraphNode)
+
+[N20]  (ControlRigGraphNode)
+
+[N21]  (ControlRigGraphNode)
+
+[N22] Distance Between (ControlRigGraphNode)
+    out MathVectorDistance.Result : Float (single-precision) -> N11.Exponential Softness.Distance, N11.Exponential Softness.Stretch Distance, N14.MathFloatGreater_1.A
+    in  MathVectorDistance.A : Vector <- N3.RigUnit_GetTransform_3.Transform.Translation
+    in  MathVectorDistance.A.X : Float (double-precision) = 0.000000
+    in  MathVectorDistance.A.Y : Float (double-precision) = 0.000000
+    in  MathVectorDistance.A.Z : Float (double-precision) = 0.000000
+    in  MathVectorDistance.B : Vector <- N2.RigUnit_GetTransform_2.Transform.Translation
+    in  MathVectorDistance.B.X : Float (double-precision) = 0.000000
+    in  MathVectorDistance.B.Y : Float (double-precision) = 0.000000
+    in  MathVectorDistance.B.Z : Float (double-precision) = 0.000000
+
+[N23] Comment (EdGraphNode_Comment)
+    // Current Distance
+
+[N24] Comment (EdGraphNode_Comment)
+    // Default Length
+
+[N25] Get Softness (ControlRigGraphNode)
+    out VariableNode.Value : Float (double-precision) -> N8.MathFloatMul_4.B
+
+[N26] Get Softness (ControlRigGraphNode)
+    out VariableNode_1.Value : Float (double-precision) -> N13.MathFloatGreater.A
+
+[N27] Absolute (ControlRigGraphNode)
+    out MathFloatAbs.Result : Float (single-precision) -> N6.MathFloatAdd.A, N16.MathFloatMul.A
+    in  MathFloatAbs.Value : Float (single-precision) <- N4.RigUnit_GetTransform_4.Transform.Translation.X
+
+[N28] Absolute (ControlRigGraphNode)
+    out MathFloatAbs_1.Result : Float (single-precision) -> N6.MathFloatAdd.B, N17.MathFloatMul_1.A
+    in  MathFloatAbs_1.Value : Float (single-precision) <- N5.RigUnit_GetTransform_5.Transform.Translation.X
+
