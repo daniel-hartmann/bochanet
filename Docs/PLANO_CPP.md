@@ -94,6 +94,7 @@ Lições da Fase 2:
 4. **MinigameCharacter + MinigameManager** — feitas juntas porque o character chama `Notify*Thrown`/`CurrentBall`.
    - Força fica no character (`ThrowStrength`, começa em 200 = default do slider), HUD só exibe.
    - `SetCanThrow(false)` corrigido.
+   - (Depois) cor da bola: ver item 5 dos problemas.
    - Removido por não ter efeito: prints de debug; eventos IA_Bocha* do próprio character (ele nunca é possuído,
      quem roteia é o PC); cast `GetGameMode → BochaGameMode` (sempre falhava, o Portal seta `GameMode`);
      criação do `WBP_StartGame` (nunca ia pra tela); tecla C → câmera na bola (manager nunca recebia input).
@@ -125,9 +126,10 @@ Em aberto (portar igual por enquanto):
 
 3. `ServerThrow` confia na `SpawnLocation` e no `Impulse` do cliente, sem validação.
 4. Input do minigame é tratado duas vezes (PC roteia para o char **e** o char tem IMC próprio com prioridade 10).
-5. **Bug observado no teste da Fase 4 (já existia antes):** no host a bola aparece azul de forma intercalada.
-   Causa provável: cor da bola decidida de formas diferentes: local `bBlue = !IsServer`; no servidor `bBlue = !IsLocalPlayerController`;
-   material local por `CurrentPlayer == 1`.
+5. **Corrigido:** no host a bola na mão aparecia azul de forma intercalada. Cada máquina tem o próprio manager e a
+   cor vinha de um contador local de turno (`CurrentPlayer`), enquanto a bola arremessada usava "não é o host → azul".
+   Regra única agora: host joga com as vermelhas, cliente com as azuis (`SpawnBall`: `bBlue = NM_Client`;
+   `ServerThrow`: `bBlue = !IsLocalPlayerController()`). `CurrentPlayer`/`ToggleCurrentPlayer` removidos (não havia turno real).
 6. `AdjustStrength` (clamp 0..400) não é usada; `SetThrowStrength` usa clamp 100..1000.
 7. `GetPlayerController(0)` / `GetPlayerCharacter(0)` usados em vários lugares — trocar por owner/controller explícito.
 8. TODO "WAIT FOR BALL TO STOP" em `NotifyBolimThrown`.

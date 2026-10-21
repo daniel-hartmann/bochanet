@@ -11,7 +11,7 @@ class ACharacter;
 class UBochaHUDWidget;
 
 /**
- * Runs one bocha match on the local machine: hands balls to the minigame character and alternates turns.
+ * Runs one bocha match on the local machine: hands balls to the minigame character.
  * BochaPortal spawns one on every machine when the minigame starts.
  */
 UCLASS()
@@ -51,13 +51,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Bocha")
 	TSubclassOf<UBochaHUDWidget> HUDWidgetClass;
 
-	/** 0 or 1; player 1 plays the blue balls. */
-	UPROPERTY(VisibleInstanceOnly, Category = "Bocha")
-	int32 CurrentPlayer = 0;
-
 private:
-	void SpawnBall(bool bIsBlue);
-	void ToggleCurrentPlayer();
+	void SpawnBall();
 	void HoldBall(ABochaBall* Ball);
 
 	UPROPERTY(Transient)

@@ -20,9 +20,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, ReplicatedUsing = OnRep_bBlue, Category = "Bocha", meta = (ExposeOnSpawn = "true"))
 	bool bBlue = false;
 
-	/** Paints the ball with BlueMaterial without changing bBlue. */
-	void ApplyBlueMaterial();
-
 protected:
 	virtual void BeginPlay() override;
 

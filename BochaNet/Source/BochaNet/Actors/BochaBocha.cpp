@@ -30,15 +30,7 @@ void ABochaBocha::OnRep_bBlue()
 
 void ABochaBocha::ApplyColor()
 {
-	if (bBlue)
-	{
-		ApplyBlueMaterial();
-	}
-}
-
-void ABochaBocha::ApplyBlueMaterial()
-{
-	if (BlueMaterial)
+	if (bBlue && BlueMaterial)
 	{
 		Sphere->SetMaterial(0, BlueMaterial);
 	}

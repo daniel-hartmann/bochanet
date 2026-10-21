@@ -34,34 +34,24 @@ void ABochaMinigameManager::BeginPlay()
 
 void ABochaMinigameManager::NotifyBallThrown()
 {
-	ToggleCurrentPlayer();
-	SpawnBall(CurrentPlayer == 1);
+	SpawnBall();
 }
 
 void ABochaMinigameManager::NotifyBolimThrown()
 {
 	// TODO: wait for the jack to stop before handing out the first ball.
-	SpawnBall(CurrentPlayer == 1);
+	SpawnBall();
 }
 
-void ABochaMinigameManager::SpawnBall(bool bIsBlue)
+void ABochaMinigameManager::SpawnBall()
 {
 	ABochaBocha* Bocha = GetWorld()->SpawnActorDeferred<ABochaBocha>(BochaClass, FTransform::Identity);
+	// The host plays the red balls and the client the blue ones, same rule as ServerThrow.
 	Bocha->bBlue = GetNetMode() == NM_Client;
 	Bocha->FinishSpawning(FTransform::Identity);
 	Bocha->SetReplicates(false);
 	CurrentBall = Bocha;
-
-	if (bIsBlue)
-	{
-		Bocha->ApplyBlueMaterial();
-	}
 	HoldBall(Bocha);
-}
-
-void ABochaMinigameManager::ToggleCurrentPlayer()
-{
-	CurrentPlayer = CurrentPlayer == 0 ? 1 : 0;
 }
 
 void ABochaMinigameManager::HoldBall(ABochaBall* Ball)

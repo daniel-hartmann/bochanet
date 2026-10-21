@@ -41,6 +41,9 @@ in the editor, *Tools → Refresh Visual Studio Code Project*, or from the repo 
   ```
 
 Then open `BochaNet/BochaNet.code-workspace` in VS Code (*File → Open Workspace from File…*).
+In VS Code, build with the `BochaNetEditor … Development Build` task. On Mac, building the
+game target (`BochaNet …`) regenerates an Xcode project and makes the editor open a missing
+`BochaNet_Mac.code-workspace`; if that happens, generate the VS Code workspace again.
 The editor is set to open C++ classes in VS Code (`Config/DefaultEditorPerProjectUserSettings.ini`).
 
 **Build without the editor** (close the editor first; with it open, the build produces

@@ -120,7 +120,7 @@ void ABochaPlayerController::ServerThrow_Implementation(FVector BallLocation, FV
 	{
 		ABochaBocha* Bocha = GetWorld()->SpawnActorDeferred<ABochaBocha>(BochaClass, SpawnTransform, nullptr, nullptr,
 			ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-		// Balls thrown by the remote player are blue.
+		// The host plays the red balls and the client the blue ones, same rule as the held ball.
 		Bocha->bBlue = !IsLocalPlayerController();
 		Bocha->FinishSpawning(SpawnTransform);
 		Ball = Bocha;
