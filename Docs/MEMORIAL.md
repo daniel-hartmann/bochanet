@@ -5,7 +5,7 @@ minijogo de **bocha** (regras CBTG, modalidade individual), jogado em rede (List
 Unreal Engine 5.8, lógica em **C++** (módulo `BochaNet`) e Blueprints só como dados (malhas, materiais, classes,
 layout de UMG).
 
-> Rascunho para revisão: copie as respostas para o documento técnico do Moodle e ajuste o que quiser.
+> Rascunho para revisão
 
 ---
 
