@@ -28,7 +28,7 @@ enum class EBochaPhase : uint8
 };
 
 /**
- * Court markings (CBTG rules, Art. 2 a, 26,50 m court) in CanchaMap coordinates, in cm.
+ * Court markings (CBTG rules, Art. 2 a, 26,50 m court) in Lvl_Cancha coordinates, in cm.
  * Play always goes from end A towards end A' (+X).
  */
 USTRUCT(BlueprintType)
@@ -98,7 +98,7 @@ public:
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-	/** Where CanchaMap was loaded; set by the server before the match finishes spawning. */
+	/** Where Lvl_Cancha was loaded; set by the server before the match finishes spawning. */
 	void SetCourtOrigin(const FVector& Origin) { CourtOrigin = Origin; }
 
 	/** Whether PlayerState may throw now. */
@@ -112,7 +112,7 @@ public:
 
 	const FBochaCourt& GetCourt() const { return Court; }
 
-	/** World location in CanchaMap coordinates (where Court is measured). */
+	/** World location in Lvl_Cancha coordinates (where Court is measured). */
 	FVector ToCourt(const FVector& WorldLocation) const { return WorldLocation - CourtOrigin; }
 
 	/** Server: starts watching a ball that was just thrown by the current thrower. */

@@ -1,0 +1,21 @@
+Blueprint: /Game/Bocha/Blueprints/BP_BochaMinigameManager.BP_BochaMinigameManager
+Parent: /Script/BochaNet.BochaMinigameManager
+
+[Variables]
+
+[Components]
+DefaultSceneRoot : SceneComponent (parent: None, socket: None)
+
+[Class Defaults overridden vs parent]
+    DefaultSceneRoot =  (own)
+    BolimClass = /Script/Engine.BlueprintGeneratedClass'/Game/Bocha/Blueprints/Balls/BP_Bolim.BP_Bolim_C'
+    BochaClass = /Script/Engine.BlueprintGeneratedClass'/Game/Bocha/Blueprints/Balls/BP_Bocha.BP_Bocha_C'
+    HUDWidgetClass = /Script/UMG.WidgetBlueprintGeneratedClass'/Game/Bocha/UI/WBP_HUD.WBP_HUD_C'
+    StateScreenClass = /Script/UMG.WidgetBlueprintGeneratedClass'/Game/Bocha/UI/WBP_GameStateScreen.WBP_GameStateScreen_C'
+
+[Component template DefaultSceneRoot : SceneComponent overridden vs class defaults]
+    bVisualizeComponent = True
+
+[Graphs]
+UserConstructionScript (1 nodes) -> UserConstructionScript.txt
+EventGraph (0 nodes) -> EventGraph.txt

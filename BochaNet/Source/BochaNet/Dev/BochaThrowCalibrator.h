@@ -8,7 +8,7 @@ class ABochaBall;
 class UBoxComponent;
 
 /**
- * Development tool: throws the jack and a bocha at a range of launch speeds on CanchaMap and logs
+ * Development tool: throws the jack and a bocha at a range of launch speeds on Lvl_Cancha and logs
  * where they stop, with and without a smooth collision slab over the floor. Started by the console
  * command Bocha.CalibrateThrows; writes Saved/BochaCalibration.txt and quits when done.
  */

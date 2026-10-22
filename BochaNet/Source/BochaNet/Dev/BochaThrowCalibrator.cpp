@@ -12,7 +12,7 @@ DEFINE_LOG_CATEGORY_STATIC(LogBochaCalibrate, Log, All);
 
 namespace
 {
-	// CanchaMap coordinates (opened directly, no level instance offset).
+	// Lvl_Cancha coordinates (opened directly, no level instance offset).
 	const FVector Release(-2470.0, -200.0, 110.0);
 	constexpr double FloorZ = 50.0;
 	constexpr int32 MinSpeed = 200;
@@ -24,7 +24,7 @@ namespace
 #if !UE_BUILD_SHIPPING
 	FAutoConsoleCommandWithWorld CalibrateCommand(
 		TEXT("Bocha.CalibrateThrows"),
-		TEXT("Throws the jack and a bocha at several speeds on CanchaMap, logs where they stop and quits."),
+		TEXT("Throws the jack and a bocha at several speeds on Lvl_Cancha, logs where they stop and quits."),
 		FConsoleCommandWithWorldDelegate::CreateLambda([](UWorld* World)
 		{
 			World->SpawnActor<ABochaThrowCalibrator>();
@@ -49,8 +49,8 @@ void ABochaThrowCalibrator::BeginPlay()
 {
 	Super::BeginPlay();
 
-	BallClasses.Add(LoadClass<ABochaBall>(nullptr, TEXT("/Game/Bocha/Actors/ABolim.ABolim_C")));
-	BallClasses.Add(LoadClass<ABochaBall>(nullptr, TEXT("/Game/Bocha/Actors/ABocha.ABocha_C")));
+	BallClasses.Add(LoadClass<ABochaBall>(nullptr, TEXT("/Game/Bocha/Blueprints/Balls/BP_Bolim.BP_Bolim_C")));
+	BallClasses.Add(LoadClass<ABochaBall>(nullptr, TEXT("/Game/Bocha/Blueprints/Balls/BP_Bocha.BP_Bocha_C")));
 	Report = TEXT("floor\tball\tspeed\tdistance\ttime\n");
 	LaunchNext();
 }

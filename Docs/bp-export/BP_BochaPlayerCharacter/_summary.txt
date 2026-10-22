@@ -1,0 +1,41 @@
+Blueprint: /Game/Bocha/Blueprints/BP_BochaPlayerCharacter.BP_BochaPlayerCharacter
+Parent: /Script/BochaNet.BochaMinigameCharacter
+
+[Variables]
+
+[Components]
+
+[Class Defaults overridden vs parent]
+    SpringArm = /Script/Engine.SpringArmComponent'/Game/Bocha/Blueprints/BP_BochaPlayerCharacter.Default__BP_BochaPlayerCharacter_C:SpringArm'
+    Camera = /Script/Engine.CameraComponent'/Game/Bocha/Blueprints/BP_BochaPlayerCharacter.Default__BP_BochaPlayerCharacter_C:Camera'
+    MappingContext = /Script/EnhancedInput.InputMappingContext'/Game/Bocha/Input/IMC_Bocha.IMC_Bocha'
+    MinimapWidgetClass = /Script/CoreUObject.Class'/Script/BochaNet.BochaMinimapWidget'
+    RedMesh = /Script/Engine.SkeletalMesh'/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple'
+    BlueMesh = /Script/Engine.SkeletalMesh'/Game/Characters/Mannequins/Meshes/SKM_Quinn_Simple.SKM_Quinn_Simple'
+    AnimClass = /Script/Engine.AnimBlueprintGeneratedClass'/Game/Bocha/Animations/ABP_BochaPlayer.ABP_BochaPlayer_C'
+    ThrowMontage = /Script/Engine.AnimMontage'/Game/Bocha/Animations/AM_BochaThrow.AM_BochaThrow'
+    Mesh = /Script/Engine.SkeletalMeshComponent'/Game/Bocha/Blueprints/BP_BochaPlayerCharacter.Default__BP_BochaPlayerCharacter_C:CharacterMesh0'
+    CharacterMovement = /Script/Engine.CharacterMovementComponent'/Game/Bocha/Blueprints/BP_BochaPlayerCharacter.Default__BP_BochaPlayerCharacter_C:CharMoveComp'
+    CapsuleComponent = /Script/Engine.CapsuleComponent'/Game/Bocha/Blueprints/BP_BochaPlayerCharacter.Default__BP_BochaPlayerCharacter_C:CollisionCylinder'
+    ArrowComponent = /Script/Engine.ArrowComponent'/Game/Bocha/Blueprints/BP_BochaPlayerCharacter.Default__BP_BochaPlayerCharacter_C:Arrow'
+    RootComponent = /Script/Engine.CapsuleComponent'/Game/Bocha/Blueprints/BP_BochaPlayerCharacter.Default__BP_BochaPlayerCharacter_C:CollisionCylinder'
+
+[Native component CollisionCylinder : CapsuleComponent overridden vs parent]
+
+[Native component Arrow : ArrowComponent overridden vs parent]
+    AttachParent = CollisionCylinder
+
+[Native component CharMoveComp : CharacterMovementComponent overridden vs parent]
+
+[Native component CharacterMesh0 : SkeletalMeshComponent overridden vs parent]
+    AttachParent = CollisionCylinder
+
+[Native component SpringArm : SpringArmComponent overridden vs parent]
+    AttachParent = CollisionCylinder
+
+[Native component Camera : CameraComponent overridden vs parent]
+    AttachParent = SpringArm
+
+[Graphs]
+UserConstructionScript (1 nodes) -> UserConstructionScript.txt
+EventGraph (0 nodes) -> EventGraph.txt

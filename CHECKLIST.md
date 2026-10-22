@@ -82,6 +82,6 @@ Entrega: **27/10/2026** até 23h59 (Moodle) e apresentação em aula. Plano: `Do
 
 - [ ] **Memorial:** responder às 10 perguntas (A. Animação e Cinemática 1–2; B. Cenário, Navegação e Câmera 3–5; C. Interface e Arquitetura de Dados 6–8; D. Física e Escopo do MVP 9–10). *(Rascunho em `Docs/MEMORIAL.md`: falta revisar, completar a 7 (inspirações) e passar para o documento do Moodle.)*
 - [x] **Nota para atores sem malha:** justificar no memorial a cinemática procedural das bolas (rolamento e freio controlado em C++). *(Memorial, pergunta 1.)*
-- [ ] **Nomenclatura na engine:** prefixos padrão (`BP_`, `WBP_`, `M_`, `T_`, `IA_`, `IMC_`, `ABP_`, `BS_`…). *(Parcial: há assets como `ABall`, `BochaGameMode`, `BallBlueMaterial`, `clay-01`.)*
-- [ ] **Organização do *Content Browser*:** pastas por tipo/sistema e sem assets sem uso (`WBP_Minimap`, `RT_Minimap`, `BP_MinimapCapture`).
+- [x] **Nomenclatura na engine:** prefixos padrão (`BP_`, `WBP_`, `M_`, `T_`, `IA_`, `IMC_`, `ABP_`, `BS_`…). *(`BP_Ball`/`BP_Bocha`/`BP_Bolim`, `BP_BochaMinigameManager`, `BP_BochaPlayerCharacter`, `BP_BochaPortal`, `Lvl_Cancha`, `M_*`, `T_Clay01`; rótulos do Outliner do `Lvl_Cancha` com pastas Court/Gameplay/Navigation/Lighting.)*
+- [x] **Organização do *Content Browser*:** pastas por tipo/sistema e sem assets sem uso (`WBP_Minimap`, `RT_Minimap`, `BP_MinimapCapture`). *(`Bocha/Animations`, `Blueprints` (+ `Balls`), `Input`, `Maps`, `Materials`, `UI`; apagados os assets sem uso, o `WBP_StartGame`, os redirectors e a pasta antiga `/Game/Blueprints`.)*
 - [ ] Entrega de acordo com o documento *Instruções para Entrega dos Trabalhos* (Moodle), até 27/10/2026.

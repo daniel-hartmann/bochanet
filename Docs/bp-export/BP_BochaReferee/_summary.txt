@@ -1,4 +1,4 @@
-Blueprint: /Game/Bocha/BP_BochaReferee.BP_BochaReferee
+Blueprint: /Game/Bocha/Blueprints/BP_BochaReferee.BP_BochaReferee
 Parent: /Script/BochaNet.BochaReferee
 
 [Variables]
@@ -10,11 +10,11 @@ Parent: /Script/BochaNet.BochaReferee
     RefereeMaterial = /Script/Engine.Material'/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial'
     AnimClass = /Script/Engine.AnimBlueprintGeneratedClass'/Game/Bocha/Animations/ABP_BochaPlayer.ABP_BochaPlayer_C'
     MeasureMontage = /Script/Engine.AnimMontage'/Game/Bocha/Animations/AM_BochaMeasure.AM_BochaMeasure'
-    Mesh = /Script/Engine.SkeletalMeshComponent'/Game/Bocha/BP_BochaReferee.Default__BP_BochaReferee_C:CharacterMesh0'
-    CharacterMovement = /Script/Engine.CharacterMovementComponent'/Game/Bocha/BP_BochaReferee.Default__BP_BochaReferee_C:CharMoveComp'
-    CapsuleComponent = /Script/Engine.CapsuleComponent'/Game/Bocha/BP_BochaReferee.Default__BP_BochaReferee_C:CollisionCylinder'
-    ArrowComponent = /Script/Engine.ArrowComponent'/Game/Bocha/BP_BochaReferee.Default__BP_BochaReferee_C:Arrow'
-    RootComponent = /Script/Engine.CapsuleComponent'/Game/Bocha/BP_BochaReferee.Default__BP_BochaReferee_C:CollisionCylinder'
+    Mesh = /Script/Engine.SkeletalMeshComponent'/Game/Bocha/Blueprints/BP_BochaReferee.Default__BP_BochaReferee_C:CharacterMesh0'
+    CharacterMovement = /Script/Engine.CharacterMovementComponent'/Game/Bocha/Blueprints/BP_BochaReferee.Default__BP_BochaReferee_C:CharMoveComp'
+    CapsuleComponent = /Script/Engine.CapsuleComponent'/Game/Bocha/Blueprints/BP_BochaReferee.Default__BP_BochaReferee_C:CollisionCylinder'
+    ArrowComponent = /Script/Engine.ArrowComponent'/Game/Bocha/Blueprints/BP_BochaReferee.Default__BP_BochaReferee_C:Arrow'
+    RootComponent = /Script/Engine.CapsuleComponent'/Game/Bocha/Blueprints/BP_BochaReferee.Default__BP_BochaReferee_C:CollisionCylinder'
 
 [Native component CollisionCylinder : CapsuleComponent overridden vs parent]
 

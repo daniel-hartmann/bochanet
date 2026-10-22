@@ -1,0 +1,69 @@
+{
+	"renameAssets": [
+		{
+			"from": "/Game/Bocha/Actors/ABall.ABall",
+			"to": "/Game/Bocha/Blueprints/Balls/BP_Ball"
+		},
+		{
+			"from": "/Game/Bocha/Actors/ABocha.ABocha",
+			"to": "/Game/Bocha/Blueprints/Balls/BP_Bocha"
+		},
+		{
+			"from": "/Game/Bocha/Actors/ABolim.ABolim",
+			"to": "/Game/Bocha/Blueprints/Balls/BP_Bolim"
+		},
+		{
+			"from": "/Game/Bocha/BochaGameMode.BochaGameMode",
+			"to": "/Game/Bocha/Blueprints/BP_BochaMinigameManager"
+		},
+		{
+			"from": "/Game/Bocha/BP_BochaMatch.BP_BochaMatch",
+			"to": "/Game/Bocha/Blueprints/BP_BochaMatch"
+		},
+		{
+			"from": "/Game/Bocha/BP_BochaReferee.BP_BochaReferee",
+			"to": "/Game/Bocha/Blueprints/BP_BochaReferee"
+		},
+		{
+			"from": "/Game/Bocha/Player/BP_MiniGameCharacter.BP_MiniGameCharacter",
+			"to": "/Game/Bocha/Blueprints/BP_BochaPlayerCharacter"
+		},
+		{
+			"from": "/Game/Bocha/CanchaMap.CanchaMap",
+			"to": "/Game/Bocha/Maps/Lvl_Cancha"
+		},
+		{
+			"from": "/Game/Bocha/Materials/BallBlueMaterial.BallBlueMaterial",
+			"to": "/Game/Bocha/Materials/M_BallBlue"
+		},
+		{
+			"from": "/Game/Bocha/Materials/BallRedMaterial.BallRedMaterial",
+			"to": "/Game/Bocha/Materials/M_BallRed"
+		},
+		{
+			"from": "/Game/Bocha/Materials/ClayMaterial.ClayMaterial",
+			"to": "/Game/Bocha/Materials/M_Clay"
+		},
+		{
+			"from": "/Game/Bocha/Materials/FloorMaterial.FloorMaterial",
+			"to": "/Game/Bocha/Materials/M_Floor"
+		},
+		{
+			"from": "/Game/Bocha/Materials/WallMaterial.WallMaterial",
+			"to": "/Game/Bocha/Materials/M_Wall"
+		},
+		{
+			"from": "/Game/Bocha/Materials/clay-01.clay-01",
+			"to": "/Game/Bocha/Materials/T_Clay01"
+		},
+		{
+			"from": "/Game/Lobby/BochaPortal.BochaPortal",
+			"to": "/Game/Lobby/BP_BochaPortal"
+		}
+	],
+	"compilePaths": [
+		"/Game/Bocha",
+		"/Game/Lobby",
+		"/Game/ThirdPerson"
+	]
+}

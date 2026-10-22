@@ -1,4 +1,4 @@
-Blueprint: /Game/Bocha/BP_BochaMatch.BP_BochaMatch
+Blueprint: /Game/Bocha/Blueprints/BP_BochaMatch.BP_BochaMatch
 Parent: /Script/BochaNet.BochaMatch
 
 [Variables]
@@ -8,7 +8,7 @@ DefaultSceneRoot : SceneComponent (parent: None, socket: None)
 
 [Class Defaults overridden vs parent]
     DefaultSceneRoot =  (own)
-    RefereeClass = /Script/Engine.BlueprintGeneratedClass'/Game/Bocha/BP_BochaReferee.BP_BochaReferee_C'
+    RefereeClass = /Script/Engine.BlueprintGeneratedClass'/Game/Bocha/Blueprints/BP_BochaReferee.BP_BochaReferee_C'
 
 [Component template DefaultSceneRoot : SceneComponent overridden vs class defaults]
     bVisualizeComponent = True

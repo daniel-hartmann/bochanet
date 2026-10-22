@@ -270,6 +270,68 @@ int32 UBochaReparentCommandlet::Main(const FString& Params)
 		bOk &= Compile(Blueprint);
 	}
 
+	const TArray<FString> RedirectorPaths = GetStringArray(Spec, TEXT("fixupRedirectorsIn"));
+	if (RedirectorPaths.Num() > 0)
+	{
+		FARFilter RedirectorFilter;
+		for (const FString& Path : RedirectorPaths)
+		{
+			RedirectorFilter.PackagePaths.Add(FName(*Path));
+		}
+		RedirectorFilter.bRecursivePaths = true;
+		RedirectorFilter.ClassPaths.Add(UObjectRedirector::StaticClass()->GetClassPathName());
+		TArray<FAssetData> RedirectorAssets;
+		AssetRegistry.GetAssets(RedirectorFilter, RedirectorAssets);
+
+		TArray<UObjectRedirector*> Redirectors;
+		for (const FAssetData& Asset : RedirectorAssets)
+		{
+			if (UObjectRedirector* Redirector = Cast<UObjectRedirector>(Asset.GetAsset()))
+			{
+				UE_LOG(LogBochaReparent, Display, TEXT("redirector %s -> %s"), *Asset.GetObjectPathString(), *GetPathNameSafe(Redirector->DestinationObject));
+				Redirectors.Add(Redirector);
+			}
+		}
+		// IAssetTools::FixupReferencers needs the Slate application (it asserts in a headless editor), so:
+		// load every package that references a redirector (its imports resolve to the new assets) and save
+		// it again, which writes the new paths. The redirector files are deleted afterwards, once nothing
+		// mentions the old names.
+		TSet<FName> RedirectorPackages;
+		for (const FAssetData& Asset : RedirectorAssets)
+		{
+			RedirectorPackages.Add(Asset.PackageName);
+		}
+		TSet<FName> Referencers;
+		for (const FName& Package : RedirectorPackages)
+		{
+			TArray<FName> PackageReferencers;
+			AssetRegistry.GetReferencers(Package, PackageReferencers);
+			for (const FName& Referencer : PackageReferencers)
+			{
+				if (!RedirectorPackages.Contains(Referencer))
+				{
+					Referencers.Add(Referencer);
+				}
+			}
+		}
+		TArray<UPackage*> ToResave;
+		for (const FName& Referencer : Referencers)
+		{
+			UPackage* Package = LoadPackage(nullptr, *Referencer.ToString(), LOAD_None);
+			UE_LOG(LogBochaReparent, Display, TEXT("resave %s%s"), *Referencer.ToString(), Package ? TEXT("") : TEXT(" (could not load)"));
+			if (Package)
+			{
+				Package->MarkPackageDirty();
+				ToResave.Add(Package);
+			}
+		}
+		if (bSave && ToResave.Num() > 0)
+		{
+			UEditorLoadingAndSavingUtils::SavePackages(ToResave, false);
+			UE_LOG(LogBochaReparent, Display, TEXT("Resaved %d referencers of %d redirector packages."), ToResave.Num(), RedirectorPackages.Num());
+		}
+	}
+
 	// Organization steps: they rewrite many packages (and the referencers), so a dry run only lists them.
 	const TArray<TSharedPtr<FJsonValue>>* MapEdits = nullptr;
 	if (Spec->TryGetArrayField(TEXT("mapEdits"), MapEdits))
@@ -608,25 +670,37 @@ bool UBochaReparentCommandlet::DeleteAndRenameAssets(const TArray<FString>& ToDe
 
 	if (RenameData.Num() > 0)
 	{
-		bOk &= AssetTools.RenameAssets(RenameData);
-		// Point every referencer at the new names, then drop the redirectors left behind.
+		// IAssetTools::RenameAssets asks for confirmation in a dialog when class defaults reference the
+		// assets (unattended, the dialog answers Cancel), so do what it does underneath: rename leaving a
+		// redirector, save, then let FixupReferencers resave the referencers and delete the redirectors.
 		TArray<UObjectRedirector*> Redirectors;
+		TArray<UPackage*> ToSave;
 		for (const FAssetRenameData& Rename : RenameData)
 		{
-			const FString OldPath = Rename.OldObjectPath.ToString();
-			if (UObjectRedirector* Redirector = FindObject<UObjectRedirector>(nullptr, *OldPath))
+			UObject* Asset = Rename.Asset.Get();
+			UPackage* OldPackage = Asset->GetOutermost();
+			ObjectTools::FPackageGroupName Target;
+			Target.PackageName = Rename.NewPackagePath / Rename.NewName;
+			Target.ObjectName = Rename.NewName;
+			TSet<UPackage*> RefusedToLoad;
+			FText Error;
+			if (!ObjectTools::RenameSingleObject(Asset, Target, RefusedToLoad, Error, nullptr, true))
+			{
+				UE_LOG(LogBochaReparent, Error, TEXT("Could not rename %s: %s"), *Rename.OldObjectPath.ToString(), *Error.ToString());
+				bOk = false;
+				continue;
+			}
+			ToSave.Add(Asset->GetOutermost());
+			ToSave.Add(OldPackage);
+			if (UObjectRedirector* Redirector = FindObject<UObjectRedirector>(nullptr, *Rename.OldObjectPath.ToString()))
 			{
 				Redirectors.Add(Redirector);
 			}
+			ChangedPackages.Add(Asset->GetOutermost());
 		}
+		bOk &= UEditorLoadingAndSavingUtils::SavePackages(ToSave, false);
 		AssetTools.FixupReferencers(Redirectors, false, ERedirectFixupMode::DeleteFixedUpRedirectors);
-		for (const FAssetRenameData& Rename : RenameData)
-		{
-			if (UObject* Asset = Rename.Asset.Get())
-			{
-				ChangedPackages.Add(Asset->GetPackage());
-			}
-		}
+		UE_LOG(LogBochaReparent, Display, TEXT("Renamed %d assets; fixed up %d redirectors."), ToSave.Num() / 2, Redirectors.Num());
 	}
 	return bOk;
 }

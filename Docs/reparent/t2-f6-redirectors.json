@@ -1,0 +1,4 @@
+{
+	"fixupRedirectorsIn": ["/Game/Bocha", "/Game/Lobby", "/Game/ThirdPerson"],
+	"compilePaths": ["/Game/Bocha", "/Game/Lobby", "/Game/ThirdPerson"]
+}

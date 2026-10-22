@@ -100,18 +100,21 @@ Feita toda por código/commandlet (sem passos no editor):
   `BlueBochasRow`); os `P1_*`/`P2_*` mantêm o nome porque são ligados ao C++ (BindWidget).
 - Commandlet: `createWidgets` (Widget Tree por JSON) e `renameWidgets`.
 
-### F6 — Organização e memorial (1 dia) — em andamento
-- ✔ `Docs/MEMORIAL.md`: rascunho das 10 respostas (falta a 7, inspirações, e a revisão).
-- Pronto para aplicar (simulado com sucesso): `Docs/reparent/t2-f6-organizacao.json`
-  - `CanchaMap`: pastas `Court` / `Gameplay` / `Navigation` / `Lighting`, rótulos descritivos, remove o
-    `BP_MinimapCapture`.
-  - Apaga `WBP_Minimap`, `RT_Minimap`, `BP_MinimapCapture`, `WBP_StartGame` (sem uso).
-  - Renomeia: bolas → `Blueprints/Balls/BP_Ball|BP_Bocha|BP_Bolim`; `BochaGameMode` → `Blueprints/BP_BochaMinigameManager`;
-    `BP_BochaMatch`/`BP_BochaReferee` → `Blueprints/`; `BP_MiniGameCharacter` → `Blueprints/BP_BochaPlayerCharacter`;
-    `CanchaMap` → `Maps/Lvl_Cancha`; materiais → `M_BallBlue`, `M_BallRed`, `M_Clay`, `M_Floor`, `M_Wall`;
-    `clay-01` → `T_Clay01`; `Lobby/BochaPortal` → `Lobby/BP_BochaPortal`.
-  - Depois: apagar a classe C++ `ABochaMinimapCapture`, atualizar caminhos no calibrador e no README.
-- [E] Outliner do lobby (`Lvl_ThirdPerson`, World Partition): pastas e nomes no editor.
+### F6 — Organização e memorial (1 dia) ✔ feita (falta: memorial pergunta 7 + revisão; Outliner do lobby)
+- `Docs/MEMORIAL.md`: rascunho das 10 respostas.
+- `Lvl_Cancha` (ex-`CanchaMap`): pastas Court / Gameplay / Navigation / Lighting, rótulos `SM_CourtFloor`,
+  `SM_CourtBoards`, `PlayerStart_Court`, `NavMeshBounds_Court`, `PointLight_Court`; `BP_MinimapCapture` removido.
+- Apagados: `WBP_Minimap`, `RT_Minimap`, `BP_MinimapCapture`, `WBP_StartGame`, a classe C++ `ABochaMinimapCapture`,
+  os redirectors e a pasta antiga `/Game/Blueprints` (4 redirectors de setembro).
+- Renomeados: `Blueprints/Balls/BP_Ball|BP_Bocha|BP_Bolim`, `Blueprints/BP_BochaMinigameManager`,
+  `Blueprints/BP_BochaMatch`, `Blueprints/BP_BochaReferee`, `Blueprints/BP_BochaPlayerCharacter`, `Maps/Lvl_Cancha`,
+  `M_BallBlue`, `M_BallRed`, `M_Clay`, `M_Floor`, `M_Wall`, `T_Clay01`, `Lobby/BP_BochaPortal`.
+- Como foi feito (o `IAssetTools::RenameAssets`/`FixupReferencers` pedem diálogos/Slate e não funcionam sem interface):
+  `ObjectTools::RenameSingleObject` com redirector → salvar → regravar os referenciadores (`fixupRedirectorsIn`)
+  → apagar os redirectors. Specs: `t2-f6-organizacao.json`, `t2-f6-renomear.json`, `t2-f6-redirectors.json`.
+- Verificado: todos os BPs compilam do disco; teste headless no `Lvl_Cancha` (calibrador) sem erros de carregamento.
+- [E] Falta: Outliner do lobby (`Lvl_ThirdPerson`, World Partition) e decidir o `Materials/clay-01.png` (arquivo-fonte
+  solto dentro de `Content`).
 
 ## Cronograma sugerido
 

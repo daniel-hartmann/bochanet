@@ -118,7 +118,7 @@ Ajustes depois dos testes (fora do regulamento, a pedido):
   velocidade no impacto. Sem `AngularDamping` (fazia a bola escorregar) e sem o teto de 3600°/s de rotação do projeto
   (o bolim de 4 cm só conseguia rolar a ~1,25 m/s). Freada `RollingDeceleration` = 210 cm/s²: distância = v²/420
   (força 500 → 5,9 m, 750 → ~13 m, 900 → 19 m, 1000 → 23,7 m). A força começa em 750. Bolim sai a 1000 cm/s.
-- **Calibração:** `UnrealEditor BochaNet.uproject /Game/Bocha/CanchaMap -game -nullrhi -benchmark -fps=60
+- **Calibração:** `UnrealEditor BochaNet.uproject /Game/Bocha/Maps/Lvl_Cancha -game -nullrhi -benchmark -fps=60
   -ExecCmds="Bocha.CalibrateThrows"` grava `Saved/BochaCalibration.txt` (distância por velocidade, bolim e bocha).
 - **Avisos no HUD:** texto grande no alto da tela (`ShowMessage`, `MessageDuration` = 4 s, `MessageFontSize` = 34),
   criado em tempo de execução no canvas do `WBP_HUD`; também vão para o log (`LogBochaMatch`).
