@@ -1,2 +1,5 @@
 *.uasset diff=unreal
 *.umap diff=unreal
+
+# Windows batch files need CRLF
+*.bat text eol=crlf

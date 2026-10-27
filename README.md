@@ -1,4 +1,4 @@
-# TESTANDO 123 BOM DIA
+# BochaNet
 
 ## Diffing Unreal assets (`.uasset` / `.umap`)
 
@@ -57,3 +57,31 @@ hot-reload binaries the editor may not pick up):
   ```bat
   "C:\Program Files\Epic Games\UE_5.8\Engine\Build\BatchFiles\Build.bat" BochaNetEditor Win64 Development -project="%CD%\BochaNet\BochaNet.uproject" -waitmutex
   ```
+
+## Packaging the game
+
+Close the editor, then from the repo root:
+
+- Mac:
+  ```bash
+  ./build-game.sh
+  ```
+- Windows:
+  ```bat
+  build-game.bat
+  ```
+
+Pass `Development` as the first argument to keep the in-game console (`~`); the default is
+`Shipping`. The result goes to `Packaged/Mac` or `Packaged/Windows` (zip that folder to share).
+Each platform has to be packaged on its own OS. Set `UE_ROOT` if the engine is not in the
+default location.
+
+**Playing over the network** (Listen Server, UDP port 7777 must be reachable): one player hosts,
+the others join by IP. Shipping builds ignore a map or address on the command line, so the game
+reads its own `-host` and `-join=<IP>` (`UBochaGameInstance`).
+
+- Windows: `BochaNet.exe -host` (host) and `BochaNet.exe -join=<host IP>` (join).
+- Mac: `open BochaNet-Mac-Shipping.app --args -host` (host) and
+  `open -n BochaNet-Mac-Shipping.app --args -join=<host IP>` (join; `-n` opens a second copy).
+
+Add `-windowed -ResX=1280 -ResY=720` to play in a window.

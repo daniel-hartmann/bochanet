@@ -82,3 +82,6 @@ DerivedDataCache/
 
 
 .DS_Store
+
+# Packaged builds (build-game.sh / build-game.bat)
+Packaged/

@@ -13,6 +13,6 @@ public class BochaNet : ModuleRules
 			"Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "UMG"
 		});
 
-		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore", "AnimGraphRuntime", "AIModule", "NavigationSystem", "GameplayTasks" });
+		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore", "EngineSettings", "AnimGraphRuntime", "AIModule", "NavigationSystem", "GameplayTasks" });
 	}
 }
