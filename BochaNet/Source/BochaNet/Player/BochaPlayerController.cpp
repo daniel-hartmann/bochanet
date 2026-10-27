@@ -95,8 +95,8 @@ void ABochaPlayerController::BochaPause()
 
 void ABochaPlayerController::BochaMove(const FInputActionValue& Value)
 {
-	ABochaMinigameCharacter* Player = GetPlayableCharacter();
-	if (!Player)
+	ABochaMinigameCharacter* Jogador = GetPlayableCharacter();
+	if (!Jogador)
 	{
 		return;
 	}
@@ -104,35 +104,35 @@ void ABochaPlayerController::BochaMove(const FInputActionValue& Value)
 	const FVector2D Axis = Value.Get<FVector2D>();
 	if (Axis.X != 0.0)
 	{
-		Player->DoMove(Axis.X);
+		Jogador->DoMove(Axis.X);
 	}
 	if (Axis.Y != 0.0)
 	{
-		Player->DoAim(Axis.Y);
+		Jogador->DoAim(Axis.Y);
 	}
 }
 
 void ABochaPlayerController::BochaStrength(const FInputActionValue& Value)
 {
-	if (ABochaMinigameCharacter* Player = GetPlayableCharacter())
+	if (ABochaMinigameCharacter* Jogador = GetPlayableCharacter())
 	{
-		Player->DoStrength(Value.Get<FVector2D>().Y);
+		Jogador->DoStrength(Value.Get<FVector2D>().Y);
 	}
 }
 
 void ABochaPlayerController::BochaAimMouse(const FInputActionValue& Value)
 {
-	if (ABochaMinigameCharacter* Player = GetPlayableCharacter())
+	if (ABochaMinigameCharacter* Jogador = GetPlayableCharacter())
 	{
-		Player->DoAimMouse(Value.Get<float>());
+		Jogador->DoAimMouse(Value.Get<float>());
 	}
 }
 
 void ABochaPlayerController::BochaThrow()
 {
-	if (ABochaMinigameCharacter* Player = GetPlayableCharacter())
+	if (ABochaMinigameCharacter* Jogador = GetPlayableCharacter())
 	{
-		Player->DoThrow();
+		Jogador->DoThrow();
 	}
 }
 
