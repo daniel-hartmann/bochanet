@@ -1,6 +1,10 @@
+- [ ] Shaders
+- [ ] Iluminação global
+
+
 # Daniel
 
-- [ ] Corrigir famoso bug do material vermelho
+- [x] Corrigir famoso bug do material vermelho
 - [ ] Poder jogar sozinho direto pelo level da cancha
 - [ ] Jogo funcionar do início ao fim
 - [ ] Poder sair pelo menu de pause
