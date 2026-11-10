@@ -19,6 +19,8 @@
 #include "Engine/Texture2D.h"
 #include "MaterialEditingLibrary.h"
 #include "Materials/Material.h"
+#include "Materials/MaterialExpressionConstant3Vector.h"
+#include "Materials/MaterialExpressionMultiply.h"
 #include "Materials/MaterialExpressionTextureSample.h"
 #include "ObjectTools.h"
 #include "UObject/ObjectRedirector.h"
@@ -938,6 +940,7 @@ bool UBochaReparentCommandlet::ImportTexture(const TSharedPtr<FJsonObject>& Spec
 bool UBochaReparentCommandlet::EditMaterial(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const
 {
 	// Rebuilds the material graph: one texture sample per given input (baseColor, normal, roughness).
+	// An optional "tint" (linear color) multiplies the base color.
 	const FString Path = Spec->GetStringField(TEXT("path"));
 	UMaterial* Material = LoadObject<UMaterial>(nullptr, *Path);
 	if (!Material)
@@ -945,7 +948,21 @@ bool UBochaReparentCommandlet::EditMaterial(const TSharedPtr<FJsonObject>& Spec,
 		UE_LOG(LogBochaReparent, Error, TEXT("editMaterials: %s not found"), *Path);
 		return false;
 	}
-	UMaterialEditingLibrary::DeleteAllMaterialExpressions(Material);
+	// Unhooks the old graph instead of deleting it: a material loaded at startup (as a C++ default) has
+	// nodes that cannot be marked as garbage. Moved to the transient package, they are not saved.
+	for (int32 Property = 0; Property < MP_MAX; ++Property)
+	{
+		if (FExpressionInput* Input = Material->GetExpressionInputForProperty(static_cast<EMaterialProperty>(Property)))
+		{
+			Input->Expression = nullptr;
+		}
+	}
+	for (UMaterialExpression* Old : TArray<TObjectPtr<UMaterialExpression>>(Material->GetExpressionCollection().Expressions))
+	{
+		Material->RemoveExpressionParameter(Old);
+		Old->Rename(nullptr, GetTransientPackage(), REN_DontCreateRedirectors | REN_NonTransactional);
+	}
+	Material->GetExpressionCollection().Empty();
 
 	struct FInput { const TCHAR* Field; EMaterialProperty Property; const TCHAR* Output; };
 	const FInput Inputs[] = {
@@ -971,7 +988,29 @@ bool UBochaReparentCommandlet::EditMaterial(const TSharedPtr<FJsonObject>& Spec,
 			UMaterialEditingLibrary::CreateMaterialExpression(Material, UMaterialExpressionTextureSample::StaticClass(), -400, NodeY));
 		Sample->Texture = Texture;
 		Sample->AutoSetSampleType();
-		UMaterialEditingLibrary::ConnectMaterialProperty(Sample, Input.Output, Input.Property);
+
+		FString TintText;
+		if (Input.Property == MP_BaseColor && Spec->TryGetStringField(TEXT("tint"), TintText))
+		{
+			FLinearColor Tint;
+			if (!Tint.InitFromString(TintText))
+			{
+				UE_LOG(LogBochaReparent, Error, TEXT("editMaterials: bad tint %s"), *TintText);
+				return false;
+			}
+			UMaterialExpressionConstant3Vector* TintNode = Cast<UMaterialExpressionConstant3Vector>(
+				UMaterialEditingLibrary::CreateMaterialExpression(Material, UMaterialExpressionConstant3Vector::StaticClass(), -400, NodeY - 150));
+			TintNode->Constant = Tint;
+			UMaterialExpression* Multiply = UMaterialEditingLibrary::CreateMaterialExpression(
+				Material, UMaterialExpressionMultiply::StaticClass(), -150, NodeY);
+			UMaterialEditingLibrary::ConnectMaterialExpressions(Sample, Input.Output, Multiply, TEXT("A"));
+			UMaterialEditingLibrary::ConnectMaterialExpressions(TintNode, TEXT(""), Multiply, TEXT("B"));
+			UMaterialEditingLibrary::ConnectMaterialProperty(Multiply, TEXT(""), Input.Property);
+		}
+		else
+		{
+			UMaterialEditingLibrary::ConnectMaterialProperty(Sample, Input.Output, Input.Property);
+		}
 		NodeY += 300;
 	}
 	UMaterialEditingLibrary::RecompileMaterial(Material);
