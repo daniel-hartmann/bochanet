@@ -21,6 +21,7 @@
 #include "Materials/Material.h"
 #include "Materials/MaterialExpressionConstant3Vector.h"
 #include "Materials/MaterialExpressionMultiply.h"
+#include "Materials/MaterialExpressionTextureCoordinate.h"
 #include "Materials/MaterialExpressionTextureSample.h"
 #include "ObjectTools.h"
 #include "UObject/ObjectRedirector.h"
@@ -940,7 +941,8 @@ bool UBochaReparentCommandlet::ImportTexture(const TSharedPtr<FJsonObject>& Spec
 bool UBochaReparentCommandlet::EditMaterial(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const
 {
 	// Rebuilds the material graph: one texture sample per given input (baseColor, normal, roughness).
-	// An optional "tint" (linear color) multiplies the base color.
+	// An optional "tint" (linear color) multiplies the base color; an optional "uvScale" sizes the
+	// texture (2 = twice as big).
 	const FString Path = Spec->GetStringField(TEXT("path"));
 	UMaterial* Material = LoadObject<UMaterial>(nullptr, *Path);
 	if (!Material)
@@ -970,6 +972,16 @@ bool UBochaReparentCommandlet::EditMaterial(const TSharedPtr<FJsonObject>& Spec,
 		{ TEXT("normal"), MP_Normal, TEXT("RGB") },
 		{ TEXT("roughness"), MP_Roughness, TEXT("R") },
 	};
+	UMaterialExpressionTextureCoordinate* Coordinates = nullptr;
+	double UVScale = 1.0;
+	if (Spec->TryGetNumberField(TEXT("uvScale"), UVScale) && UVScale != 1.0)
+	{
+		Coordinates = Cast<UMaterialExpressionTextureCoordinate>(
+			UMaterialEditingLibrary::CreateMaterialExpression(Material, UMaterialExpressionTextureCoordinate::StaticClass(), -650, 0));
+		Coordinates->UTiling = 1.0 / UVScale;
+		Coordinates->VTiling = 1.0 / UVScale;
+	}
+
 	int32 NodeY = 0;
 	for (const FInput& Input : Inputs)
 	{
@@ -988,6 +1000,10 @@ bool UBochaReparentCommandlet::EditMaterial(const TSharedPtr<FJsonObject>& Spec,
 			UMaterialEditingLibrary::CreateMaterialExpression(Material, UMaterialExpressionTextureSample::StaticClass(), -400, NodeY));
 		Sample->Texture = Texture;
 		Sample->AutoSetSampleType();
+		if (Coordinates)
+		{
+			UMaterialEditingLibrary::ConnectMaterialExpressions(Coordinates, TEXT(""), Sample, TEXT("UVs"));
+		}
 
 		FString TintText;
 		if (Input.Property == MP_BaseColor && Spec->TryGetStringField(TEXT("tint"), TintText))
