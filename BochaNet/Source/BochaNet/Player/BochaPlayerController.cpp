@@ -149,6 +149,9 @@ void ABochaPlayerController::ServerThrow_Implementation(FVector BallLocation, FV
 	ABochaMatch* Match = ABochaMatch::Find(this);
 	if (!Match || !Match->CanThrow(PlayerState) || !Match->IsBehindThrowLine(BallLocation))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Throw rejected: %s."), !Match ? TEXT("no match")
+			: !Match->CanThrow(PlayerState) ? TEXT("not this player's turn")
+			: *FString::Printf(TEXT("ball past line B at %s"), *Match->ToCourt(BallLocation).ToCompactString()));
 		ClientThrowRejected();
 		return;
 	}

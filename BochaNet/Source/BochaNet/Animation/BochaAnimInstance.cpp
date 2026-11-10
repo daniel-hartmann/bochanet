@@ -10,6 +10,9 @@ void UBochaAnimInstance::NativeInitializeAnimation()
 
 	Character = Cast<ACharacter>(GetOwningActor());
 	MovementComponent = Character ? Character->GetCharacterMovement() : nullptr;
+
+	// The throw reuses an attack with root motion, which stepped the player past line B on every throw.
+	RootMotionMode = ERootMotionMode::IgnoreRootMotion;
 }
 
 void UBochaAnimInstance::NativeUpdateAnimation(float DeltaSeconds)

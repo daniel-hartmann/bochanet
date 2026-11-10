@@ -194,7 +194,9 @@ void ABochaMinigameCharacter::SendThrow(const FVector& Velocity)
 		return;
 	}
 
+	// Destroyed first: on the host the RPC runs right away, and a rejected throw gives a new ball back.
 	ABochaBall* Ball = GameMode->GetCurrentBall();
-	PlayerController->ServerThrow(Ball->GetActorLocation(), Velocity);
+	const FVector BallLocation = Ball->GetActorLocation();
 	Ball->Destroy();
+	PlayerController->ServerThrow(BallLocation, Velocity);
 }

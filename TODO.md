@@ -1,13 +1,13 @@
-- [ ] Shaders
 - [ ] Iluminação global
 
 
 # Daniel
 
 - [x] Corrigir famoso bug do material vermelho
-- [ ] Poder jogar sozinho direto pelo level da cancha
-- [ ] Jogo funcionar do início ao fim
+- [x] Poder jogar sozinho direto pelo level da cancha
+- [x] Jogo funcionar do início ao fim
 - [ ] Poder sair pelo menu de pause
+- [ ] Shaders
 
 # Faé
 
