@@ -37,6 +37,9 @@ public:
 	/** Local pause: opens or closes the pause screen; the match goes on for the other player. */
 	void TogglePause();
 	bool IsPaused() const { return bPaused; }
+
+	/** Pause screen "Sair": back to the lobby (network) or quits (court opened on its own). */
+	void Exit();
 	ABochaBall* GetCurrentBall() const { return CurrentBall; }
 	UBochaHUDWidget* GetHUD() const { return HUD; }
 

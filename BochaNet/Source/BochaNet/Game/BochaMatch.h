@@ -96,6 +96,9 @@ public:
 	/** The match in the world of WorldContext, if it has been spawned (or replicated) yet. */
 	static ABochaMatch* Find(const UObject* WorldContext);
 
+	/** Server: ends the minigame for everyone (back to the lobby, or a new match on the court alone). */
+	void EndMinigame();
+
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	/** Where Lvl_Cancha was loaded; set by the server before the match finishes spawning. */
@@ -255,7 +258,6 @@ private:
 	void StartRound();
 	void EndRound(const FStanding& Standing);
 	void ConfirmVictory();
-	void EndMinigame();
 
 	/** Announces the result on every machine (Game Over). */
 	UFUNCTION(NetMulticast, Reliable)

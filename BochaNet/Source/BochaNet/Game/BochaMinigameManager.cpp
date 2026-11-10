@@ -6,7 +6,10 @@
 #include "Game/BochaMatch.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/PlayerController.h"
+#include "EngineUtils.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "Lobby/BochaPortal.h"
 #include "Player/BochaBallCamera.h"
 #include "Player/BochaPlayerController.h"
 #include "Player/BochaMinigameCharacter.h"
@@ -40,6 +43,7 @@ void ABochaMinigameManager::BeginPlay()
 		// Above the HUD.
 		StateScreen->AddToViewport(10);
 		StateScreen->OnContinue.AddUObject(this, &ABochaMinigameManager::TogglePause);
+		StateScreen->OnExit.AddUObject(this, &ABochaMinigameManager::Exit);
 	}
 	if (const ABochaMinigameCharacter* Player = Cast<ABochaMinigameCharacter>(TargetCharacter))
 	{
@@ -173,6 +177,20 @@ void ABochaMinigameManager::RefreshCamera()
 	else
 	{
 		LocalController->SetViewTargetWithBlend(TargetCharacter, CameraBlendTime);
+	}
+}
+
+void ABochaMinigameManager::Exit()
+{
+	APlayerController* LocalController = UGameplayStatics::GetPlayerController(this, 0);
+	if (!TActorIterator<ABochaPortal>(GetWorld()))
+	{
+		UKismetSystemLibrary::QuitGame(this, LocalController, EQuitPreference::Quit, false);
+		return;
+	}
+	if (ABochaPlayerController* BochaController = Cast<ABochaPlayerController>(LocalController))
+	{
+		BochaController->ServerLeaveMinigame();
 	}
 }
 

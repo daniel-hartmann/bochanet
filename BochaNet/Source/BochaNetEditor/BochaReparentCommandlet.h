@@ -34,6 +34,7 @@ private:
 		bool bSave, TSet<UPackage*>& ChangedPackages) const;
 	UWidget* BuildWidget(UWidgetBlueprint* WidgetBlueprint, UPanelWidget* Parent, const TSharedPtr<FJsonObject>& Node) const;
 	bool CreateWidgetBlueprint(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const;
+	bool AddWidget(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const;
 	bool DuplicateAsset(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const;
 	bool CreateMontage(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const;
 	bool CreateBlueprintAsset(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const;

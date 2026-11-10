@@ -192,6 +192,14 @@ void ABochaPlayerController::ServerClaimVictory_Implementation()
 	}
 }
 
+void ABochaPlayerController::ServerLeaveMinigame_Implementation()
+{
+	if (ABochaMatch* Match = ABochaMatch::Find(this))
+	{
+		Match->EndMinigame();
+	}
+}
+
 void ABochaPlayerController::ClientThrowRejected_Implementation()
 {
 	if (MinigameManager)

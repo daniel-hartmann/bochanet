@@ -162,6 +162,15 @@ int32 UBochaReparentCommandlet::Main(const FString& Params)
 		}
 	}
 
+	const TArray<TSharedPtr<FJsonValue>>* AddedWidgets = nullptr;
+	if (Spec->TryGetArrayField(TEXT("addWidgets"), AddedWidgets))
+	{
+		for (const TSharedPtr<FJsonValue>& Value : *AddedWidgets)
+		{
+			bOk &= AddWidget(Value->AsObject(), ChangedPackages);
+		}
+	}
+
 	const TArray<TSharedPtr<FJsonValue>>* NewActions = nullptr;
 	if (Spec->TryGetArrayField(TEXT("createInputActions"), NewActions))
 	{
@@ -815,6 +824,47 @@ bool UBochaReparentCommandlet::CreateWidgetBlueprint(const TSharedPtr<FJsonObjec
 	Package->MarkPackageDirty();
 	ChangedPackages.Add(Package);
 	UE_LOG(LogBochaReparent, Display, TEXT("Created %s (child of %s)"), *PackageName, *Parent->GetName());
+	return true;
+}
+
+bool UBochaReparentCommandlet::AddWidget(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const
+{
+	const FString Path = Spec->GetStringField(TEXT("path"));
+	UWidgetBlueprint* WidgetBlueprint = LoadObject<UWidgetBlueprint>(nullptr, *Path);
+	if (!WidgetBlueprint)
+	{
+		UE_LOG(LogBochaReparent, Error, TEXT("addWidgets: %s not found"), *Path);
+		return false;
+	}
+	const TSharedPtr<FJsonObject> Node = Spec->GetObjectField(TEXT("widget"));
+	const FString Name = Node->GetStringField(TEXT("name"));
+	if (WidgetBlueprint->WidgetTree->FindWidget(FName(*Name)))
+	{
+		UE_LOG(LogBochaReparent, Display, TEXT("%s: %s already exists"), *WidgetBlueprint->GetName(), *Name);
+		return true;
+	}
+	const FString ParentName = Spec->GetStringField(TEXT("parent"));
+	UPanelWidget* Parent = Cast<UPanelWidget>(WidgetBlueprint->WidgetTree->FindWidget(FName(*ParentName)));
+	if (!Parent)
+	{
+		UE_LOG(LogBochaReparent, Error, TEXT("%s: no panel named %s"), *WidgetBlueprint->GetName(), *ParentName);
+		return false;
+	}
+	UWidget* Widget = BuildWidget(WidgetBlueprint, Parent, Node);
+	if (!Widget)
+	{
+		return false;
+	}
+	// As the designer does: every new widget gets its variable GUID.
+	UWidgetTree::ForWidgetAndChildren(Widget, [WidgetBlueprint](UWidget* Added)
+	{
+		WidgetBlueprint->OnVariableAdded(Added->GetFName());
+	});
+	FBlueprintEditorUtils::MarkBlueprintAsStructurallyModified(WidgetBlueprint);
+	Compile(WidgetBlueprint);
+	WidgetBlueprint->MarkPackageDirty();
+	ChangedPackages.Add(WidgetBlueprint->GetPackage());
+	UE_LOG(LogBochaReparent, Display, TEXT("%s: added %s to %s"), *WidgetBlueprint->GetName(), *Name, *ParentName);
 	return true;
 }
 

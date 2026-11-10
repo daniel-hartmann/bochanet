@@ -11,6 +11,7 @@ void UBochaStateScreenWidget::NativeOnInitialized()
 	Super::NativeOnInitialized();
 
 	ContinueButton->OnClicked.AddDynamic(this, &UBochaStateScreenWidget::HandleContinueClicked);
+	ExitButton->OnClicked.AddDynamic(this, &UBochaStateScreenWidget::HandleExitClicked);
 	SetVisibility(ESlateVisibility::Collapsed);
 }
 
@@ -34,6 +35,7 @@ void UBochaStateScreenWidget::Show(EBochaScreen Screen, const FText& Subtitle, f
 		"A/D: andar   Q/E ou mouse: mirar   W/S: força   Espaço: arremessar   P: pausa"));
 	ControlsText->SetVisibility(bShowControls ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed);
 	ContinueButton->SetVisibility(Screen == EBochaScreen::Pause ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+	ExitButton->SetVisibility(Screen == EBochaScreen::Pause ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
 
 	// Only the pause screen takes the mouse; the others are drawn over the game.
 	SetVisibility(Screen == EBochaScreen::Pause ? ESlateVisibility::Visible : ESlateVisibility::HitTestInvisible);
@@ -55,6 +57,11 @@ void UBochaStateScreenWidget::Hide()
 void UBochaStateScreenWidget::HandleContinueClicked()
 {
 	OnContinue.Broadcast();
+}
+
+void UBochaStateScreenWidget::HandleExitClicked()
+{
+	OnExit.Broadcast();
 }
 
 #undef LOCTEXT_NAMESPACE

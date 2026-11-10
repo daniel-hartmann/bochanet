@@ -39,6 +39,10 @@ public:
 	UFUNCTION(Server, Reliable)
 	void ServerClaimVictory();
 
+	/** The pause screen's "Sair": ends the minigame and takes every player back to the lobby. */
+	UFUNCTION(Server, Reliable)
+	void ServerLeaveMinigame();
+
 	/** The server refused a throw: put the held ball back as the match says. */
 	UFUNCTION(Client, Reliable)
 	void ClientThrowRejected();

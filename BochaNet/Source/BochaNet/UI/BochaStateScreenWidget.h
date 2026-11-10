@@ -35,6 +35,9 @@ public:
 	/** The pause screen's "Continuar" button. */
 	FSimpleMulticastDelegate OnContinue;
 
+	/** The pause screen's "Sair" button. */
+	FSimpleMulticastDelegate OnExit;
+
 protected:
 	virtual void NativeOnInitialized() override;
 
@@ -51,6 +54,9 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> ContinueButton;
 
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UButton> ExitButton;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Bocha|Screen")
 	FSlateColor VictoryColor = FSlateColor(FLinearColor(0.3f, 1.f, 0.4f));
 
@@ -60,6 +66,9 @@ protected:
 private:
 	UFUNCTION()
 	void HandleContinueClicked();
+
+	UFUNCTION()
+	void HandleExitClicked();
 
 	EBochaScreen Current = EBochaScreen::Start;
 	FTimerHandle HideTimer;
