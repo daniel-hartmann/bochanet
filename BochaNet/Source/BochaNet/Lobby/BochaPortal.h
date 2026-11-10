@@ -30,6 +30,10 @@ public:
 
 	bool HasMinigameStarted() const { return bMinigameStarted; }
 
+	/** Spawns the local player's minigame character and manager at the actor tagged StartTag. */
+	static void SetUpLocalPlayer(UWorld* World, FName StartTag, TSubclassOf<ABochaMinigameCharacter> CharacterClass,
+		TSubclassOf<ABochaMinigameManager> ManagerClass);
+
 protected:
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	virtual void NotifyActorEndOverlap(AActor* OtherActor) override;

@@ -10,6 +10,7 @@
 #include "Game/BochaReferee.h"
 #include "GameFramework/GameStateBase.h"
 #include "GameFramework/PlayerState.h"
+#include "Kismet/GameplayStatics.h"
 #include "Lobby/BochaPortal.h"
 #include "Net/UnrealNetwork.h"
 #include "TimerManager.h"
@@ -426,7 +427,14 @@ void ABochaMatch::MulticastGameOver_Implementation(int32 WinnerTeam, int32 RedSc
 void ABochaMatch::EndMinigame()
 {
 	// Every machine goes back to the lobby; the portal then destroys this match.
-	for (TActorIterator<ABochaPortal> It(GetWorld()); It; ++It)
+	TActorIterator<ABochaPortal> It(GetWorld());
+	if (!It)
+	{
+		// Court opened on its own (BochaSoloGameMode): play again.
+		UGameplayStatics::OpenLevel(this, FName(UGameplayStatics::GetCurrentLevelName(this)));
+		return;
+	}
+	for (; It; ++It)
 	{
 		It->MulticastEndMinigame();
 	}

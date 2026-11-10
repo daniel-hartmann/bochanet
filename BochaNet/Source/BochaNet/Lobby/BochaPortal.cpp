@@ -114,22 +114,28 @@ void ABochaPortal::MulticastEndMinigame_Implementation()
 
 void ABochaPortal::OnMinigameLevelShown()
 {
+	SetUpLocalPlayer(GetWorld(), StartTag, MinigameCharacterClass, MinigameManagerClass);
+}
+
+void ABochaPortal::SetUpLocalPlayer(UWorld* World, FName StartTag, TSubclassOf<ABochaMinigameCharacter> CharacterClass,
+	TSubclassOf<ABochaMinigameManager> ManagerClass)
+{
 	TArray<AActor*> StartActors;
-	UGameplayStatics::GetAllActorsWithTag(this, StartTag, StartActors);
-	ABochaPlayerController* PlayerController = Cast<ABochaPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	UGameplayStatics::GetAllActorsWithTag(World, StartTag, StartActors);
+	ABochaPlayerController* PlayerController = Cast<ABochaPlayerController>(UGameplayStatics::GetPlayerController(World, 0));
 	if (StartActors.IsEmpty() || !PlayerController)
 	{
 		return;
 	}
 
 	const AActor* Start = StartActors[0];
-	ABochaMinigameCharacter* Character = GetWorld()->SpawnActor<ABochaMinigameCharacter>(
-		MinigameCharacterClass, Start->GetActorLocation(), Start->GetActorRotation());
+	ABochaMinigameCharacter* Character = World->SpawnActor<ABochaMinigameCharacter>(
+		CharacterClass, Start->GetActorLocation(), Start->GetActorRotation());
 	PlayerController->MinigameCharacter = Character;
 	PlayerController->SetIgnoreMoveInput(true);
 	PlayerController->SetIgnoreLookInput(true);
 
-	ABochaMinigameManager* Manager = GetWorld()->SpawnActorDeferred<ABochaMinigameManager>(MinigameManagerClass, FTransform::Identity);
+	ABochaMinigameManager* Manager = World->SpawnActorDeferred<ABochaMinigameManager>(ManagerClass, FTransform::Identity);
 	Manager->TargetCharacter = Character;
 	Manager->FinishSpawning(FTransform::Identity);
 	PlayerController->MinigameManager = Manager;
