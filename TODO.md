@@ -6,7 +6,7 @@
 - [x] Corrigir famoso bug do material vermelho
 - [x] Poder jogar sozinho direto pelo level da cancha
 - [x] Jogo funcionar do início ao fim
-- [ ] Poder sair pelo menu de pause
+- [x] Poder sair pelo menu de pause
 - [ ] Shaders
 
 # Faé
