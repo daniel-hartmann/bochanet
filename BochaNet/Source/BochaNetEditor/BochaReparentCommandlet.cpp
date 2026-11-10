@@ -14,7 +14,12 @@
 #include "Animation/AnimMontage.h"
 #include "Animation/AnimNotifies/AnimNotify.h"
 #include "Animation/AnimSequence.h"
+#include "AssetImportTask.h"
 #include "AssetToolsModule.h"
+#include "Engine/Texture2D.h"
+#include "MaterialEditingLibrary.h"
+#include "Materials/Material.h"
+#include "Materials/MaterialExpressionTextureSample.h"
 #include "ObjectTools.h"
 #include "UObject/ObjectRedirector.h"
 #include "Engine/World.h"
@@ -159,6 +164,24 @@ int32 UBochaReparentCommandlet::Main(const FString& Params)
 		for (const TSharedPtr<FJsonValue>& Value : *NewWidgets)
 		{
 			bOk &= CreateWidgetBlueprint(Value->AsObject(), ChangedPackages);
+		}
+	}
+
+	const TArray<TSharedPtr<FJsonValue>>* Textures = nullptr;
+	if (Spec->TryGetArrayField(TEXT("importTextures"), Textures))
+	{
+		for (const TSharedPtr<FJsonValue>& Value : *Textures)
+		{
+			bOk &= ImportTexture(Value->AsObject(), ChangedPackages);
+		}
+	}
+
+	const TArray<TSharedPtr<FJsonValue>>* Materials = nullptr;
+	if (Spec->TryGetArrayField(TEXT("editMaterials"), Materials))
+	{
+		for (const TSharedPtr<FJsonValue>& Value : *Materials)
+		{
+			bOk &= EditMaterial(Value->AsObject(), ChangedPackages);
 		}
 	}
 
@@ -865,6 +888,96 @@ bool UBochaReparentCommandlet::AddWidget(const TSharedPtr<FJsonObject>& Spec, TS
 	WidgetBlueprint->MarkPackageDirty();
 	ChangedPackages.Add(WidgetBlueprint->GetPackage());
 	UE_LOG(LogBochaReparent, Display, TEXT("%s: added %s to %s"), *WidgetBlueprint->GetName(), *Name, *ParentName);
+	return true;
+}
+
+bool UBochaReparentCommandlet::ImportTexture(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const
+{
+	// "file" is relative to the repository root; "type" is color, normal or mask (linear, e.g. roughness).
+	const FString File = FPaths::ConvertRelativePathToFull(FPaths::Combine(FPaths::ProjectDir(), TEXT(".."), Spec->GetStringField(TEXT("file"))));
+	const FString Dest = Spec->GetStringField(TEXT("dest"));
+	const FString Type = Spec->GetStringField(TEXT("type"));
+	if (!FPaths::FileExists(File))
+	{
+		UE_LOG(LogBochaReparent, Error, TEXT("importTextures: %s not found"), *File);
+		return false;
+	}
+
+	UAssetImportTask* Task = NewObject<UAssetImportTask>();
+	Task->Filename = File;
+	Task->DestinationPath = FPackageName::GetLongPackagePath(Dest);
+	Task->DestinationName = FPackageName::GetShortName(Dest);
+	Task->bReplaceExisting = true;
+	Task->bAutomated = true;
+	Task->bSave = false;
+	FModuleManager::LoadModuleChecked<FAssetToolsModule>("AssetTools").Get().ImportAssetTasks({ Task });
+
+	UTexture2D* Texture = LoadObject<UTexture2D>(nullptr, *(Dest + TEXT(".") + FPackageName::GetShortName(Dest)));
+	if (!Texture)
+	{
+		UE_LOG(LogBochaReparent, Error, TEXT("importTextures: could not import %s"), *File);
+		return false;
+	}
+	if (Type == TEXT("normal"))
+	{
+		Texture->CompressionSettings = TC_Normalmap;
+		Texture->SRGB = false;
+	}
+	else if (Type == TEXT("mask"))
+	{
+		Texture->CompressionSettings = TC_Masks;
+		Texture->SRGB = false;
+	}
+	Texture->PostEditChange();
+	Texture->MarkPackageDirty();
+	ChangedPackages.Add(Texture->GetPackage());
+	UE_LOG(LogBochaReparent, Display, TEXT("Imported %s as %s (%s)"), *FPaths::GetCleanFilename(File), *Dest, *Type);
+	return true;
+}
+
+bool UBochaReparentCommandlet::EditMaterial(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const
+{
+	// Rebuilds the material graph: one texture sample per given input (baseColor, normal, roughness).
+	const FString Path = Spec->GetStringField(TEXT("path"));
+	UMaterial* Material = LoadObject<UMaterial>(nullptr, *Path);
+	if (!Material)
+	{
+		UE_LOG(LogBochaReparent, Error, TEXT("editMaterials: %s not found"), *Path);
+		return false;
+	}
+	UMaterialEditingLibrary::DeleteAllMaterialExpressions(Material);
+
+	struct FInput { const TCHAR* Field; EMaterialProperty Property; const TCHAR* Output; };
+	const FInput Inputs[] = {
+		{ TEXT("baseColor"), MP_BaseColor, TEXT("RGB") },
+		{ TEXT("normal"), MP_Normal, TEXT("RGB") },
+		{ TEXT("roughness"), MP_Roughness, TEXT("R") },
+	};
+	int32 NodeY = 0;
+	for (const FInput& Input : Inputs)
+	{
+		FString TexturePath;
+		if (!Spec->TryGetStringField(Input.Field, TexturePath))
+		{
+			continue;
+		}
+		UTexture* Texture = LoadObject<UTexture>(nullptr, *TexturePath);
+		if (!Texture)
+		{
+			UE_LOG(LogBochaReparent, Error, TEXT("editMaterials: %s not found"), *TexturePath);
+			return false;
+		}
+		UMaterialExpressionTextureSample* Sample = Cast<UMaterialExpressionTextureSample>(
+			UMaterialEditingLibrary::CreateMaterialExpression(Material, UMaterialExpressionTextureSample::StaticClass(), -400, NodeY));
+		Sample->Texture = Texture;
+		Sample->AutoSetSampleType();
+		UMaterialEditingLibrary::ConnectMaterialProperty(Sample, Input.Output, Input.Property);
+		NodeY += 300;
+	}
+	UMaterialEditingLibrary::RecompileMaterial(Material);
+	Material->MarkPackageDirty();
+	ChangedPackages.Add(Material->GetPackage());
+	UE_LOG(LogBochaReparent, Display, TEXT("Rebuilt %s"), *Path);
 	return true;
 }
 
