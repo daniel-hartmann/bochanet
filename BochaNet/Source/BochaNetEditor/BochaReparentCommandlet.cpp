@@ -19,7 +19,11 @@
 #include "Engine/Texture2D.h"
 #include "MaterialEditingLibrary.h"
 #include "Materials/Material.h"
+#include "Engine/PostProcessVolume.h"
+#include "Factories/MaterialFactoryNew.h"
 #include "Materials/MaterialExpressionConstant3Vector.h"
+#include "Materials/MaterialExpressionCustom.h"
+#include "Materials/MaterialExpressionSceneTexture.h"
 #include "Materials/MaterialExpressionMultiply.h"
 #include "Materials/MaterialExpressionTextureCoordinate.h"
 #include "Materials/MaterialExpressionTextureSample.h"
@@ -185,6 +189,15 @@ int32 UBochaReparentCommandlet::Main(const FString& Params)
 		for (const TSharedPtr<FJsonValue>& Value : *Materials)
 		{
 			bOk &= EditMaterial(Value->AsObject(), ChangedPackages);
+		}
+	}
+
+	const TArray<TSharedPtr<FJsonValue>>* Outlines = nullptr;
+	if (Spec->TryGetArrayField(TEXT("createOutlineMaterials"), Outlines))
+	{
+		for (const TSharedPtr<FJsonValue>& Value : *Outlines)
+		{
+			bOk &= CreateOutlineMaterial(Value->AsObject(), ChangedPackages);
 		}
 	}
 
@@ -621,6 +634,56 @@ bool UBochaReparentCommandlet::EditMap(const TSharedPtr<FJsonObject>& Spec, bool
 	ForEachEntry(TEXT("folders"), [](AActor* Actor, const FString& Folder) { Actor->SetFolderPath(FName(*Folder)); });
 	ForEachEntry(TEXT("labels"), [](AActor* Actor, const FString& Label) { Actor->SetActorLabel(Label); });
 
+	// "addPostProcessVolume": { "label", "folder", "settings": { FPostProcessSettings field: text }, "blendables": [material] }
+	const TSharedPtr<FJsonObject>* VolumeSpec = nullptr;
+	if (Spec->TryGetObjectField(TEXT("addPostProcessVolume"), VolumeSpec))
+	{
+		const FString Label = (*VolumeSpec)->GetStringField(TEXT("label"));
+		bool bExists = false;
+		for (AActor* Actor : World->PersistentLevel->Actors)
+		{
+			bExists |= Actor && Actor->IsA<APostProcessVolume>() && Actor->GetActorLabel() == Label;
+		}
+		UE_LOG(LogBochaReparent, Display, TEXT("%s: add post process volume %s%s"), *World->GetName(), *Label, bExists ? TEXT(" (already there)") : TEXT(""));
+		if (bSave && !bExists)
+		{
+			FActorSpawnParameters Params;
+			Params.OverrideLevel = World->PersistentLevel;
+			APostProcessVolume* Volume = World->SpawnActor<APostProcessVolume>(Params);
+			if (!Volume)
+			{
+				UE_LOG(LogBochaReparent, Error, TEXT("%s: could not spawn the post process volume"), *World->GetName());
+				return false;
+			}
+			Volume->SetActorLabel(Label);
+			Volume->SetFolderPath(FName(*(*VolumeSpec)->GetStringField(TEXT("folder"))));
+			Volume->bUnbound = true;
+			const TSharedPtr<FJsonObject>* Settings = nullptr;
+			if ((*VolumeSpec)->TryGetObjectField(TEXT("settings"), Settings))
+			{
+				for (const TPair<FString, TSharedPtr<FJsonValue>>& Pair : (*Settings)->Values)
+				{
+					FProperty* Property = FindFProperty<FProperty>(FPostProcessSettings::StaticStruct(), FName(*Pair.Key));
+					if (!Property || !Property->ImportText_InContainer(*Pair.Value->AsString(), &Volume->Settings, nullptr, PPF_None))
+					{
+						UE_LOG(LogBochaReparent, Error, TEXT("%s: could not set %s = %s"), *World->GetName(), *Pair.Key, *Pair.Value->AsString());
+						return false;
+					}
+				}
+			}
+			for (const FString& BlendablePath : GetStringArray(*VolumeSpec, TEXT("blendables")))
+			{
+				UObject* Blendable = LoadObject<UObject>(nullptr, *BlendablePath);
+				if (!Blendable)
+				{
+					UE_LOG(LogBochaReparent, Error, TEXT("%s: blendable %s not found"), *World->GetName(), *BlendablePath);
+					return false;
+				}
+				Volume->Settings.WeightedBlendables.Array.Add(FWeightedBlendable(1.f, Blendable));
+			}
+		}
+	}
+
 	for (const FString& Name : GetStringArray(Spec, TEXT("removeActors")))
 	{
 		AActor* Actor = FindActor(Name);
@@ -1033,6 +1096,72 @@ bool UBochaReparentCommandlet::EditMaterial(const TSharedPtr<FJsonObject>& Spec,
 	Material->MarkPackageDirty();
 	ChangedPackages.Add(Material->GetPackage());
 	UE_LOG(LogBochaReparent, Display, TEXT("Rebuilt %s"), *Path);
+	return true;
+}
+
+bool UBochaReparentCommandlet::CreateOutlineMaterial(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const
+{
+	// Post process material: draws a "width" pixel "color" line around whatever renders into custom depth.
+	const FString PackageName = Spec->GetStringField(TEXT("path"));
+	if (FPackageName::DoesPackageExist(PackageName))
+	{
+		UE_LOG(LogBochaReparent, Display, TEXT("%s already exists"), *PackageName);
+		return true;
+	}
+	FLinearColor Color;
+	if (!Color.InitFromString(Spec->GetStringField(TEXT("color"))))
+	{
+		UE_LOG(LogBochaReparent, Error, TEXT("createOutlineMaterials: bad color"));
+		return false;
+	}
+	const double Width = Spec->GetNumberField(TEXT("width"));
+
+	UPackage* Package = CreatePackage(*PackageName);
+	UMaterialFactoryNew* Factory = NewObject<UMaterialFactoryNew>();
+	UMaterial* Material = Cast<UMaterial>(Factory->FactoryCreateNew(UMaterial::StaticClass(), Package,
+		FName(*FPackageName::GetShortName(PackageName)), RF_Public | RF_Standalone, nullptr, GWarn));
+	Material->MaterialDomain = MD_PostProcess;
+
+	UMaterialExpressionSceneTexture* SceneColor = Cast<UMaterialExpressionSceneTexture>(
+		UMaterialEditingLibrary::CreateMaterialExpression(Material, UMaterialExpressionSceneTexture::StaticClass(), -700, 0));
+	SceneColor->SceneTextureId = PPI_PostProcessInput0;
+	UMaterialExpressionSceneTexture* CustomDepth = Cast<UMaterialExpressionSceneTexture>(
+		UMaterialEditingLibrary::CreateMaterialExpression(Material, UMaterialExpressionSceneTexture::StaticClass(), -700, 250));
+	CustomDepth->SceneTextureId = PPI_CustomDepth;
+	UMaterialExpression* ScreenUV = UMaterialEditingLibrary::CreateMaterialExpression(
+		Material, UMaterialExpressionTextureCoordinate::StaticClass(), -700, 500);
+
+	UMaterialExpressionCustom* Custom = Cast<UMaterialExpressionCustom>(
+		UMaterialEditingLibrary::CreateMaterialExpression(Material, UMaterialExpressionCustom::StaticClass(), -300, 0));
+	Custom->Description = TEXT("Outline");
+	Custom->OutputType = CMOT_Float3;
+	Custom->Inputs.Empty();
+	for (const TCHAR* Name : { TEXT("SceneColor"), TEXT("Center"), TEXT("InvSize"), TEXT("UV") })
+	{
+		FCustomInput& Input = Custom->Inputs.AddDefaulted_GetRef();
+		Input.InputName = Name;
+	}
+	// 13 = PPI_CustomDepth. A pixel is on the line when a neighbour is much closer in custom depth
+	// (the outlined object) than the pixel itself (background, or something behind it).
+	Custom->Code = FString::Printf(TEXT(
+		"float2 D = InvSize * %.2f;\n"
+		"float Near = min(min(SceneTextureLookup(UV + float2(D.x, 0), 13, false).r, SceneTextureLookup(UV - float2(D.x, 0), 13, false).r),\n"
+		"                 min(SceneTextureLookup(UV + float2(0, D.y), 13, false).r, SceneTextureLookup(UV - float2(0, D.y), 13, false).r));\n"
+		"float Edge = Center.r - Near > 50 ? 1 : 0;\n"
+		"return lerp(SceneColor.rgb, float3(%.3f, %.3f, %.3f), Edge);"),
+		Width, Color.R, Color.G, Color.B);
+
+	UMaterialEditingLibrary::ConnectMaterialExpressions(SceneColor, TEXT("Color"), Custom, TEXT("SceneColor"));
+	UMaterialEditingLibrary::ConnectMaterialExpressions(CustomDepth, TEXT("Color"), Custom, TEXT("Center"));
+	UMaterialEditingLibrary::ConnectMaterialExpressions(SceneColor, TEXT("InvSize"), Custom, TEXT("InvSize"));
+	UMaterialEditingLibrary::ConnectMaterialExpressions(ScreenUV, TEXT(""), Custom, TEXT("UV"));
+	UMaterialEditingLibrary::ConnectMaterialProperty(Custom, TEXT(""), MP_EmissiveColor);
+	UMaterialEditingLibrary::RecompileMaterial(Material);
+
+	FAssetRegistryModule::AssetCreated(Material);
+	Package->MarkPackageDirty();
+	ChangedPackages.Add(Package);
+	UE_LOG(LogBochaReparent, Display, TEXT("Created %s"), *PackageName);
 	return true;
 }
 

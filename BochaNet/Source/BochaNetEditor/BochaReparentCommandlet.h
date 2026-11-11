@@ -37,6 +37,7 @@ private:
 	bool AddWidget(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const;
 	bool ImportTexture(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const;
 	bool EditMaterial(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const;
+	bool CreateOutlineMaterial(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const;
 	bool DuplicateAsset(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const;
 	bool CreateMontage(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const;
 	bool CreateBlueprintAsset(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const;
