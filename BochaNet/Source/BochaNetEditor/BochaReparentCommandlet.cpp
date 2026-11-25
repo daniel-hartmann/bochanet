@@ -14,7 +14,19 @@
 #include "Animation/AnimMontage.h"
 #include "Animation/AnimNotifies/AnimNotify.h"
 #include "Animation/AnimSequence.h"
+#include "AssetImportTask.h"
 #include "AssetToolsModule.h"
+#include "Engine/Texture2D.h"
+#include "MaterialEditingLibrary.h"
+#include "Materials/Material.h"
+#include "Engine/PostProcessVolume.h"
+#include "Factories/MaterialFactoryNew.h"
+#include "Materials/MaterialExpressionConstant3Vector.h"
+#include "Materials/MaterialExpressionCustom.h"
+#include "Materials/MaterialExpressionSceneTexture.h"
+#include "Materials/MaterialExpressionMultiply.h"
+#include "Materials/MaterialExpressionTextureCoordinate.h"
+#include "Materials/MaterialExpressionTextureSample.h"
 #include "ObjectTools.h"
 #include "UObject/ObjectRedirector.h"
 #include "Engine/World.h"
@@ -159,6 +171,33 @@ int32 UBochaReparentCommandlet::Main(const FString& Params)
 		for (const TSharedPtr<FJsonValue>& Value : *NewWidgets)
 		{
 			bOk &= CreateWidgetBlueprint(Value->AsObject(), ChangedPackages);
+		}
+	}
+
+	const TArray<TSharedPtr<FJsonValue>>* Textures = nullptr;
+	if (Spec->TryGetArrayField(TEXT("importTextures"), Textures))
+	{
+		for (const TSharedPtr<FJsonValue>& Value : *Textures)
+		{
+			bOk &= ImportTexture(Value->AsObject(), ChangedPackages);
+		}
+	}
+
+	const TArray<TSharedPtr<FJsonValue>>* Materials = nullptr;
+	if (Spec->TryGetArrayField(TEXT("editMaterials"), Materials))
+	{
+		for (const TSharedPtr<FJsonValue>& Value : *Materials)
+		{
+			bOk &= EditMaterial(Value->AsObject(), ChangedPackages);
+		}
+	}
+
+	const TArray<TSharedPtr<FJsonValue>>* Outlines = nullptr;
+	if (Spec->TryGetArrayField(TEXT("createOutlineMaterials"), Outlines))
+	{
+		for (const TSharedPtr<FJsonValue>& Value : *Outlines)
+		{
+			bOk &= CreateOutlineMaterial(Value->AsObject(), ChangedPackages);
 		}
 	}
 
@@ -595,6 +634,56 @@ bool UBochaReparentCommandlet::EditMap(const TSharedPtr<FJsonObject>& Spec, bool
 	ForEachEntry(TEXT("folders"), [](AActor* Actor, const FString& Folder) { Actor->SetFolderPath(FName(*Folder)); });
 	ForEachEntry(TEXT("labels"), [](AActor* Actor, const FString& Label) { Actor->SetActorLabel(Label); });
 
+	// "addPostProcessVolume": { "label", "folder", "settings": { FPostProcessSettings field: text }, "blendables": [material] }
+	const TSharedPtr<FJsonObject>* VolumeSpec = nullptr;
+	if (Spec->TryGetObjectField(TEXT("addPostProcessVolume"), VolumeSpec))
+	{
+		const FString Label = (*VolumeSpec)->GetStringField(TEXT("label"));
+		bool bExists = false;
+		for (AActor* Actor : World->PersistentLevel->Actors)
+		{
+			bExists |= Actor && Actor->IsA<APostProcessVolume>() && Actor->GetActorLabel() == Label;
+		}
+		UE_LOG(LogBochaReparent, Display, TEXT("%s: add post process volume %s%s"), *World->GetName(), *Label, bExists ? TEXT(" (already there)") : TEXT(""));
+		if (bSave && !bExists)
+		{
+			FActorSpawnParameters Params;
+			Params.OverrideLevel = World->PersistentLevel;
+			APostProcessVolume* Volume = World->SpawnActor<APostProcessVolume>(Params);
+			if (!Volume)
+			{
+				UE_LOG(LogBochaReparent, Error, TEXT("%s: could not spawn the post process volume"), *World->GetName());
+				return false;
+			}
+			Volume->SetActorLabel(Label);
+			Volume->SetFolderPath(FName(*(*VolumeSpec)->GetStringField(TEXT("folder"))));
+			Volume->bUnbound = true;
+			const TSharedPtr<FJsonObject>* Settings = nullptr;
+			if ((*VolumeSpec)->TryGetObjectField(TEXT("settings"), Settings))
+			{
+				for (const TPair<FString, TSharedPtr<FJsonValue>>& Pair : (*Settings)->Values)
+				{
+					FProperty* Property = FindFProperty<FProperty>(FPostProcessSettings::StaticStruct(), FName(*Pair.Key));
+					if (!Property || !Property->ImportText_InContainer(*Pair.Value->AsString(), &Volume->Settings, nullptr, PPF_None))
+					{
+						UE_LOG(LogBochaReparent, Error, TEXT("%s: could not set %s = %s"), *World->GetName(), *Pair.Key, *Pair.Value->AsString());
+						return false;
+					}
+				}
+			}
+			for (const FString& BlendablePath : GetStringArray(*VolumeSpec, TEXT("blendables")))
+			{
+				UObject* Blendable = LoadObject<UObject>(nullptr, *BlendablePath);
+				if (!Blendable)
+				{
+					UE_LOG(LogBochaReparent, Error, TEXT("%s: blendable %s not found"), *World->GetName(), *BlendablePath);
+					return false;
+				}
+				Volume->Settings.WeightedBlendables.Array.Add(FWeightedBlendable(1.f, Blendable));
+			}
+		}
+	}
+
 	for (const FString& Name : GetStringArray(Spec, TEXT("removeActors")))
 	{
 		AActor* Actor = FindActor(Name);
@@ -865,6 +954,214 @@ bool UBochaReparentCommandlet::AddWidget(const TSharedPtr<FJsonObject>& Spec, TS
 	WidgetBlueprint->MarkPackageDirty();
 	ChangedPackages.Add(WidgetBlueprint->GetPackage());
 	UE_LOG(LogBochaReparent, Display, TEXT("%s: added %s to %s"), *WidgetBlueprint->GetName(), *Name, *ParentName);
+	return true;
+}
+
+bool UBochaReparentCommandlet::ImportTexture(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const
+{
+	// "file" is relative to the repository root; "type" is color, normal or mask (linear, e.g. roughness).
+	const FString File = FPaths::ConvertRelativePathToFull(FPaths::Combine(FPaths::ProjectDir(), TEXT(".."), Spec->GetStringField(TEXT("file"))));
+	const FString Dest = Spec->GetStringField(TEXT("dest"));
+	const FString Type = Spec->GetStringField(TEXT("type"));
+	if (!FPaths::FileExists(File))
+	{
+		UE_LOG(LogBochaReparent, Error, TEXT("importTextures: %s not found"), *File);
+		return false;
+	}
+
+	UAssetImportTask* Task = NewObject<UAssetImportTask>();
+	Task->Filename = File;
+	Task->DestinationPath = FPackageName::GetLongPackagePath(Dest);
+	Task->DestinationName = FPackageName::GetShortName(Dest);
+	Task->bReplaceExisting = true;
+	Task->bAutomated = true;
+	Task->bSave = false;
+	FModuleManager::LoadModuleChecked<FAssetToolsModule>("AssetTools").Get().ImportAssetTasks({ Task });
+
+	UTexture2D* Texture = LoadObject<UTexture2D>(nullptr, *(Dest + TEXT(".") + FPackageName::GetShortName(Dest)));
+	if (!Texture)
+	{
+		UE_LOG(LogBochaReparent, Error, TEXT("importTextures: could not import %s"), *File);
+		return false;
+	}
+	if (Type == TEXT("normal"))
+	{
+		Texture->CompressionSettings = TC_Normalmap;
+		Texture->SRGB = false;
+	}
+	else if (Type == TEXT("mask"))
+	{
+		Texture->CompressionSettings = TC_Masks;
+		Texture->SRGB = false;
+	}
+	Texture->PostEditChange();
+	Texture->MarkPackageDirty();
+	ChangedPackages.Add(Texture->GetPackage());
+	UE_LOG(LogBochaReparent, Display, TEXT("Imported %s as %s (%s)"), *FPaths::GetCleanFilename(File), *Dest, *Type);
+	return true;
+}
+
+bool UBochaReparentCommandlet::EditMaterial(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const
+{
+	// Rebuilds the material graph: one texture sample per given input (baseColor, normal, roughness).
+	// An optional "tint" (linear color) multiplies the base color; an optional "uvScale" sizes the
+	// texture (2 = twice as big).
+	const FString Path = Spec->GetStringField(TEXT("path"));
+	UMaterial* Material = LoadObject<UMaterial>(nullptr, *Path);
+	if (!Material)
+	{
+		UE_LOG(LogBochaReparent, Error, TEXT("editMaterials: %s not found"), *Path);
+		return false;
+	}
+	// Unhooks the old graph instead of deleting it: a material loaded at startup (as a C++ default) has
+	// nodes that cannot be marked as garbage. Moved to the transient package, they are not saved.
+	for (int32 Property = 0; Property < MP_MAX; ++Property)
+	{
+		if (FExpressionInput* Input = Material->GetExpressionInputForProperty(static_cast<EMaterialProperty>(Property)))
+		{
+			Input->Expression = nullptr;
+		}
+	}
+	for (UMaterialExpression* Old : TArray<TObjectPtr<UMaterialExpression>>(Material->GetExpressionCollection().Expressions))
+	{
+		Material->RemoveExpressionParameter(Old);
+		Old->Rename(nullptr, GetTransientPackage(), REN_DontCreateRedirectors | REN_NonTransactional);
+	}
+	Material->GetExpressionCollection().Empty();
+
+	struct FInput { const TCHAR* Field; EMaterialProperty Property; const TCHAR* Output; };
+	const FInput Inputs[] = {
+		{ TEXT("baseColor"), MP_BaseColor, TEXT("RGB") },
+		{ TEXT("normal"), MP_Normal, TEXT("RGB") },
+		{ TEXT("roughness"), MP_Roughness, TEXT("R") },
+	};
+	UMaterialExpressionTextureCoordinate* Coordinates = nullptr;
+	double UVScale = 1.0;
+	if (Spec->TryGetNumberField(TEXT("uvScale"), UVScale) && UVScale != 1.0)
+	{
+		Coordinates = Cast<UMaterialExpressionTextureCoordinate>(
+			UMaterialEditingLibrary::CreateMaterialExpression(Material, UMaterialExpressionTextureCoordinate::StaticClass(), -650, 0));
+		Coordinates->UTiling = 1.0 / UVScale;
+		Coordinates->VTiling = 1.0 / UVScale;
+	}
+
+	int32 NodeY = 0;
+	for (const FInput& Input : Inputs)
+	{
+		FString TexturePath;
+		if (!Spec->TryGetStringField(Input.Field, TexturePath))
+		{
+			continue;
+		}
+		UTexture* Texture = LoadObject<UTexture>(nullptr, *TexturePath);
+		if (!Texture)
+		{
+			UE_LOG(LogBochaReparent, Error, TEXT("editMaterials: %s not found"), *TexturePath);
+			return false;
+		}
+		UMaterialExpressionTextureSample* Sample = Cast<UMaterialExpressionTextureSample>(
+			UMaterialEditingLibrary::CreateMaterialExpression(Material, UMaterialExpressionTextureSample::StaticClass(), -400, NodeY));
+		Sample->Texture = Texture;
+		Sample->AutoSetSampleType();
+		if (Coordinates)
+		{
+			UMaterialEditingLibrary::ConnectMaterialExpressions(Coordinates, TEXT(""), Sample, TEXT("UVs"));
+		}
+
+		FString TintText;
+		if (Input.Property == MP_BaseColor && Spec->TryGetStringField(TEXT("tint"), TintText))
+		{
+			FLinearColor Tint;
+			if (!Tint.InitFromString(TintText))
+			{
+				UE_LOG(LogBochaReparent, Error, TEXT("editMaterials: bad tint %s"), *TintText);
+				return false;
+			}
+			UMaterialExpressionConstant3Vector* TintNode = Cast<UMaterialExpressionConstant3Vector>(
+				UMaterialEditingLibrary::CreateMaterialExpression(Material, UMaterialExpressionConstant3Vector::StaticClass(), -400, NodeY - 150));
+			TintNode->Constant = Tint;
+			UMaterialExpression* Multiply = UMaterialEditingLibrary::CreateMaterialExpression(
+				Material, UMaterialExpressionMultiply::StaticClass(), -150, NodeY);
+			UMaterialEditingLibrary::ConnectMaterialExpressions(Sample, Input.Output, Multiply, TEXT("A"));
+			UMaterialEditingLibrary::ConnectMaterialExpressions(TintNode, TEXT(""), Multiply, TEXT("B"));
+			UMaterialEditingLibrary::ConnectMaterialProperty(Multiply, TEXT(""), Input.Property);
+		}
+		else
+		{
+			UMaterialEditingLibrary::ConnectMaterialProperty(Sample, Input.Output, Input.Property);
+		}
+		NodeY += 300;
+	}
+	UMaterialEditingLibrary::RecompileMaterial(Material);
+	Material->MarkPackageDirty();
+	ChangedPackages.Add(Material->GetPackage());
+	UE_LOG(LogBochaReparent, Display, TEXT("Rebuilt %s"), *Path);
+	return true;
+}
+
+bool UBochaReparentCommandlet::CreateOutlineMaterial(const TSharedPtr<FJsonObject>& Spec, TSet<UPackage*>& ChangedPackages) const
+{
+	// Post process material: draws a "width" pixel "color" line around whatever renders into custom depth.
+	const FString PackageName = Spec->GetStringField(TEXT("path"));
+	if (FPackageName::DoesPackageExist(PackageName))
+	{
+		UE_LOG(LogBochaReparent, Display, TEXT("%s already exists"), *PackageName);
+		return true;
+	}
+	FLinearColor Color;
+	if (!Color.InitFromString(Spec->GetStringField(TEXT("color"))))
+	{
+		UE_LOG(LogBochaReparent, Error, TEXT("createOutlineMaterials: bad color"));
+		return false;
+	}
+	const double Width = Spec->GetNumberField(TEXT("width"));
+
+	UPackage* Package = CreatePackage(*PackageName);
+	UMaterialFactoryNew* Factory = NewObject<UMaterialFactoryNew>();
+	UMaterial* Material = Cast<UMaterial>(Factory->FactoryCreateNew(UMaterial::StaticClass(), Package,
+		FName(*FPackageName::GetShortName(PackageName)), RF_Public | RF_Standalone, nullptr, GWarn));
+	Material->MaterialDomain = MD_PostProcess;
+
+	UMaterialExpressionSceneTexture* SceneColor = Cast<UMaterialExpressionSceneTexture>(
+		UMaterialEditingLibrary::CreateMaterialExpression(Material, UMaterialExpressionSceneTexture::StaticClass(), -700, 0));
+	SceneColor->SceneTextureId = PPI_PostProcessInput0;
+	UMaterialExpressionSceneTexture* CustomDepth = Cast<UMaterialExpressionSceneTexture>(
+		UMaterialEditingLibrary::CreateMaterialExpression(Material, UMaterialExpressionSceneTexture::StaticClass(), -700, 250));
+	CustomDepth->SceneTextureId = PPI_CustomDepth;
+	UMaterialExpression* ScreenUV = UMaterialEditingLibrary::CreateMaterialExpression(
+		Material, UMaterialExpressionTextureCoordinate::StaticClass(), -700, 500);
+
+	UMaterialExpressionCustom* Custom = Cast<UMaterialExpressionCustom>(
+		UMaterialEditingLibrary::CreateMaterialExpression(Material, UMaterialExpressionCustom::StaticClass(), -300, 0));
+	Custom->Description = TEXT("Outline");
+	Custom->OutputType = CMOT_Float3;
+	Custom->Inputs.Empty();
+	for (const TCHAR* Name : { TEXT("SceneColor"), TEXT("Center"), TEXT("InvSize"), TEXT("UV") })
+	{
+		FCustomInput& Input = Custom->Inputs.AddDefaulted_GetRef();
+		Input.InputName = Name;
+	}
+	// 13 = PPI_CustomDepth. A pixel is on the line when a neighbour is much closer in custom depth
+	// (the outlined object) than the pixel itself (background, or something behind it).
+	Custom->Code = FString::Printf(TEXT(
+		"float2 D = InvSize * %.2f;\n"
+		"float Near = min(min(SceneTextureLookup(UV + float2(D.x, 0), 13, false).r, SceneTextureLookup(UV - float2(D.x, 0), 13, false).r),\n"
+		"                 min(SceneTextureLookup(UV + float2(0, D.y), 13, false).r, SceneTextureLookup(UV - float2(0, D.y), 13, false).r));\n"
+		"float Edge = Center.r - Near > 50 ? 1 : 0;\n"
+		"return lerp(SceneColor.rgb, float3(%.3f, %.3f, %.3f), Edge);"),
+		Width, Color.R, Color.G, Color.B);
+
+	UMaterialEditingLibrary::ConnectMaterialExpressions(SceneColor, TEXT("Color"), Custom, TEXT("SceneColor"));
+	UMaterialEditingLibrary::ConnectMaterialExpressions(CustomDepth, TEXT("Color"), Custom, TEXT("Center"));
+	UMaterialEditingLibrary::ConnectMaterialExpressions(SceneColor, TEXT("InvSize"), Custom, TEXT("InvSize"));
+	UMaterialEditingLibrary::ConnectMaterialExpressions(ScreenUV, TEXT(""), Custom, TEXT("UV"));
+	UMaterialEditingLibrary::ConnectMaterialProperty(Custom, TEXT(""), MP_EmissiveColor);
+	UMaterialEditingLibrary::RecompileMaterial(Material);
+
+	FAssetRegistryModule::AssetCreated(Material);
+	Package->MarkPackageDirty();
+	ChangedPackages.Add(Package);
+	UE_LOG(LogBochaReparent, Display, TEXT("Created %s"), *PackageName);
 	return true;
 }
 

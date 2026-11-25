@@ -115,6 +115,13 @@ void ABochaMinigameManager::Refresh()
 	RefreshHeldBall(Match->CanThrow(LocalPlayer));
 	RefreshCamera();
 
+	// The jack is outlined (custom depth, M_PP_BolimOutline) only while it lies still and the
+	// players aim the bochas at it from the throwing end.
+	for (TActorIterator<ABochaBolim> It(GetWorld()); It; ++It)
+	{
+		It->GetSphere()->SetRenderCustomDepth(Match->GetPhase() == EBochaPhase::ThrowingBochas);
+	}
+
 	const int32 LocalTeam = Match->GetTeamOf(LocalPlayer);
 	if (ABochaMinigameCharacter* Player = Cast<ABochaMinigameCharacter>(TargetCharacter))
 	{
