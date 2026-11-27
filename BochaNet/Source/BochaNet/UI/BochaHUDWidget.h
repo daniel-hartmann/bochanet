@@ -45,6 +45,8 @@ public:
 
 protected:
 	virtual void NativeOnInitialized() override;
+	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
 
 	/** How long a message stays on screen (s). */
 	UPROPERTY(EditDefaultsOnly, Category = "Bocha|HUD")
@@ -79,4 +81,13 @@ private:
 	TObjectPtr<UTextBlock> MessageText;
 
 	FTimerHandle MessageTimer;
+
+	/** Match clock (ABochaGameState::GetMatchTime), created at runtime like MessageText. */
+	UPROPERTY(Transient)
+	TObjectPtr<UTextBlock> ClockText;
+
+	/** Updates the clock once per second (no Tick, no property binding). */
+	void UpdateClock();
+
+	FTimerHandle ClockTimer;
 };

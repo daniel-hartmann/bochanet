@@ -6,6 +6,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "DrawDebugHelpers.h"
 #include "EngineUtils.h"
+#include "Game/BochaGameState.h"
 #include "Game/BochaMinigameManager.h"
 #include "Game/BochaReferee.h"
 #include "GameFramework/GameStateBase.h"
@@ -13,6 +14,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Lobby/BochaPortal.h"
 #include "Net/UnrealNetwork.h"
+#include "Player/BochaPlayerState.h"
 #include "TimerManager.h"
 
 #define LOCTEXT_NAMESPACE "BochaMatch"
@@ -53,11 +55,7 @@ void ABochaMatch::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifet
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(ABochaMatch, CourtOrigin);
-	DOREPLIFETIME(ABochaMatch, Phase);
-	DOREPLIFETIME(ABochaMatch, CurrentThrower);
 	DOREPLIFETIME(ABochaMatch, Players);
-	DOREPLIFETIME(ABochaMatch, BochasLeft);
-	DOREPLIFETIME(ABochaMatch, Score);
 	DOREPLIFETIME(ABochaMatch, PointHolder);
 	DOREPLIFETIME(ABochaMatch, Winner);
 	DOREPLIFETIME(ABochaMatch, ThrownBall);
@@ -68,6 +66,24 @@ void ABochaMatch::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	GetWorldTimerManager().ClearAllTimersForObject(this);
 	if (HasAuthority())
 	{
+		// Back to the lobby: the players leave the match and the game waits for the next one.
+		for (APlayerState* PlayerState : Players)
+		{
+			if (ABochaPlayerState* BochaPlayer = Cast<ABochaPlayerState>(PlayerState); IsValid(BochaPlayer))
+			{
+				BochaPlayer->ClearMatch();
+			}
+		}
+		if (IsValid(SoloOpponent))
+		{
+			SoloOpponent->Destroy();
+		}
+		SoloOpponent = nullptr;
+		if (ABochaGameState* GameState = GetBochaGameState(); IsValid(GameState))
+		{
+			GameState->ResetMatch();
+		}
+
 		if (IsValid(Referee))
 		{
 			Referee->Destroy();
@@ -112,16 +128,45 @@ void ABochaMatch::BeginPlay()
 	// The host plays red (team 0), the other player blue (team 1).
 	for (APlayerState* PlayerState : GetWorld()->GetGameState()->PlayerArray)
 	{
+		if (PlayerState->IsABot())
+		{
+			continue;
+		}
 		const APlayerController* Controller = PlayerState->GetPlayerController();
 		Players.Insert(PlayerState, Controller && Controller->IsLocalController() ? 0 : Players.Num());
 	}
 	Players.SetNum(NumTeams);
 	if (!Players[1])
 	{
-		Players[1] = Players[0];
+		// Playing alone: blue gets its own player state (its own points and bochas), thrown for by the same player.
+		SoloOpponent = GetWorld()->SpawnActor<ABochaPlayerState>();
+		if (SoloOpponent)
+		{
+			SoloOpponent->SetIsABot(true);
+			SoloOpponent->SetPlayerName(GetTeamName(1).ToString());
+		}
+		Players[1] = SoloOpponent;
 	}
 
-	Score.Init(0, NumTeams);
+	for (int32 Team = 0; Team < NumTeams; ++Team)
+	{
+		if (ABochaPlayerState* TeamState = GetTeamState(Team))
+		{
+			TeamState->StartMatch(Team);
+		}
+		else
+		{
+			UE_LOG(LogBochaMatch, Error, TEXT("Team %d has no ABochaPlayerState: the game mode must be (a child of) ABochaGameMode."), Team);
+		}
+	}
+	if (ABochaGameState* GameState = GetBochaGameState())
+	{
+		GameState->StartMatch();
+	}
+	else
+	{
+		UE_LOG(LogBochaMatch, Error, TEXT("No ABochaGameState: the game mode must be (a child of) ABochaGameMode."));
+	}
 
 	// Art. 9 c: a draw decides who throws first.
 	BolimThrower = FMath::RandRange(0, NumTeams - 1);
@@ -136,8 +181,54 @@ void ABochaMatch::BeginPlay()
 
 bool ABochaMatch::CanThrow(const APlayerState* PlayerState) const
 {
+	const EBochaPhase Phase = GetPhase();
 	return (Phase == EBochaPhase::ThrowingBolim || Phase == EBochaPhase::ThrowingBochas)
-		&& Players.IsValidIndex(CurrentThrower) && Players[CurrentThrower] == PlayerState;
+		&& IsOnTeam(PlayerState, GetCurrentThrower());
+}
+
+bool ABochaMatch::IsOnTeam(const APlayerState* PlayerState, int32 Team) const
+{
+	if (!PlayerState || !Players.IsValidIndex(Team) || !Players[Team])
+	{
+		return false;
+	}
+	// Playing alone, the player (team 0) also throws for the bot.
+	return Players[Team] == PlayerState || (Players[Team]->IsABot() && Players[0] == PlayerState);
+}
+
+ABochaPlayerState* ABochaMatch::GetTeamState(int32 Team) const
+{
+	return Players.IsValidIndex(Team) ? Cast<ABochaPlayerState>(Players[Team]) : nullptr;
+}
+
+int32 ABochaMatch::GetScore(int32 Team) const
+{
+	const ABochaPlayerState* TeamState = GetTeamState(Team);
+	return TeamState ? TeamState->GetPoints() : 0;
+}
+
+int32 ABochaMatch::GetBochasLeft(int32 Team) const
+{
+	const ABochaPlayerState* TeamState = GetTeamState(Team);
+	return TeamState ? TeamState->GetBochasLeft() : 0;
+}
+
+EBochaPhase ABochaMatch::GetPhase() const
+{
+	const ABochaGameState* GameState = GetBochaGameState();
+	return GameState ? GameState->GetTurnPhase() : EBochaPhase::WaitingForPlayers;
+}
+
+int32 ABochaMatch::GetCurrentThrower() const
+{
+	const ABochaGameState* GameState = GetBochaGameState();
+	return GameState ? GameState->GetCurrentTeam() : INDEX_NONE;
+}
+
+ABochaGameState* ABochaMatch::GetBochaGameState() const
+{
+	const UWorld* World = GetWorld();
+	return World ? World->GetGameState<ABochaGameState>() : nullptr;
 }
 
 bool ABochaMatch::IsBehindThrowLine(const FVector& WorldLocation) const
@@ -164,8 +255,14 @@ void ABochaMatch::StartRound()
 	ThrownBall = nullptr;
 	PointHolder = INDEX_NONE;
 
-	BochasLeft.Init(BochasPerPlayer, NumTeams);
-	UE_LOG(LogBochaMatch, Display, TEXT("Round starts: team %d throws the jack. Score %d x %d."), BolimThrower, Score[0], Score[1]);
+	for (int32 Team = 0; Team < NumTeams; ++Team)
+	{
+		if (ABochaPlayerState* TeamState = GetTeamState(Team))
+		{
+			TeamState->SetBochasLeft(BochasPerPlayer);
+		}
+	}
+	UE_LOG(LogBochaMatch, Display, TEXT("Round starts: team %d throws the jack. Score %d x %d."), BolimThrower, GetScore(0), GetScore(1));
 	SetState(EBochaPhase::ThrowingBolim, BolimThrower);
 }
 
@@ -177,14 +274,18 @@ void ABochaMatch::RegisterThrow(ABochaBall* Ball)
 		SpawnReferee();
 	}
 
-	bWaitingForBolim = Phase == EBochaPhase::ThrowingBolim;
+	const int32 CurrentThrower = GetCurrentThrower();
+	bWaitingForBolim = GetPhase() == EBochaPhase::ThrowingBolim;
 	if (bWaitingForBolim)
 	{
 		Bolim = Ball;
 	}
 	else
 	{
-		--BochasLeft[CurrentThrower];
+		if (ABochaPlayerState* TeamState = GetTeamState(CurrentThrower))
+		{
+			TeamState->SetBochasLeft(TeamState->GetBochasLeft() - 1);
+		}
 	}
 	BallsInPlay.Add(Ball);
 	UE_LOG(LogBochaMatch, Display, TEXT("Team %d threw %s from %s."), CurrentThrower,
@@ -282,7 +383,7 @@ void ABochaMatch::SpawnReferee()
 
 void ABochaMatch::StartMeasuring()
 {
-	SetState(EBochaPhase::Measuring, CurrentThrower);
+	SetState(EBochaPhase::Measuring, GetCurrentThrower());
 
 	// Walk to just short of the jack, measure there (its "Medir" notify), then announce.
 	const FVector Target = Bolim->GetActorLocation() - FVector(RefereeMeasureDistance, 0.0, 0.0);
@@ -298,7 +399,7 @@ void ABochaMatch::StartMeasuring()
 
 void ABochaMatch::FinishMeasuring()
 {
-	if (Phase != EBochaPhase::Measuring)
+	if (GetPhase() != EBochaPhase::Measuring)
 	{
 		return;
 	}
@@ -322,9 +423,9 @@ void ABochaMatch::ResolveThrow()
 	const FStanding Standing = GetStanding();
 	PointHolder = Standing.Holder;
 	UE_LOG(LogBochaMatch, Display, TEXT("Balls stopped. Best red %.1f, blue %.1f; holder %d%s; bochas left %d/%d."),
-		Standing.Best[0], Standing.Best[1], Standing.Holder, Standing.bTie ? TEXT(" (tie)") : TEXT(""), BochasLeft[0], BochasLeft[1]);
+		Standing.Best[0], Standing.Best[1], Standing.Holder, Standing.bTie ? TEXT(" (tie)") : TEXT(""), GetBochasLeft(0), GetBochasLeft(1));
 
-	if (BochasLeft[0] == 0 && BochasLeft[1] == 0)
+	if (GetBochasLeft(0) == 0 && GetBochasLeft(1) == 0)
 	{
 		EndRound(Standing);
 		return;
@@ -332,8 +433,8 @@ void ABochaMatch::ResolveThrow()
 
 	// Art. 3 c: the side without the point plays. On a tie the side that caused it plays again
 	// (Art. 13 c); with no bocha on the court, the side whose bocha was annulled plays again (Art. 9 d).
-	int32 Next = Standing.bTie || Standing.Holder == INDEX_NONE ? CurrentThrower : OtherTeam(Standing.Holder);
-	if (BochasLeft[Next] == 0)
+	int32 Next = Standing.bTie || Standing.Holder == INDEX_NONE ? GetCurrentThrower() : OtherTeam(Standing.Holder);
+	if (GetBochasLeft(Next) == 0)
 	{
 		Next = OtherTeam(Next);
 	}
@@ -373,16 +474,19 @@ void ABochaMatch::EndRound(const FStanding& Standing)
 				++Points;
 			}
 		}
-		Score[RoundWinner] += Points;
+		if (ABochaPlayerState* TeamState = GetTeamState(RoundWinner))
+		{
+			TeamState->AddPoints(Points);
+		}
 		// Art. 9 f: whoever scored throws the next jack.
 		BolimThrower = RoundWinner;
 		MulticastAnnounce(FText::Format(
 			LOCTEXT("Scored", "{0} marcou {1} {1}|plural(one=ponto,other=pontos). Placar: Vermelho {2} x {3} Azul."),
-			GetTeamName(RoundWinner), Points, Score[0], Score[1]));
+			GetTeamName(RoundWinner), Points, GetScore(0), GetScore(1)));
 
 		// Art. 5 a: the first to TargetScore wins. Their machine claims the victory (Server RPC),
 		// the server confirms it; if the claim never comes, the server ends the game anyway.
-		if (Score[RoundWinner] >= TargetScore)
+		if (GetScore(RoundWinner) >= TargetScore)
 		{
 			Winner = RoundWinner;
 			SetState(EBochaPhase::RoundOver, INDEX_NONE);
@@ -397,7 +501,7 @@ void ABochaMatch::EndRound(const FStanding& Standing)
 
 void ABochaMatch::HandleVictoryClaim(const APlayerState* Claimer)
 {
-	const bool bValid = Winner != INDEX_NONE && IsOnTeam(Claimer, Winner) && Score[Winner] >= TargetScore;
+	const bool bValid = Winner != INDEX_NONE && IsOnTeam(Claimer, Winner) && GetScore(Winner) >= TargetScore;
 	UE_LOG(LogBochaMatch, Display, TEXT("Victory claimed by %s: %s."), *GetNameSafe(Claimer), bValid ? TEXT("confirmed") : TEXT("rejected"));
 	if (bValid)
 	{
@@ -407,13 +511,17 @@ void ABochaMatch::HandleVictoryClaim(const APlayerState* Claimer)
 
 void ABochaMatch::ConfirmVictory()
 {
-	if (Phase == EBochaPhase::GameOver)
+	if (GetPhase() == EBochaPhase::GameOver)
 	{
 		return;
 	}
 	GetWorldTimerManager().ClearTimer(VictoryTimer);
 	SetState(EBochaPhase::GameOver, INDEX_NONE);
-	MulticastGameOver(Winner, Score[0], Score[1]);
+	if (ABochaGameState* GameState = GetBochaGameState())
+	{
+		GameState->FinishMatch(Winner);
+	}
+	MulticastGameOver(Winner, GetScore(0), GetScore(1));
 	GetWorldTimerManager().SetTimer(EndMinigameTimer, this, &ABochaMatch::EndMinigame, GameOverDuration);
 }
 
@@ -508,7 +616,7 @@ void ABochaMatch::RemoveIrregularBolim()
 	Bolim = nullptr;
 
 	// House rule (instead of Art. 9 f): the same player throws the jack again.
-	SetState(EBochaPhase::ThrowingBolim, CurrentThrower);
+	SetState(EBochaPhase::ThrowingBolim, GetCurrentThrower());
 }
 
 FText ABochaMatch::GetBolimProblem() const
@@ -575,8 +683,10 @@ bool ABochaMatch::IsBolimStillInPlay() const
 
 void ABochaMatch::SetState(EBochaPhase NewPhase, int32 NewThrower)
 {
-	Phase = NewPhase;
-	CurrentThrower = NewThrower;
+	if (ABochaGameState* GameState = GetBochaGameState())
+	{
+		GameState->SetTurn(NewPhase, NewThrower);
+	}
 	ForceNetUpdate();
 	// OnRep only runs on clients; the listen server host needs the notification too.
 	OnStateChanged.Broadcast();

@@ -4,13 +4,16 @@
 #include "Actors/BochaBolim.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/StaticMeshComponent.h"
+#include "EngineUtils.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "Game/BochaGameState.h"
 #include "Game/BochaMatch.h"
 #include "Game/BochaMinigameManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/BochaHUDWidget.h"
+#include "UI/BochaLobbyWidget.h"
 #include "Lobby/BochaPortal.h"
 #include "Player/BochaMinigameCharacter.h"
 
@@ -36,6 +39,15 @@ void ABochaPlayerController::InitializeLocalInput()
 		return;
 	}
 	InputSubsystem->AddMappingContext(DefaultMappingContext, 0);
+
+	// Lobby banner ("waiting for players"), only on maps with a portal (not on the court opened alone).
+	if (TActorIterator<ABochaPortal>(GetWorld()))
+	{
+		if (UBochaLobbyWidget* LobbyWidget = CreateWidget<UBochaLobbyWidget>(this, UBochaLobbyWidget::StaticClass()))
+		{
+			LobbyWidget->AddToPlayerScreen(0);
+		}
+	}
 
 	if (ShouldUseTouchControls())
 	{
@@ -138,6 +150,14 @@ void ABochaPlayerController::BochaThrow()
 
 void ABochaPlayerController::ServerRequestStart_Implementation(ABochaPortal* Portal)
 {
+	// The match only leaves WaitingForPlayers with enough players connected; the server decides.
+	const ABochaGameState* BochaGameState = GetWorld()->GetGameState<ABochaGameState>();
+	if (BochaGameState && (!BochaGameState->HasEnoughPlayers() || BochaGameState->GetMatchPhase() != EBochaMatchPhase::WaitingForPlayers))
+	{
+		UE_LOG(LogTemp, Display, TEXT("[server] Start refused: %d/%d players, match %s."), BochaGameState->GetConnectedPlayers(),
+			BochaGameState->GetRequiredPlayers(), *UEnum::GetValueAsString(BochaGameState->GetMatchPhase()));
+		return;
+	}
 	if (Portal && !Portal->HasMinigameStarted())
 	{
 		Portal->MulticastStartMinigame();

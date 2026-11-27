@@ -6,6 +6,8 @@
 
 class ABochaBall;
 class ABochaBolim;
+class ABochaGameState;
+class ABochaPlayerState;
 class ABochaReferee;
 class APlayerState;
 class UPrimitiveComponent;
@@ -128,14 +130,24 @@ public:
 	 */
 	FVector LaunchBolim(ABochaBall* JackBall, float Strength) const;
 
-	/** Team of PlayerState, or INDEX_NONE. Playing alone, the same player is both teams; this returns 0. */
+	/** Team of PlayerState, or INDEX_NONE. Playing alone, the player is red (0) and also throws for the blue bot. */
 	int32 GetTeamOf(const APlayerState* PlayerState) const;
 
-	EBochaPhase GetPhase() const { return Phase; }
-	int32 GetCurrentThrower() const { return CurrentThrower; }
-	int32 GetBochasLeft(int32 Team) const { return BochasLeft.IsValidIndex(Team) ? BochasLeft[Team] : 0; }
+	/** Rules phase, kept in ABochaGameState (the turn is global state). */
+	EBochaPhase GetPhase() const;
+	/** Team that throws now, kept in ABochaGameState. */
+	int32 GetCurrentThrower() const;
+	/** Read from the team's ABochaPlayerState. */
+	int32 GetBochasLeft(int32 Team) const;
 	int32 GetBochasPerPlayer() const { return BochasPerPlayer; }
-	int32 GetScore(int32 Team) const { return Score.IsValidIndex(Team) ? Score[Team] : 0; }
+	/** Read from the team's ABochaPlayerState. */
+	int32 GetScore(int32 Team) const;
+
+	/** Player state of Team (playing alone, team 1 is a bot player state), or null. */
+	ABochaPlayerState* GetTeamState(int32 Team) const;
+
+	/** Fires OnStateChanged on this machine (the game state or a player state of the match changed). */
+	void NotifyStateChanged() { OnStateChanged.Broadcast(); }
 	/** Team whose bocha is closest to the jack, or INDEX_NONE (no bochas, or a tie). */
 	int32 GetPointHolder() const { return PointHolder; }
 
@@ -148,18 +160,15 @@ public:
 	/** Team that reached TargetScore (set before the victory is confirmed), or INDEX_NONE. */
 	int32 GetWinner() const { return Winner; }
 
-	/** Whether PlayerState plays for Team (playing alone, the same player is both teams). */
-	bool IsOnTeam(const APlayerState* PlayerState, int32 Team) const
-	{
-		return PlayerState && Players.IsValidIndex(Team) && Players[Team] == PlayerState;
-	}
+	/** Whether PlayerState plays for Team (playing alone, the player also throws for the blue bot). */
+	bool IsOnTeam(const APlayerState* PlayerState, int32 Team) const;
 
 	/** Server: the winner's machine claims the victory; confirmed when the score backs it up. */
 	void HandleVictoryClaim(const APlayerState* Claimer);
 
 	/** Fired on every machine when the game is over: winner team, red score, blue score. */
 	TMulticastDelegate<void(int32, int32, int32)> OnGameOver;
-	bool IsThrowingBolim() const { return Phase == EBochaPhase::ThrowingBolim; }
+	bool IsThrowingBolim() const { return GetPhase() == EBochaPhase::ThrowingBolim; }
 
 	/** Fired on every machine whenever the replicated state changes. */
 	FSimpleMulticastDelegate OnStateChanged;
@@ -300,21 +309,12 @@ private:
 	UPROPERTY(Replicated)
 	FVector CourtOrigin = FVector::ZeroVector;
 
-	UPROPERTY(ReplicatedUsing = OnRep_State)
-	EBochaPhase Phase = EBochaPhase::WaitingForPlayers;
-
-	UPROPERTY(ReplicatedUsing = OnRep_State)
-	int32 CurrentThrower = INDEX_NONE;
-
-	/** Index = team. Both entries are the same player when playing alone. */
+	/**
+	 * Index = team. Playing alone, team 1 is a bot player state spawned by the match (SoloOpponent).
+	 * Points and bochas left live in each ABochaPlayerState; the phase and the turn in ABochaGameState.
+	 */
 	UPROPERTY(ReplicatedUsing = OnRep_State)
 	TArray<TObjectPtr<APlayerState>> Players;
-
-	UPROPERTY(ReplicatedUsing = OnRep_State)
-	TArray<int32> BochasLeft;
-
-	UPROPERTY(ReplicatedUsing = OnRep_State)
-	TArray<int32> Score;
 
 	UPROPERTY(ReplicatedUsing = OnRep_State)
 	int32 PointHolder = INDEX_NONE;
@@ -335,6 +335,12 @@ private:
 
 	UPROPERTY(Transient)
 	TObjectPtr<ABochaReferee> Referee;
+
+	/** Server: the blue team's bot player state when playing alone. */
+	UPROPERTY(Transient)
+	TObjectPtr<ABochaPlayerState> SoloOpponent;
+
+	ABochaGameState* GetBochaGameState() const;
 
 
 	/** The thrown ball touched another ball ("fez jogo"). */

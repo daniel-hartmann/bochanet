@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/GameModeBase.h"
+#include "Game/BochaGameMode.h"
 #include "BochaSoloGameMode.generated.h"
 
 class ABochaMatch;
@@ -11,9 +11,10 @@ class ABochaMinigameManager;
 /**
  * Game mode of Lvl_Cancha opened on its own (not streamed in by the portal): starts a match where the
  * single player throws for both teams. Set for the map in DefaultEngine.ini (GameModeMapPrefixes).
+ * Uses the same game state and player state as the lobby (ABochaGameMode).
  */
 UCLASS()
-class BOCHANET_API ABochaSoloGameMode : public AGameModeBase
+class BOCHANET_API ABochaSoloGameMode : public ABochaGameMode
 {
 	GENERATED_BODY()
 

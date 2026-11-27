@@ -9,6 +9,7 @@
 ABochaSoloGameMode::ABochaSoloGameMode()
 {
 	DefaultPawnClass = nullptr;
+	RequiredPlayers = 1;
 
 	static ConstructorHelpers::FClassFinder<APlayerController> PlayerControllerBP(TEXT("/Game/ThirdPerson/Blueprints/BP_ThirdPersonPlayerController"));
 	static ConstructorHelpers::FClassFinder<ABochaMatch> MatchBP(TEXT("/Game/Bocha/Blueprints/BP_BochaMatch"));

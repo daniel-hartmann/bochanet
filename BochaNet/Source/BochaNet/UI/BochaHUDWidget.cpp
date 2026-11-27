@@ -6,6 +6,7 @@
 #include "Components/Image.h"
 #include "Components/Slider.h"
 #include "Components/TextBlock.h"
+#include "Game/BochaGameState.h"
 #include "TimerManager.h"
 
 #define LOCTEXT_NAMESPACE "BochaHUD"
@@ -47,6 +48,57 @@ void UBochaHUDWidget::NativeOnInitialized()
 	MessageSlot->SetAlignment(FVector2D(0.5, 0.5));
 	MessageSlot->SetPosition(FVector2D::ZeroVector);
 	MessageSlot->SetAutoSize(true);
+
+	// Match clock, top center, in the same font as the player rows when there is one.
+	ClockText = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("ClockText"));
+	FSlateFontInfo ClockFont = P1_Name ? P1_Name->GetFont() : ClockText->GetFont();
+	ClockFont.Size = 22;
+	ClockText->SetFont(ClockFont);
+	ClockText->SetJustification(ETextJustify::Center);
+	ClockText->SetShadowOffset(FVector2D(1.0, 1.0));
+	ClockText->SetShadowColorAndOpacity(FLinearColor(0.f, 0.f, 0.f, 0.8f));
+	ClockText->SetVisibility(ESlateVisibility::Collapsed);
+
+	UCanvasPanelSlot* ClockSlot = Canvas->AddChildToCanvas(ClockText);
+	ClockSlot->SetAnchors(FAnchors(0.5f, 0.f));
+	ClockSlot->SetAlignment(FVector2D(0.5, 0.0));
+	ClockSlot->SetPosition(FVector2D(0.0, 12.0));
+	ClockSlot->SetAutoSize(true);
+}
+
+void UBochaHUDWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+	UpdateClock();
+	GetWorld()->GetTimerManager().SetTimer(ClockTimer, this, &UBochaHUDWidget::UpdateClock, 1.f, true);
+}
+
+void UBochaHUDWidget::NativeDestruct()
+{
+	if (const UWorld* World = GetWorld())
+	{
+		World->GetTimerManager().ClearTimer(ClockTimer);
+	}
+	Super::NativeDestruct();
+}
+
+void UBochaHUDWidget::UpdateClock()
+{
+	if (!ClockText)
+	{
+		return;
+	}
+	const ABochaGameState* GameState = GetWorld() ? GetWorld()->GetGameState<ABochaGameState>() : nullptr;
+	if (!GameState || GameState->GetMatchPhase() == EBochaMatchPhase::WaitingForPlayers)
+	{
+		ClockText->SetVisibility(ESlateVisibility::Collapsed);
+		return;
+	}
+	const int32 Seconds = FMath::FloorToInt(GameState->GetMatchTime());
+	ClockText->SetText(FText::Format(LOCTEXT("Clock", "Tempo de partida {0}:{1}"),
+		FText::AsNumber(Seconds / 60, &FNumberFormattingOptions::DefaultNoGrouping()),
+		FText::FromString(FString::Printf(TEXT("%02d"), Seconds % 60))));
+	ClockText->SetVisibility(ESlateVisibility::HitTestInvisible);
 }
 
 void UBochaHUDWidget::ShowMessage(const FText& Message, float Duration)
