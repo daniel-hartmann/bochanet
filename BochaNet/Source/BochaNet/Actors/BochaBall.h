@@ -58,9 +58,42 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Bocha|Physics")
 	float StopSpeed = 5.f;
 
+	/**
+	 * Bounce between two balls (coefficient of restitution): 0 = they stop together, 1 = perfectly elastic.
+	 * Computed here instead of by the physics engine, which ignores bounces below BounceThresholdVelocity
+	 * (2 m/s by default, faster than most hits on the court). The ball with the lower id of the pair uses
+	 * its own value.
+	 */
+	UPROPERTY(EditDefaultsOnly, Category = "Bocha|Physics", meta = (ClampMin = "0.0", ClampMax = "1.0"))
+	float BallRestitution = 0.9f;
+
+	/** Bounce off the boards around the court (0 = stops dead against it, 1 = perfectly elastic). */
+	UPROPERTY(EditDefaultsOnly, Category = "Bocha|Physics", meta = (ClampMin = "0.0", ClampMax = "1.0"))
+	float WallRestitution = 0.7f;
+
 private:
 	void StopRolling();
 
+	/** Server: rolling resistance and the braking to a stop target. */
+	void TickRolling(float DeltaSeconds);
+
+	/** Server: bounces off another ball or a board (see BallRestitution, WallRestitution), then rolls again. */
+	UFUNCTION()
+	void OnSphereHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent,
+		FVector NormalImpulse, const FHitResult& Hit);
+
 	bool bHasStopTarget = false;
+
+	/**
+	 * After a bounce: for the next ticks the spin is matched to the new velocity. A collision only changes the
+	 * linear velocity, so the ball would skid and the floor's sliding friction would stop it in a few centimeters.
+	 */
+	int32 RollAfterHitTicks = 0;
+
+	/** Velocity at the end of the last tick: the velocity before this frame's collisions. */
+	FVector PreStepVelocity = FVector::ZeroVector;
+
+	/** Server: sets the velocity after a bounce (awake, rolling again on the next ticks). */
+	void SetBounceVelocity(const FVector& NewVelocity);
 	double StopTargetX = 0.0;
 };
