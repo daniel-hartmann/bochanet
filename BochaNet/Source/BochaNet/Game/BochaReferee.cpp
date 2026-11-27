@@ -10,6 +10,19 @@
 
 DEFINE_LOG_CATEGORY_STATIC(LogBochaReferee, Log, All);
 
+namespace
+{
+	/**
+	 * Runs a copy of Callback: whoever is called may unbind (or rebind) the original from inside it, which
+	 * would otherwise destroy the delegate while it is still executing (crash in packaged builds).
+	 */
+	void Fire(const FSimpleDelegate& Callback)
+	{
+		const FSimpleDelegate Copy = Callback;
+		Copy.ExecuteIfBound();
+	}
+}
+
 ABochaReferee::ABochaReferee()
 {
 	bReplicates = true;
@@ -81,7 +94,7 @@ void ABochaReferee::WalkTo(const FVector& Location)
 	else
 	{
 		CurrentWalk = FAIRequestID::InvalidRequest;
-		OnArrived.ExecuteIfBound();
+		Fire(OnArrived);
 	}
 }
 
@@ -93,7 +106,7 @@ void ABochaReferee::OnMoveCompleted(FAIRequestID RequestID, EPathFollowingResult
 	}
 	CurrentWalk = FAIRequestID::InvalidRequest;
 	UE_LOG(LogBochaReferee, Display, TEXT("Walk finished: %s."), *UEnum::GetValueAsString(Result));
-	OnArrived.ExecuteIfBound();
+	Fire(OnArrived);
 }
 
 void ABochaReferee::Measure()
@@ -104,7 +117,7 @@ void ABochaReferee::Measure()
 	}
 	else
 	{
-		OnMeasured.ExecuteIfBound();
+		Fire(OnMeasured);
 	}
 }
 
@@ -117,6 +130,6 @@ void ABochaReferee::OnMeasureNotify()
 {
 	if (HasAuthority())
 	{
-		OnMeasured.ExecuteIfBound();
+		Fire(OnMeasured);
 	}
 }
